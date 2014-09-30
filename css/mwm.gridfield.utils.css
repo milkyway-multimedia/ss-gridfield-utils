@@ -1,0 +1,61 @@
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr,
+.cms .ss-gridfield-timeline table.ss-gridfield-table th,
+.cms .ss-gridfield-timeline table.ss-gridfield-table td {
+    display:block;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr {
+    width: 100%;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover {
+    text-align: right;
+    white-space: nowrap;
+    border-top: 1px solid #a4b4bf;
+    border-left: 1px solid #a4b4bf;
+    color: #fff;
+    background: #98aab6 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header th {
+    width:auto;
+    display: inline-block;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .col-TimelineIcon,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .non-sortable {
+    display: none;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .col-Actions {
+    float: left;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header {
+    background-color:#000000 !important;
+    text-align: right;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th {
+    display: inline-block;
+    margin:5px;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th:last-child {
+    float: left;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th div {
+    padding-bottom:0;
+    margin-bottom:0;
+}
