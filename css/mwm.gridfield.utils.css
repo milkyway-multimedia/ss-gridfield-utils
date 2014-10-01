@@ -1,13 +1,31 @@
+.cms .ss-gridfield-timeline table.ss-gridfield-table,
+.cms .ss-gridfield-timeline table.ss-gridfield-table thead,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr,
 .cms .ss-gridfield-timeline table.ss-gridfield-table th,
 .cms .ss-gridfield-timeline table.ss-gridfield-table td {
     display:block;
 }
 
+.cms .ss-gridfield-timeline table.ss-gridfield-table,
+.cms .ss-gridfield-timeline table.ss-gridfield-table thead,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr {
     width: 100%;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
+    background-color:#fff;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover {
+    background-color:rgb(240, 244, 247) !important;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td {
+    border:0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header,
@@ -58,4 +76,57 @@
 .cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th div {
     padding-bottom:0;
     margin-bottom:0;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody td {
+    float: left;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
+    float: left;
+    padding:0;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
+    padding:15px;
+    position: relative;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
+    padding:15px;
+    width:55px;
+    position: relative;
+    text-align: center;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div:before {
+    content:'';
+    display:block;
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:50%;
+    width:2px;
+    margin-left:-1px;
+    background-color:rgb(240, 244, 247);
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa {
+    font-size:20px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    line-height:40px;
+    text-align: center;
+    background-color:rgb(240, 244, 247);
+    color:rgba(102, 102, 102, 0.8);
+    position:relative;
+    z-index:5;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa.icon-timeline--minor {
+    font-size:10px;
+    width: 20px;
+    height: 20px;
+    line-height:20px;
 }

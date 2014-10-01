@@ -81,7 +81,10 @@ class SaveAllButton implements \GridField_HTMLProvider, \GridField_ActionProvide
 			}
 
 			if ($this->publish) {
-				$grid->List->each(
+				// Only use the viewable list items, since bulk publishing can take a toll on the system
+				$list = ($paginator = $grid->getConfig()->getComponentByType('GridFieldPaginator')) ? $paginator->getManipulatedData($grid, $grid->List) : $grid->List;
+
+				$list->each(
 					function ($item) {
 						if ($item->hasExtension('Versioned')) {
 							$item->writeToStage('Stage');
