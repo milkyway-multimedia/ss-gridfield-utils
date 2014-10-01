@@ -87,16 +87,20 @@
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody td {
     padding:0;
+    max-width:none;
+    margin-right:40px;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
     float: left;
+    margin-right:0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.col-buttons {
     position: absolute;
     top:50%;
     margin-top:-10px;
+    margin-right:0;
     right:40px;
 }
 
