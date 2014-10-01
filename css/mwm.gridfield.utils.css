@@ -18,6 +18,13 @@
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
     background-color:#fff;
+    position: relative;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover {
@@ -79,12 +86,22 @@
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody td {
-    float: left;
+    padding:0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
     float: left;
-    padding:0;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.col-buttons {
+    position: absolute;
+    top:50%;
+    margin-top:-10px;
+    right:40px;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon + td {
+    padding-top:10px;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
