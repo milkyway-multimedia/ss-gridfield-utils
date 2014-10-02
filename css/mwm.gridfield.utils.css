@@ -20,6 +20,16 @@
     clear:both;
 }
 
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th {
+    min-height: 1px;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
     background-color:#fff;
     position: relative;
