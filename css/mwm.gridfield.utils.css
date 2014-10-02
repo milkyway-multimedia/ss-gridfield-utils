@@ -16,6 +16,10 @@
     width: 100%;
 }
 
+.cms .ss-gridfield-timeline table.ss-gridfield-table {
+    clear:both;
+}
+
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
     background-color:#fff;
     position: relative;
