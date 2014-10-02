@@ -4,7 +4,12 @@ GridField Utilities
 
 Includes the following:
 - Milkyway\SS\GridFieldUtils\HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
-- Milkyway\SS\GridFieldUtils\SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler
+- Milkyway\SS\GridFieldUtils\SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
+- Milkyway\SS\GridFieldUtils\DisplayAsTimeline: Will change the display of your GridField to a timeline (probably not be compatible with other extensions)
+
+### Caveats
+- The DisplayAsTimeline component is very hacky at this stage, due to the lack of support for templates in GridField. It has only been tested in Google Chrome
+- The SaveAllButton will be VERY slow when your objects are versioned and there are many of them
 
 ## Install
 Add the following to your composer.json file

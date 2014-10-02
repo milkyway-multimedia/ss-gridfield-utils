@@ -19,6 +19,7 @@
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
     background-color:#fff;
     position: relative;
+    padding:15px 0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:after {
@@ -89,11 +90,13 @@
     padding:0;
     max-width:none;
     margin-right:40px;
+    margin-left:85px;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
     float: left;
     margin-right:0;
+    margin-left:0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.col-buttons {
@@ -102,10 +105,11 @@
     margin-top:-10px;
     margin-right:0;
     right:40px;
+    margin-left:0;
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon + td {
-    padding-top:10px;
+
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
@@ -114,19 +118,19 @@
 }
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
-    padding:15px;
+    padding:0 15px;
     width:55px;
     position: relative;
     text-align: center;
 }
 
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div:before {
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:before {
     content:'';
     display:block;
     position: absolute;
     top:0;
     bottom:0;
-    left:50%;
+    left:43px;
     width:2px;
     margin-left:-1px;
     background-color:rgb(240, 244, 247);
@@ -150,4 +154,8 @@
     width: 20px;
     height: 20px;
     line-height:20px;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover td.TimelineIcon div i.fa {
+    background-color:#fff;
 }
