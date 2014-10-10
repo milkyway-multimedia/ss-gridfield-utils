@@ -16,11 +16,11 @@ class HelpButton implements
 
     protected $id;
 
-    protected $title;
+    public $title;
 
-    protected $content;
+    public $content;
 
-    protected $template = 'GridFieldHelpButton_View';
+    public $template = 'GridFieldHelpButton_View';
 
     public function __construct($fragment = 'buttons-before-right', $title = '', $id = '') {
         $this->fragment = $fragment;
