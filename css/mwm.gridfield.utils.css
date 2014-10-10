@@ -24,7 +24,9 @@
     min-height: 1px;
 }
 
-.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:after {
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td:after {
     content: "";
     display: table;
     clear: both;
@@ -172,4 +174,17 @@
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover td.TimelineIcon div i.fa {
     background-color:#fff;
+}
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td.bottom-all {
+    -moz-border-radius-bottomleft: 0;
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -moz-border-radius-bottomright: 0;
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.cms table.ss-gridfield-table.ss-gridfield-timeline tr td.bottom-all .datagrid-pagination .pagination-page-number input {
+    text-align: center;
 }
