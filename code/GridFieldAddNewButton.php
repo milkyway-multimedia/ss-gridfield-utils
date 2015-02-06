@@ -3,7 +3,7 @@
  * Milkyway Multimedia
  * GridFieldAddNewButton.php
  *
- * @package reggardocolaianni.com
+ * @package milkyway-multimedia/ss-gridfield-utils
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 

@@ -3,7 +3,7 @@
  * Milkyway Multimedia
  * utilities.php
  *
- * @package relatewell.org.au
+ * @package milkyway-multimedia/ss-gridfield-utils
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
