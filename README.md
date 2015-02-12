@@ -27,6 +27,10 @@ Add the following to your composer.json file
 
 ```
 
+## Credits
+- [ajshort](https://github.com/ajshort "ajshort on Github"): He did most of the coding of GridFieldExtensions, which I borrowed for the more complex versions in this module
+- [silverstripe-australia](https://github.com/silverstripe-australia "silverstripe-australia on Github"): They now look after the GridFieldExtensions module, and have done some updates which I have probably borrowed
+
 ## TODO
 * Get DisplayAsTimeline to work with sorting (just in case)
 * Test EditableRow with tabs...
