@@ -147,8 +147,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	}
 
 	protected function getRowTemplate($grid) {
-		$fields = $this->getFieldList($grid)->dataFields();
 		$class = str_replace('\\', '_', __CLASS__);
+		$form = $this->getForm($grid, '-{%=o.num%}')->setHTMLID('Form-'.$class.'-{%=o.num%}');
+		$fields = $form->Fields()->dataFields();
 
 		foreach($fields as $field) {
 			$field->setName(sprintf(
@@ -157,8 +158,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		}
 
 		return \ArrayData::create([
-			'Form' => $this->getForm($grid, '-{%=o.num%}')->setHTMLID('Form-'.$class.'-{%=o.num%}'),
+			'Form' => $form,
 			'ColumnCount' => count($grid->getColumns()),
+			'ColumnCountWithoutActions' => count($grid->getColumns()) - 1,
 		    'Model' => (($record = $this->getRecordFromGrid($grid)) && $record->hasMethod('i18n_singular_name')) ? $record->i18n_singular_name() : _t('GridFieldUtils.ITEM', 'Item'),
 			]
 		)->renderWith(array_merge((array)$this->template, ['GridField_AddNewInlineExtended']));
@@ -208,9 +210,15 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 				return \FieldList::create($this->fields);
 		}
 
-		if($grid && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
-			return $editable->getFields($grid, $this->getRecordFromGrid($grid));
+		if($grid) {
+			if($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
+				return $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
+			if($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
+				return $editable->getFields($grid, $this->getRecordFromGrid($grid));
 		}
+
+		if($record = $this->getRecordFromGrid($grid))
+			return $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
 
 		throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
 	}
@@ -241,7 +249,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		$form = $this->getForm($grid);
 		$class = str_replace('\\', '_', __CLASS__);
 
-		if(preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', $grid->Name, $class), $remaining, $matches) && isset($matches[1])) {
+		if(preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $class), $remaining, $matches) && isset($matches[1])) {
 			foreach($form->Fields()->dataFields() as $field) {
 				$field->setName(sprintf(
 					'%s[%s][%s][%s]', $grid->getName(), $class, $matches[1], $field->getName()
@@ -249,7 +257,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 			}
 		}
 
-		return $form->handleRequest($request, \DataModel::inst());
+		return $form;
 	}
 
 	public function Link() {

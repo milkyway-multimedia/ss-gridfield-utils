@@ -15,8 +15,23 @@
             "_assets/css/**/*.less",
             "_assets/css/**/*.scss"
         ],
-        "dest"  : "css/",
-        "merged": {
-        }
+        "dest"  : "css/"
+    },
+    "js"   : {
+        "all"   : [
+            "_assets/js/**/*",
+            "!_assets/js/imports/**/*"
+        ],
+        "src"   : [
+            "_assets/js/**/*",
+            "!_assets/js/imports/**/*",
+            "!_assets/js/imports",
+            "!_assets/js/old/**/*",
+            "!_assets/js/old"
+        ],
+        "watch" : [
+            "_assets/js/**/*"
+        ],
+        "dest"  : "js/"
     }
 }

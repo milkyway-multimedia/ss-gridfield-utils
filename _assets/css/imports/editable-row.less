@@ -1,0 +1,85 @@
+@import "../../../../mwm/thirdparty/font-awesome/less/variables";
+
+@fa-font-path: "../../mwm/fonts";
+
+@import "../../../../mwm/thirdparty/font-awesome/less/mixins";
+@import "../../../../mwm/thirdparty/font-awesome/less/path";
+@import (reference) "add-new-inline-extended";
+
+.cms .ss-gridfield-editable-row--row:extend(.cms .ss-gridfield-inline-new-extended--row all) {}
+
+.ss-gridfield-editable-row--toggle {
+	cursor: pointer;
+
+	&:after {
+		.fa-icon();
+		content:@fa-var-plus;
+	}
+
+	&.ss-gridfield-editable-row--toggle_open:after {
+		content:@fa-var-minus;
+	}
+}
+
+.cms table.ss-gridfield-table tbody td.ss-gridfield-editable-row--icon-holder {
+	width: 1px;
+}
+
+.ss-gridfield-editable-row--row_hide {
+	display: none;
+}
+
+.ss-gridfield-editable-row--loading {
+	* {
+		opacity: 0.2 !important;
+	}
+
+	.ss-gridfield-editable-row--icon-holder {
+		opacity:1 !important;
+		background: url(../../framework/admin/images/spinner.gif) center center no-repeat !important;
+	}
+}
+
+.cms table.ss-gridfield-table tr td.ss-gridfield-editable-row--fieldsHolder {
+	padding:0;
+}
+
+.ss-gridfield-editable-row--fields {
+	.cms .ss-gridfield-editable-row--row &,
+	.ui-tabs .ui-tabs-panel,
+	.cms .ss-gridfield-editable-row--row & .ss-gridfield {
+		padding:0;
+	}
+
+	.ui-tabs .ui-tabs-panel > *,
+	> .field,
+	fieldset.ss-gridfield > :not(table) {
+		margin:15px 20px;
+	}
+
+	fieldset.ss-gridfield {
+		margin:0 !important;
+	}
+
+	.cms & table.ss-gridfield-table thead tr:first-child th:first-child,
+	.cms & table.ss-gridfield-table thead tr:first-child th:last-child {
+		border-radius:0;
+	}
+
+	h3[id] {
+		&:extend(.cms .ss-gridfield-inline-new-extended--row td > h6);
+		margin:0 !important;
+		background: lighten(#a4b4bf, 15%);
+	}
+
+	.ss-gridfield-inline-new-extended--fields h3[id] {
+		margin-right: -5px !important;
+		margin-left: -5px !important;
+	}
+}
+
+.ss-gridfield-editable-row--row {
+	&:hover .ss-gridfield-editable-row--fieldsHolder_before ~ * {
+		background-color:white;
+	}
+}

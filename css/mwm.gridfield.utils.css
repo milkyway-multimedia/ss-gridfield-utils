@@ -1,14 +1,20 @@
-.cms .ss-gridfield-inline-new-extended--row td {
+.cms .ss-gridfield-inline-new-extended--row td,
+.cms .ss-gridfield-editable-row--row td {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.cms .ss-gridfield-inline-new-extended--row .ss-gridfield-inline-new-extended--fieldsHolder {
+.cms .ss-gridfield-inline-new-extended--row .ss-gridfield-inline-new-extended--fieldsHolder,
+.cms .ss-gridfield-editable-row--row .ss-gridfield-inline-new-extended--fieldsHolder {
   padding: 0;
 }
 .cms .ss-gridfield-inline-new-extended--row fieldset,
-.cms .ss-gridfield-inline-new-extended--row h6 {
+.cms .ss-gridfield-inline-new-extended--row h6,
+.cms .ss-gridfield-editable-row--row fieldset,
+.cms .ss-gridfield-editable-row--row h6 {
   padding: 5px;
 }
-.cms .ss-gridfield-inline-new-extended--row td > h6 {
+.cms .ss-gridfield-inline-new-extended--row td > h6,
+.cms .ss-gridfield-editable-row--row td > h6,
+.ss-gridfield-editable-row--fields h3[id] {
   background: #c2cdd4;
   border-bottom: #b6c3cb;
   padding: 10px;
@@ -18,14 +24,35 @@
 .cms .ss-gridfield-inline-new-extended--row .field input.text,
 .cms .ss-gridfield-inline-new-extended--row .field textarea,
 .cms .ss-gridfield-inline-new-extended--row .field select,
-.cms .ss-gridfield-inline-new-extended--row .field .TreeDropdownField {
+.cms .ss-gridfield-inline-new-extended--row .field .TreeDropdownField,
+.cms .ss-gridfield-editable-row--row .field input.text,
+.cms .ss-gridfield-editable-row--row .field textarea,
+.cms .ss-gridfield-editable-row--row .field select,
+.cms .ss-gridfield-editable-row--row .field .TreeDropdownField {
   max-width: 500px !important;
 }
-.cms .ss-gridfield-inline-new-extended--row .field {
+.cms .ss-gridfield-inline-new-extended--row .field,
+.cms .ss-gridfield-editable-row--row .field {
   border-bottom: 0;
   -webkit-box-shadow: none;
           box-shadow: none;
   margin-bottom: 0;
+}
+.cms .ss-gridfield-inline-new-extended--row .field.checkbox,
+.cms .ss-gridfield-editable-row--row .field.checkbox {
+  padding-left: 150px;
+}
+.cms .ss-gridfield-inline-new-extended--row .field > label.right,
+.cms .ss-gridfield-editable-row--row .field > label.right {
+  float: none;
+}
+.cms .ss-gridfield-inline-new-extended--row .readonly.message,
+.cms .ss-gridfield-editable-row--row .readonly.message {
+  padding-top: 10px !important;
+}
+.ss-gridfield-inline-new-extended--buttons {
+  vertical-align: top;
+  padding: 15px 8px;
 }
 .cms .ss-gridfield-timeline table.ss-gridfield-table {
   display: block;
@@ -202,7 +229,10 @@
   font-weight: normal;
   font-style: normal;
 }
-.ss-gridfield-treeView--toggle:after {
+.ss-gridfield-editable-row--toggle {
+  cursor: pointer;
+}
+.ss-gridfield-editable-row--toggle:after {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -214,6 +244,51 @@
           transform: translate(0, 0);
   content: "\f067";
 }
-.ss-gridfield-treeView--toggle.ss-gridfield-treeView--toggle_open:after {
+.ss-gridfield-editable-row--toggle.ss-gridfield-editable-row--toggle_open:after {
   content: "\f068";
+}
+.cms table.ss-gridfield-table tbody td.ss-gridfield-editable-row--icon-holder {
+  width: 1px;
+}
+.ss-gridfield-editable-row--row_hide {
+  display: none;
+}
+.ss-gridfield-editable-row--loading * {
+  opacity: 0.2 !important;
+}
+.ss-gridfield-editable-row--loading .ss-gridfield-editable-row--icon-holder {
+  opacity: 1 !important;
+  background: url(../../framework/admin/images/spinner.gif) center center no-repeat !important;
+}
+.cms table.ss-gridfield-table tr td.ss-gridfield-editable-row--fieldsHolder {
+  padding: 0;
+}
+.cms .ss-gridfield-editable-row--row .ss-gridfield-editable-row--fields,
+.ss-gridfield-editable-row--fields .ui-tabs .ui-tabs-panel,
+.cms .ss-gridfield-editable-row--row .ss-gridfield-editable-row--fields .ss-gridfield {
+  padding: 0;
+}
+.ss-gridfield-editable-row--fields .ui-tabs .ui-tabs-panel > *,
+.ss-gridfield-editable-row--fields > .field,
+.ss-gridfield-editable-row--fields fieldset.ss-gridfield > :not(table) {
+  margin: 15px 20px;
+}
+.ss-gridfield-editable-row--fields fieldset.ss-gridfield {
+  margin: 0 !important;
+}
+.cms .ss-gridfield-editable-row--fields table.ss-gridfield-table thead tr:first-child th:first-child,
+.cms .ss-gridfield-editable-row--fields table.ss-gridfield-table thead tr:first-child th:last-child {
+  -webkit-border-radius: 0;
+          border-radius: 0;
+}
+.ss-gridfield-editable-row--fields h3[id] {
+  margin: 0 !important;
+  background: #d1d9df;
+}
+.ss-gridfield-editable-row--fields .ss-gridfield-inline-new-extended--fields h3[id] {
+  margin-right: -5px !important;
+  margin-left: -5px !important;
+}
+.ss-gridfield-editable-row--row:hover .ss-gridfield-editable-row--fieldsHolder_before ~ * {
+  background-color: white;
 }
