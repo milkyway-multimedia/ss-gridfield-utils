@@ -1,19 +1,20 @@
 {
-    "name"       : "milkyway-multimedia/ss-gridfield-utils",
+    "name":        "milkyway-multimedia/ss-gridfield-utils",
     "description": "You can never have too many GridField components!",
-    "type"       : "silverstripe-module",
-    "keywords"   : ["silverstripe", "utilities", "mwm", "gridfield"],
-    "license"    : "MIT",
-    "authors"    : [
+    "type":        "silverstripe-module",
+    "keywords":    ["silverstripe", "utilities", "mwm", "gridfield"],
+    "license":     "MIT",
+    "authors":     [
         {
-            "name" : "Mellisa Hankins",
+            "name":  "Mellisa Hankins",
             "email": "mell@milkywaymultimedia.com.au"
         }
     ],
-    "require"    : {
-        "silverstripe/framework"                  : "~3.1"
+    "require":     {
+        "silverstripe/framework":     "~3.1",
+        "milkyway-multimedia/ss-mwm": "dev-master"
     },
-    "extra"      : {
+    "extra":       {
         "installer-name": "gridfield-utils"
     }
 }

@@ -1,0 +1,164 @@
+@import "../../../../mwm/thirdparty/bootstrap/less/mixins";
+
+.cms .ss-gridfield-timeline table.ss-gridfield-table {
+	display: block;
+	width: 100%;
+	clear: both;
+
+	thead, tbody, tfoot, tr, th, td {
+		display: block;
+	}
+
+	thead, tbody, tfoot, tr {
+		width: 100%;
+	}
+
+	tr.title th {
+		min-height: 1px;
+	}
+
+	tr.title th,
+	tfoot,
+	tfoot td,
+	tbody tr,
+	.filter-header {
+		.clearfix();
+	}
+
+	tbody tr {
+		background-color: #fff;
+		position: relative;
+		padding: 15px 0;
+
+		&:hover {
+			background-color: rgb(240, 244, 247) !important;
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 43px;
+			width: 2px;
+			margin-left: -1px;
+			background-color: rgb(240, 244, 247);
+		}
+	}
+
+	td {
+		border: 0;
+	}
+
+	tbody td {
+		padding: 0;
+		max-width: none;
+		margin-right: 40px;
+		margin-left: 85px;
+
+		&.bottom-all {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+
+			.datagrid-pagination .pagination-page-number input {
+				text-align: center;
+			}
+		}
+	}
+
+	td.TimelineIcon {
+		float: left;
+		margin-right: 0;
+		margin-left: 0;
+	}
+
+	td.col-buttons {
+		position: absolute;
+		top: 50%;
+		margin-top: -10px;
+		margin-right: 0;
+		right: 40px;
+		margin-left: 0;
+	}
+
+	td.TimelineIcon div {
+		padding: 0 15px;
+		width: 55px;
+		position: relative;
+		text-align: center;
+
+		i.fa {
+			font-size: 20px;
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			background-color: rgb(240, 244, 247);
+			color: rgba(102, 102, 102, 0.8);
+			position: relative;
+			z-index: 5;
+
+			&.icon-timeline--minor {
+				font-size: 10px;
+				width: 20px;
+				height: 20px;
+				line-height: 20px;
+			}
+		}
+	}
+
+	tbody tr:hover td.TimelineIcon div i.fa {
+		background-color: #fff;
+	}
+
+	tfoot td.bottom-all {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.sortable-header,
+	.sortable-header:hover {
+		text-align: right;
+		white-space: nowrap;
+		border-top: 1px solid #a4b4bf;
+		border-left: 1px solid #a4b4bf;
+		color: #fff;
+		background: #98aab6 !important;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+		th {
+			width: auto;
+			display: inline-block;
+		}
+
+		.col-TimelineIcon,
+		.non-sortable {
+			display: none;
+		}
+
+		.col-Actions {
+			float: left;
+		}
+	}
+
+	.filter-header {
+		background-color: #000000 !important;
+		text-align: right;
+	}
+
+	.filter-header > th {
+		display: inline-block;
+		margin: 5px;
+
+		&:last-child {
+			float: left;
+		}
+
+		div {
+			padding-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+}

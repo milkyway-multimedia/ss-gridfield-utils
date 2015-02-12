@@ -1,0 +1,22 @@
+{
+    "css"   : {
+        "all"   : [
+            "_assets/css/**/*",
+            "!_assets/css/imports/**/*"
+        ],
+        "src"   : [
+            "_assets/css/**/*",
+            "!_assets/css/imports/**/*",
+            "!_assets/css/imports",
+            "!_assets/css/old/**/*",
+            "!_assets/css/old"
+        ],
+        "watch" : [
+            "_assets/css/**/*.less",
+            "_assets/css/**/*.scss"
+        ],
+        "dest"  : "css/",
+        "merged": {
+        }
+    }
+}

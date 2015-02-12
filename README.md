@@ -24,6 +24,9 @@ Add the following to your composer.json file
 
 ```
 
+## TODO
+* Get TreeView and DisplayAsTimeline to work with sorting
+
 ## License
 * MIT
 

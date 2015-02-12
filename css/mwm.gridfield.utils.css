@@ -1,190 +1,219 @@
-.cms .ss-gridfield-timeline table.ss-gridfield-table,
+.cms .ss-gridfield-inline-new-extended--row td {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.cms .ss-gridfield-inline-new-extended--row .ss-gridfield-inline-new-extended--fieldsHolder {
+  padding: 0;
+}
+.cms .ss-gridfield-inline-new-extended--row fieldset,
+.cms .ss-gridfield-inline-new-extended--row h6 {
+  padding: 5px;
+}
+.cms .ss-gridfield-inline-new-extended--row td > h6 {
+  background: #c2cdd4;
+  border-bottom: #b6c3cb;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.cms .ss-gridfield-inline-new-extended--row .field input.text,
+.cms .ss-gridfield-inline-new-extended--row .field textarea,
+.cms .ss-gridfield-inline-new-extended--row .field select,
+.cms .ss-gridfield-inline-new-extended--row .field .TreeDropdownField {
+  max-width: 500px !important;
+}
+.cms .ss-gridfield-inline-new-extended--row .field {
+  border-bottom: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  margin-bottom: 0;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table {
+  display: block;
+  width: 100%;
+  clear: both;
+}
 .cms .ss-gridfield-timeline table.ss-gridfield-table thead,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tfoot,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr,
 .cms .ss-gridfield-timeline table.ss-gridfield-table th,
 .cms .ss-gridfield-timeline table.ss-gridfield-table td {
-    display:block;
+  display: block;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table,
 .cms .ss-gridfield-timeline table.ss-gridfield-table thead,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tfoot,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr {
-    width: 100%;
+  width: 100%;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table {
-    clear:both;
-}
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th {
-    min-height: 1px;
+  min-height: 1px;
 }
-
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:before,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot:before,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td:before,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:before,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header:before,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:after,
 .cms .ss-gridfield-timeline table.ss-gridfield-table tfoot:after,
-.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td:after {
-    content: "";
-    display: table;
-    clear: both;
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header:after {
+  content: " ";
+  display: table;
 }
-
+.cms .ss-gridfield-timeline table.ss-gridfield-table tr.title th:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:after,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header:after {
+  clear: both;
+}
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr {
-    background-color:#fff;
-    position: relative;
-    padding:15px 0;
+  background-color: #fff;
+  position: relative;
+  padding: 15px 0;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover {
-    background-color:rgb(240, 244, 247) !important;
+  background-color: #f0f4f7 !important;
 }
-
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 43px;
+  width: 2px;
+  margin-left: -1px;
+  background-color: #f0f4f7;
+}
 .cms .ss-gridfield-timeline table.ss-gridfield-table td {
-    border:0;
+  border: 0;
 }
-
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody td {
+  padding: 0;
+  max-width: none;
+  margin-right: 40px;
+  margin-left: 85px;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody td.bottom-all {
+  -webkit-border-bottom-left-radius: 0;
+          border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+          border-bottom-right-radius: 0;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody td.bottom-all .datagrid-pagination .pagination-page-number input {
+  text-align: center;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
+  float: left;
+  margin-right: 0;
+  margin-left: 0;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.col-buttons {
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  margin-right: 0;
+  right: 40px;
+  margin-left: 0;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
+  padding: 0 15px;
+  width: 55px;
+  position: relative;
+  text-align: center;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa {
+  font-size: 20px;
+  -webkit-border-radius: 50%;
+          border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background-color: #f0f4f7;
+  color: rgba(102, 102, 102, 0.8);
+  position: relative;
+  z-index: 5;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa.icon-timeline--minor {
+  font-size: 10px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover td.TimelineIcon div i.fa {
+  background-color: #fff;
+}
+.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td.bottom-all {
+  -webkit-border-bottom-left-radius: 0;
+          border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+          border-bottom-right-radius: 0;
+}
 .cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header,
 .cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover {
-    text-align: right;
-    white-space: nowrap;
-    border-top: 1px solid #a4b4bf;
-    border-left: 1px solid #a4b4bf;
-    color: #fff;
-    background: #98aab6 !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: right;
+  white-space: nowrap;
+  border-top: 1px solid #a4b4bf;
+  border-left: 1px solid #a4b4bf;
+  color: #fff;
+  background: #98aab6 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header th {
-    width:auto;
-    display: inline-block;
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header th,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover th {
+  width: auto;
+  display: inline-block;
 }
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .col-TimelineIcon,
-.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .non-sortable {
-    display: none;
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover .col-TimelineIcon,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .non-sortable,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover .non-sortable {
+  display: none;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .col-Actions {
-    float: left;
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header .col-Actions,
+.cms .ss-gridfield-timeline table.ss-gridfield-table .sortable-header:hover .col-Actions {
+  float: left;
 }
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header {
-    background-color:#000000 !important;
-    text-align: right;
+  background-color: #000000 !important;
+  text-align: right;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th {
-    display: inline-block;
-    margin:5px;
+  display: inline-block;
+  margin: 5px;
 }
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th:last-child {
-    float: left;
+  float: left;
 }
-
 .cms .ss-gridfield-timeline table.ss-gridfield-table .filter-header > th div {
-    padding-bottom:0;
-    margin-bottom:0;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table tbody td {
-    padding:0;
-    max-width:none;
-    margin-right:40px;
-    margin-left:85px;
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../../mwm/fonts/fontawesome-webfont.eot?v=4.3.0');
+  src: url('../../mwm/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../../mwm/fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('../../mwm/fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../../mwm/fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../../mwm/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon {
-    float: left;
-    margin-right:0;
-    margin-left:0;
+.ss-gridfield-treeView--toggle:after {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+      -ms-transform: translate(0, 0);
+          transform: translate(0, 0);
+  content: "\f067";
 }
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.col-buttons {
-    position: absolute;
-    top:50%;
-    margin-top:-10px;
-    margin-right:0;
-    right:40px;
-    margin-left:0;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon + td {
-
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
-    padding:15px;
-    position: relative;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div {
-    padding:0 15px;
-    width:55px;
-    position: relative;
-    text-align: center;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:before {
-    content:'';
-    display:block;
-    position: absolute;
-    top:0;
-    bottom:0;
-    left:43px;
-    width:2px;
-    margin-left:-1px;
-    background-color:rgb(240, 244, 247);
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa {
-    font-size:20px;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    line-height:40px;
-    text-align: center;
-    background-color:rgb(240, 244, 247);
-    color:rgba(102, 102, 102, 0.8);
-    position:relative;
-    z-index:5;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table td.TimelineIcon div i.fa.icon-timeline--minor {
-    font-size:10px;
-    width: 20px;
-    height: 20px;
-    line-height:20px;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table tbody tr:hover td.TimelineIcon div i.fa {
-    background-color:#fff;
-}
-
-.cms .ss-gridfield-timeline table.ss-gridfield-table tfoot td.bottom-all {
-    -moz-border-radius-bottomleft: 0;
-    -webkit-border-bottom-left-radius: 0;
-    border-bottom-left-radius: 0;
-    -moz-border-radius-bottomright: 0;
-    -webkit-border-bottom-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.cms table.ss-gridfield-table.ss-gridfield-timeline tr td.bottom-all .datagrid-pagination .pagination-page-number input {
-    text-align: center;
+.ss-gridfield-treeView--toggle.ss-gridfield-treeView--toggle_open:after {
+  content: "\f068";
 }
