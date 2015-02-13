@@ -1,0 +1,73 @@
+tr.ss-gridfield-range-slider.field.date {
+	display: table-row;
+}
+
+.ss-gridfield-range-slider {
+	.noUi-pips {
+		height:27px;
+		top:auto;
+		bottom:100%;
+
+		.noUi-marker:first-child + .noUi-value-large,
+		.noUi-marker:nth-last-child(2) + .noUi-value-large {
+			display: none;
+		}
+	}
+
+	.noUi-value-horizontal {
+		display: none;
+		margin-left:-30px;
+	}
+
+	.ss-gridfield-table > thead > &:first-child {
+		.noUi-value-horizontal {
+			display:block;
+			top: -7px;
+			padding: 0;
+		}
+	}
+
+	.noUi-marker-horizontal.noUi-marker {
+		width: 1px;
+		box-shadow: 1px 0 0 fade(#ffffff, 5%);
+	}
+
+	.noUi-marker-horizontal.noUi-marker-large {
+		background-color:fade(#ffffff, 60%);
+		bottom:auto;
+		height:5px;
+	}
+
+	.noUi-marker-normal {
+		background-color:fade(#ffffff, 30%);
+	}
+
+	.rangeslider-linked {
+		&[readonly] {
+			opacity:0.5;
+			max-width:100px;
+		}
+	}
+
+	> th {
+		text-align: right;
+	}
+
+	> th > label,
+	> th > input,
+	> th > button {
+		display: inline;
+	}
+
+	&.ss-gridfield-range-slider--hide-navigation {
+	> th > label,
+	> th > input,
+	> th > button {
+		display: none;
+	}
+	}
+
+	> th > button {
+		display: none;
+	}
+}

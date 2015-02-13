@@ -299,3 +299,57 @@
 .ss-gridfield-editable-row--row > * {
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
+tr.ss-gridfield-range-slider.field.date {
+  display: table-row;
+}
+.ss-gridfield-range-slider .noUi-pips {
+  height: 27px;
+  top: auto;
+  bottom: 100%;
+}
+.ss-gridfield-range-slider .noUi-pips .noUi-marker:first-child + .noUi-value-large,
+.ss-gridfield-range-slider .noUi-pips .noUi-marker:nth-last-child(2) + .noUi-value-large {
+  display: none;
+}
+.ss-gridfield-range-slider .noUi-value-horizontal {
+  display: none;
+  margin-left: -30px;
+}
+.ss-gridfield-table > thead > .ss-gridfield-range-slider:first-child .noUi-value-horizontal {
+  display: block;
+  top: -7px;
+  padding: 0;
+}
+.ss-gridfield-range-slider .noUi-marker-horizontal.noUi-marker {
+  width: 1px;
+  -webkit-box-shadow: 1px 0 0 rgba(255, 255, 255, 0.05);
+          box-shadow: 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+.ss-gridfield-range-slider .noUi-marker-horizontal.noUi-marker-large {
+  background-color: rgba(255, 255, 255, 0.6);
+  bottom: auto;
+  height: 5px;
+}
+.ss-gridfield-range-slider .noUi-marker-normal {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.ss-gridfield-range-slider .rangeslider-linked[readonly] {
+  opacity: 0.5;
+  max-width: 100px;
+}
+.ss-gridfield-range-slider > th {
+  text-align: right;
+}
+.ss-gridfield-range-slider > th > label,
+.ss-gridfield-range-slider > th > input,
+.ss-gridfield-range-slider > th > button {
+  display: inline;
+}
+.ss-gridfield-range-slider.ss-gridfield-range-slider--hide-navigation > th > label,
+.ss-gridfield-range-slider.ss-gridfield-range-slider--hide-navigation > th > input,
+.ss-gridfield-range-slider.ss-gridfield-range-slider--hide-navigation > th > button {
+  display: none;
+}
+.ss-gridfield-range-slider > th > button {
+  display: none;
+}

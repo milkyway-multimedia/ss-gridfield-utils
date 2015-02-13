@@ -135,5 +135,22 @@
                 return false;
             }
         });
+
+        var sliderTimeStamp;
+        $(".ss-gridfield-range-slider--field.rangeslider.has-rangeslider").entwine({
+            onchange: function(e) {
+                if(e.timeStamp == sliderTimeStamp)
+                    return;
+
+                sliderTimeStamp = e.timeStamp;
+
+                var $parent = this.parents('.ss-gridfield-range-slider:first'),
+                    $button = $parent.find('.ss-gridfield-range-slider--button');
+
+                if($button.length) {
+                    $button.click();
+                }
+            }
+        });
     });
 })(jQuery);
