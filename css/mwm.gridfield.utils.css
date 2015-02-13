@@ -295,3 +295,6 @@
 .ss-gridfield-editable-row--row:hover .ss-gridfield-editable-row--fieldsHolder_before ~ * {
   background-color: white;
 }
+.ss-gridfield-editable-row--row > * {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
