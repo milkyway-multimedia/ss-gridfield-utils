@@ -286,6 +286,7 @@
 }
 .ss-gridfield-editable-row--fields h3[id] {
   margin: 0 !important;
+  margin-top: 15px !important;
   background: #d1d9df;
 }
 .ss-gridfield-editable-row--fields .ss-gridfield-inline-new-extended--fields h3[id] {
