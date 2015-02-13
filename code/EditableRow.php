@@ -141,6 +141,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 		Utilities::include_requirements();
 
 		$gridField->addExtraClass('ss-gridfield-editable-rows');
+		$this->workingGrid = $gridField;
 
 		return [
 			'class' => 'ss-gridfield-editable-row--icon-holder',
