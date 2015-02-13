@@ -353,3 +353,37 @@ tr.ss-gridfield-range-slider.field.date {
 .ss-gridfield-range-slider > th > button {
   display: none;
 }
+.ss-gridfield-range-slider--holder_hasLabel {
+  position: relative;
+}
+.ss-gridfield-range-slider--holder_hasLabel .rangeslider-display.noUi-horizontal {
+  height: 20px;
+}
+.ss-gridfield-range-slider--holder_hasLabel .rangeslider-display.noUi-horizontal .noUi-handle {
+  width: 30px;
+  height: 30px;
+  left: -15px;
+  top: -6px;
+}
+.ss-gridfield-range-slider--holder_hasLabel .rangeslider-display .noUi-handle:after,
+.ss-gridfield-range-slider--holder_hasLabel .rangeslider-display .noUi-handle:before {
+  top: 10px;
+}
+.ss-gridfield-range-slider--holder_hasLabel .ss-gridfield-range-slider--holder-label {
+  display: block !important;
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+  width: 150px;
+  margin-left: -150px;
+  text-align: center;
+  text-transform: uppercase;
+  /* font-weight: normal; */
+  background: rgba(255, 255, 255, 0.9);
+  color: #98aab6;
+  padding-top: 2px;
+}
+.ss-gridfield-range-slider--holder_hasLabel .noUi-handle {
+  z-index: 20;
+}

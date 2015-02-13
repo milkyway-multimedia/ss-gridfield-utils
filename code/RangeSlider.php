@@ -19,19 +19,21 @@ class RangeSlider implements \GridField_ActionProvider, \GridField_DataManipulat
 	public $hideNavigation = false;
 
 	public $label;
+	public $navigationLabel;
 
 	public $comparisonFilter = 'LessThan';
 
 	private $working;
 
-	public function __construct($filterField = 'Created', $fragment = 'header', $label = '') {
+	public function __construct($filterField = 'Created', $fragment = 'header', $label = '', $navigationLabel = '') {
 		if(!\ClassInfo::exists('RangeSliderField')) {
 			throw new \LogicException('Please install the milkyway-multimedia/ss-mwm-formfields module to use this feature');
 		}
 
 		$this->filterField = $filterField;
 		$this->fragment = $fragment;
-		$this->label = $label ?: _t('GridFieldUtils.SHOW', 'Show');
+		$this->label = $label;
+		$this->navigationLabel = $navigationLabel ?: _t('GridFieldUtils.SHOW', 'Show');
 	}
 
 	public function getActions($gridField) {
@@ -139,6 +141,10 @@ class RangeSlider implements \GridField_ActionProvider, \GridField_DataManipulat
 			->setAttribute('title', _t('GridField.Filter', 'Filter'))
 			->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $this->filterField);
 
+		if($this->label !== null) {
+			$data['Label'] = $this->label ?: singleton($gridField->getModelClass())->fieldLabel($this->filterField);
+		}
+
 		$data['Slider']->inputCallback = function($fields) use($fieldName, $dbField, $settings, &$data) {
 			foreach($fields as $field) {
 				$this->modifyFormFieldForDBField($dbField, $field->Render, $settings);
@@ -147,9 +153,15 @@ class RangeSlider implements \GridField_ActionProvider, \GridField_DataManipulat
 					$data['HasDates'] = true;
 			}
 
-			if($this->label) {
+			if($this->navigationLabel) {
 				$fields->unshift(\ArrayData::create([
-					'Render' => \LabelField::create($fieldName . '[label]', $this->label)
+					'Render' => \LabelField::create($fieldName . '[label]', $this->navigationLabel)
+				]));
+			}
+
+			if(isset($data['Label']) && $data['Label']) {
+				$fields->unshift(\ArrayData::create([
+					'Render' => \LabelField::create($fieldName . '--LABEL', $data['Label'])->addExtraClass('ss-gridfield-range-slider--holder-label')
 				]));
 			}
 		};

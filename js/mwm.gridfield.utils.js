@@ -1,36 +1,36 @@
 (function($) {
-	$.entwine("ss", function($) {
-		$(".gridfield-help-button-dialog").entwine({
-			loadDialog: function(deferred) {
-				var dialog = this.addClass("loading").children(".ui-dialog-content").empty();
+    $.entwine("ss", function($) {
+        $(".gridfield-help-button-dialog").entwine({
+            loadDialog: function(deferred) {
+                var dialog = this.addClass("loading").children(".ui-dialog-content").empty();
 
-				deferred.done(function(data) {
-					dialog.html(data).parent().removeClass("loading");
-				});
-			}
-		});
+                deferred.done(function(data) {
+                    dialog.html(data).parent().removeClass("loading");
+                });
+            }
+        });
 
-		$(".ss-gridfield .gridfield-help-button").entwine({
-			onclick: function() {
-				var dialog = $("<div></div>").appendTo("body").dialog({
-					modal: false,
-					resizable: true,
-					width: 600,
-					height: 600,
-					close: function() {
-						$(this).dialog("destroy").remove();
-					}
-				});
+        $(".ss-gridfield .gridfield-help-button").entwine({
+            onclick: function() {
+                var dialog = $("<div></div>").appendTo("body").dialog({
+                    modal: false,
+                    resizable: true,
+                    width: 600,
+                    height: 600,
+                    close: function() {
+                        $(this).dialog("destroy").remove();
+                    }
+                });
 
-				dialog.parent().addClass("gridfield-help-button-dialog").loadDialog(
-					$.get(this.prop("href"))
-				);
+                dialog.parent().addClass("gridfield-help-button-dialog").loadDialog(
+                    $.get(this.prop("href"))
+                );
 
-				dialog.data("grid", this.closest(".ss-gridfield"));
+                dialog.data("grid", this.closest(".ss-gridfield"));
 
-				return false;
-			}
-		});
+                return false;
+            }
+        });
 
         $(".ss-gridfield-treeView--toggle").entwine({
             onclick: function() {
@@ -62,9 +62,9 @@
                     row = this.find(".ss-gridfield-add-inline-extended--template:last"),
                     num = this.data("add-inline-num") || 1;
 
-                tmpl.cache["ss-gridfield-add-inline-extended--template"] = tmpl(row.html());
+                tmpl.cache[this[0].id + "-ss-gridfield-add-inline-extended--template"] = tmpl(row.html());
 
-                var item = $(tmpl("ss-gridfield-add-inline-extended--template", { num: num }));
+                var item = $(tmpl(this[0].id + "-ss-gridfield-add-inline-extended--template", { num: num }));
 
                 this.find("tbody:first").append(item);
                 this.find("tbody:first").children(".ss-gridfield-no-items:first").hide();

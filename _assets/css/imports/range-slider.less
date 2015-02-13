@@ -71,3 +71,43 @@ tr.ss-gridfield-range-slider.field.date {
 		display: none;
 	}
 }
+
+.ss-gridfield-range-slider--holder_hasLabel {
+	position: relative;
+
+	.rangeslider-display.noUi-horizontal {
+		height:20px;
+	}
+
+	.rangeslider-display.noUi-horizontal .noUi-handle {
+		width: 30px;
+		height: 30px;
+		left: -15px;
+		top: -6px;
+	}
+
+	.rangeslider-display .noUi-handle:after,
+	.rangeslider-display .noUi-handle:before {
+		top: 10px;
+	}
+
+	.ss-gridfield-range-slider--holder-label {
+		display: block !important;
+		position: absolute;
+		top: 15px;
+		bottom: 15px;
+		left: 50%;
+		width: 150px;
+		margin-left: -150px;
+		text-align: center;
+		text-transform: uppercase;
+		/* font-weight: normal; */
+		background: rgba(255,255,255,0.9);
+		color: #98aab6;
+		padding-top: 2px;
+	}
+
+	.noUi-handle {
+		z-index: 20;
+	}
+}
