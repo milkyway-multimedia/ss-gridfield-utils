@@ -120,7 +120,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	{
 		$classes = 'ss-gridfield-editable-row--icon';
 
-		if($record && $record->canEdit())
+		if($record)
 			$classes .= ' ss-gridfield-editable-row--toggle';
 
 		return sprintf('<i class="%s"></i>', $classes);
@@ -271,9 +271,6 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	public function loadItem($grid, $request) {
 		$record = $this->getRecordFromRequest($grid, $request);
 
-		if(!$record->canEdit())
-			throw new \SS_HTTPResponse_Exception(null, 403);
-
 		$form = $this->getForm($grid, $record);
 
 		foreach($form->Fields()->dataFields() as $field) {
@@ -282,6 +279,9 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 				'%s[%s][%s][%s]', $grid->getName(), $class, $record->ID, $field->getName()
 			));
 		}
+
+		if(!$record->canEdit())
+			$form->makeReadonly();
 
 		$countUntilThisColumn = 0;
 		foreach($grid->getColumns() as $column) {
