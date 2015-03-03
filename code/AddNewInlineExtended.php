@@ -9,8 +9,11 @@
 
 namespace Milkyway\SS\GridFieldUtils;
 
-class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler {
+class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler
+{
 	public $urlSegment = 'extendedInline';
+
+	public $hideUnlessOpenedWithEditableColumns = false;
 
 	protected $fragment;
 
@@ -28,9 +31,10 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		'handleForm',
 	];
 
-	public function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField)
+	{
 		return array(
-			$this->urlSegment.'/$Form!' => 'handleForm',
+			$this->urlSegment . '/$Form!' => 'handleForm',
 		);
 	}
 
@@ -39,9 +43,10 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 * @param string $title the text to display on the button
 	 * @param \FieldList|Callable|array $fields the fields to display in inline form
 	 */
-	public function __construct($fragment = 'buttons-before-left', $title = '', $fields = null) {
+	public function __construct($fragment = 'buttons-before-left', $title = '', $fields = null)
+	{
 		$this->fragment = $fragment;
-		$this->title = $title ?: _t('GridFieldExtensions.ADD', 'Add');
+		$this->title = $title ? : _t('GridFieldExtensions.ADD', 'Add');
 		$this->fields = $fields;
 	}
 
@@ -50,7 +55,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 *
 	 * @return string
 	 */
-	public function getFragment() {
+	public function getFragment()
+	{
 		return $this->fragment;
 	}
 
@@ -60,7 +66,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 * @param string $fragment
 	 * @return static $this
 	 */
-	public function setFragment($fragment) {
+	public function setFragment($fragment)
+	{
 		$this->fragment = $fragment;
 		return $this;
 	}
@@ -70,7 +77,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 *
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->title;
 	}
 
@@ -80,7 +88,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 * @param string $title
 	 * @return static $this
 	 */
-	public function setTitle($title) {
+	public function setTitle($title)
+	{
 		$this->title = $title;
 		return $this;
 	}
@@ -90,7 +99,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 *
 	 * @return \FieldList|Callable|array
 	 */
-	public function getFields() {
+	public function getFields()
+	{
 		return $this->fields;
 	}
 
@@ -100,7 +110,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 * @param \FieldList|Callable|array $fields
 	 * @return static $this
 	 */
-	public function setFields($fields) {
+	public function setFields($fields)
+	{
 		$this->fields = $fields;
 		return $this;
 	}
@@ -110,7 +121,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 *
 	 * @return \Validator|Callable|array
 	 */
-	public function getValidator() {
+	public function getValidator()
+	{
 		return $this->validator;
 	}
 
@@ -120,13 +132,15 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 * @param \Validator|Callable|array $validator
 	 * @return static $this
 	 */
-	public function setValidator($validator) {
+	public function setValidator($validator)
+	{
 		$this->validator = $validator;
 		return $this;
 	}
 
-	public function getHTMLFragments($grid) {
-		if($grid->getList() && !singleton($grid->getModelClass())->canCreate()) {
+	public function getHTMLFragments($grid)
+	{
+		if ($grid->getList() && !singleton($grid->getModelClass())->canCreate()) {
 			return [];
 		}
 
@@ -137,97 +151,123 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		Utilities::include_requirements();
 
 		$data = \ArrayData::create([
-			'Title'  => $this->getTitle(),
+			'Title' => $this->getTitle(),
 		]);
 
 		return array(
 			$fragment => $data->renderWith('GridField_AddNewInlineExtended_Button'),
-			'after'   => $this->getRowTemplate($grid)
+			'after' => $this->getRowTemplate($grid)
 		);
 	}
 
-	protected function getRowTemplate($grid) {
+	protected function getRowTemplate($grid)
+	{
 		$class = str_replace('\\', '_', __CLASS__);
-		$form = $this->getForm($grid, '-{%=o.num%}')->setHTMLID('Form-'.$class.'-{%=o.num%}');
+		$form = $this->getForm($grid, '-{%=o.num%}')->setHTMLID('Form-' . $class . '-{%=o.num%}');
 		$fields = $form->Fields()->dataFields();
+		$editableColumnsTemplate = null;
+		$countUntilThisColumn = 0;
 
-		foreach($fields as $field) {
+		foreach ($fields as $field) {
 			$field->setName(sprintf(
 				'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), $class, $field->getName()
 			));
 		}
 
+		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns')) && ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))) {
+			$ecFragments = (new \GridFieldAddNewInlineButton())->getHTMLFragments($grid);
+			$editableColumnsTemplate = str_replace('GridFieldAddNewInlineButton', str_replace('\\', '_', __CLASS__), str_replace([
+				'<script type="text/x-tmpl" class="ss-gridfield-add-inline-template">', '</script>'
+			], '', $ecFragments['after']));
+
+			foreach ($grid->getColumns() as $column) {
+				$countUntilThisColumn++;
+
+				if (in_array($column, $editableRow->getColumnsHandled($grid)))
+					break;
+			}
+
+			if ($countUntilThisColumn == count($grid->getColumns()))
+				$countUntilThisColumn = 0;
+		}
+
 		return \ArrayData::create([
-			'Form' => $form,
-			'ColumnCount' => count($grid->getColumns()),
-			'ColumnCountWithoutActions' => count($grid->getColumns()) - 1,
-		    'Model' => (($record = $this->getRecordFromGrid($grid)) && $record->hasMethod('i18n_singular_name')) ? $record->i18n_singular_name() : _t('GridFieldUtils.ITEM', 'Item'),
+				'EditableColumns' => $editableColumnsTemplate,
+				'Form' => $form,
+				'ColumnCount' => count($grid->getColumns()) - $countUntilThisColumn,
+				'ColumnCountWithoutActions' => count($grid->getColumns()) - $countUntilThisColumn - 1,
+				'PrevColumnsCount' => $countUntilThisColumn,
+				'Model' => (($record = $this->getRecordFromGrid($grid)) && $record->hasMethod('i18n_singular_name')) ? $record->i18n_singular_name() : _t('GridFieldUtils.ITEM', 'Item'),
 			]
 		)->renderWith(array_merge((array)$this->template, ['GridField_AddNewInlineExtended']));
 	}
 
-	public function handleSave(\GridField $grid, \DataObjectInterface $record) {
-		$list  = $grid->getList();
+	public function handleSave(\GridField $grid, \DataObjectInterface $record)
+	{
+		$list = $grid->getList();
 		$value = $grid->Value();
 		$className = str_replace('\\', '_', __CLASS__);
 
-		if(!isset($value[$className]) || !is_array($value[$className])) {
+		if (!isset($value[$className]) || !is_array($value[$className])) {
 			return;
 		}
 
-		$class    = $grid->getModelClass();
+		$class = $grid->getModelClass();
 
-		if(!singleton($class)->canCreate()) {
+		if (!singleton($class)->canCreate()) {
 			return;
 		}
 
-		$form     = $this->getForm($grid);
+		$form = $this->getForm($grid);
 
-		foreach($value[$className] as $fields) {
-			$item  = \Object::create($class);
+		foreach ($value[$className] as $fields) {
+			$item = \Object::create($class);
 
 			$form->loadDataFrom($fields);
 			$form->saveInto($item);
-			$extra = array_intersect_key($form->Data, (array) $list->getExtraFields());
+			$extra = array_intersect_key($form->Data, (array)$list->getExtraFields());
 
 			$item->write();
 			$list->add($item, $extra);
 		}
 	}
 
-	protected function getForm($grid, $append = '') {
+	protected function getForm($grid, $append = '')
+	{
 		$this->workingGrid = $grid;
-		return \Form::create($this, 'Form-'.$grid->getModelClass().$append, $this->getFieldList($grid), \FieldList::create(), $this->getValidatorForForm($grid));
+		return \Form::create($this, 'Form-' . $grid->getModelClass() . $append, $this->getFieldList($grid), \FieldList::create(), $this->getValidatorForForm($grid))->loadDataFrom($this->getRecordFromGrid($grid));
 	}
 
-	protected function getFieldList($grid = null) {
-		if($this->fields) {
-			if($this->fields instanceof \FieldList)
+	protected function getFieldList($grid = null)
+	{
+		if ($this->fields) {
+			if ($this->fields instanceof \FieldList)
 				return $this->fields;
-			elseif(is_callable($this->fields))
+			elseif (is_callable($this->fields))
 				return call_user_func_array($this->fields, [$this->getRecordFromGrid($grid), $grid, $this]);
 			else
 				return \FieldList::create($this->fields);
 		}
 
-		if($grid) {
-			if($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
+		if ($grid) {
+			if ($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
 				return $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
-			if($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
+			if ($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
 				return $editable->getFields($grid, $this->getRecordFromGrid($grid));
 		}
 
-		if($record = $this->getRecordFromGrid($grid))
+		if ($record = $this->getRecordFromGrid($grid))
 			return $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
 
 		throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
 	}
 
-	protected function getValidatorForForm($grid = null) {
-		if($this->validator) {
-			if($this->validator instanceof \Validator)
+	protected function getValidatorForForm($grid = null)
+	{
+		if ($this->validator) {
+			if ($this->validator instanceof \Validator)
 				return $this->validator;
-			elseif(is_callable($this->validator))
+			elseif (is_callable($this->validator))
 				return call_user_func_array($this->validator, [$this->getRecordFromGrid($grid), $grid, $this]);
 			else
 				return \Validator::create($this->validator);
@@ -236,21 +276,23 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		return null;
 	}
 
-	protected function getRecordFromGrid($grid) {
-		if($grid->getList()) {
+	protected function getRecordFromGrid($grid)
+	{
+		if ($grid->getList()) {
 			return \Object::create($grid->getModelClass());
 		}
 
 		return null;
 	}
 
-	public function handleForm($grid, $request) {
+	public function handleForm($grid, $request)
+	{
 		$remaining = $request->remaining();
 		$form = $this->getForm($grid);
 		$class = str_replace('\\', '_', __CLASS__);
 
-		if(preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $class), $remaining, $matches) && isset($matches[1])) {
-			foreach($form->Fields()->dataFields() as $field) {
+		if (preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $class), $remaining, $matches) && isset($matches[1])) {
+			foreach ($form->Fields()->dataFields() as $field) {
 				$field->setName(sprintf(
 					'%s[%s][%s][%s]', $grid->getName(), $class, $matches[1], $field->getName()
 				));
@@ -260,7 +302,13 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		return $form;
 	}
 
-	public function Link() {
+	public function Link()
+	{
 		return $this->workingGrid ? \Controller::join_links($this->workingGrid->Link($this->urlSegment)) : null;
+	}
+
+	protected function canEditWithEditableColumns($gridField)
+	{
+		return $this->hideUnlessOpenedWithEditableColumns && $gridField->Config->getComponentByType('GridFieldEditableColumns') && $gridField->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow');
 	}
 }
