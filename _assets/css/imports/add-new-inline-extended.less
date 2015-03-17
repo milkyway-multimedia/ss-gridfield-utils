@@ -1,4 +1,11 @@
 .cms .ss-gridfield-inline-new-extended--row {
+	&.ss-gridfield-inline-new-extended--row--has-columns {
+		display: none;
+
+		&.ss-gridfield-inline-new-extended--row--has-columns_open {
+			display:table-row;
+		}
+	}
 	td {
 		border-top: 1px solid fade(#000000, 10%);
 	}
@@ -53,4 +60,17 @@
 
 .cms table.ss-gridfield-table tbody .ss-gridfield-inline-new-extended--row td.col-buttons {
 	padding:8px;
+}
+
+.ss-gridfield-add-inline-extended--toggle {
+	cursor: pointer;
+
+	&:after {
+		.fa-icon();
+		content:@fa-var-plus;
+	}
+
+	&.ss-gridfield-add-inline-extended--toggle_open:after {
+		content:@fa-var-minus;
+	}
 }

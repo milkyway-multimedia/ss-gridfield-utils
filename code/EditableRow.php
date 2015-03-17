@@ -120,8 +120,9 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	{
 		$classes = 'ss-gridfield-editable-row--icon';
 
-		if($record)
+		if($record) {
 			$classes .= ' ss-gridfield-editable-row--toggle';
+		}
 
 		return sprintf('<i class="%s"></i>', $classes);
 	}
@@ -144,8 +145,8 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 		$this->workingGrid = $gridField;
 
 		return [
-			'class' => 'ss-gridfield-editable-row--icon-holder',
 			'data-link' => $this->Link('load', $record->ID),
+			'class' => 'ss-gridfield-editable-row--icon-holder',
 		];
 	}
 

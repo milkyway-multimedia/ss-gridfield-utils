@@ -176,9 +176,22 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns')) && ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))) {
 			$ecFragments = (new \GridFieldAddNewInlineButton())->getHTMLFragments($grid);
-			$editableColumnsTemplate = str_replace('GridFieldAddNewInlineButton', str_replace('\\', '_', __CLASS__), str_replace([
+			$editableColumnsTemplate = str_replace([
+					'GridFieldAddNewInlineButton',
+			        'ss-gridfield-editable-row--icon-holder">',
+			        'ss-gridfield-inline-new"',
+			        'ss-gridfield-delete-inline'
+				],
+				[
+					str_replace('\\', '_', __CLASS__),
+				    'ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle"></i>',
+				    'ss-gridfield-inline-new-extended" data-inline-new-extended-row="{%=o.num%}"',
+				    'ss-gridfield-inline-new-extended--row-delete'
+				 ], str_replace([
 				'<script type="text/x-tmpl" class="ss-gridfield-add-inline-template">', '</script>'
 			], '', $ecFragments['after']));
+
+
 
 			foreach ($grid->getColumns() as $column) {
 				$countUntilThisColumn++;
@@ -194,6 +207,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		return \ArrayData::create([
 				'EditableColumns' => $editableColumnsTemplate,
 				'Form' => $form,
+				'AllColumnsCount' => count($grid->getColumns()),
 				'ColumnCount' => count($grid->getColumns()) - $countUntilThisColumn,
 				'ColumnCountWithoutActions' => count($grid->getColumns()) - $countUntilThisColumn - 1,
 				'PrevColumnsCount' => $countUntilThisColumn,
@@ -307,7 +321,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		return $this->workingGrid ? \Controller::join_links($this->workingGrid->Link($this->urlSegment)) : null;
 	}
 
-	protected function canEditWithEditableColumns($gridField)
+	public function canEditWithEditableColumns($gridField)
 	{
 		return $this->hideUnlessOpenedWithEditableColumns && $gridField->Config->getComponentByType('GridFieldEditableColumns') && $gridField->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow');
 	}

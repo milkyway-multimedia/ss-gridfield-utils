@@ -84,8 +84,23 @@
         $(".ss-gridfield-inline-new-extended--row-delete").entwine({
             onclick: function() {
                 if(confirm(ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?"))) {
-                    this.parents('.ss-gridfield-inline-new-extended--row:first').remove();
+                    this.parents('tbody:first')
+                        .find('tr[data-inline-new-extended-row=' +
+                            this.parents('tr[data-inline-new-extended-row]:first').data('inlineNewExtendedRow') + ']'
+                        ).remove();
                 }
+
+                return false;
+            }
+        });
+
+        $(".ss-gridfield-add-inline-extended--toggle").entwine({
+            onclick: function() {
+                var $parent = this.parents('tr:first');
+
+                this.toggleClass('ss-gridfield-add-inline-extended--toggle_open');
+
+                $parent.parent().find('.ss-gridfield-inline-new-extended--row--has-columns[data-inline-new-extended-row=' + $parent.data('inlineNewExtendedRow') + ']').toggleClass('ss-gridfield-inline-new-extended--row--has-columns_open');
 
                 return false;
             }
