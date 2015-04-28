@@ -40,6 +40,19 @@
             }
         });
 
+        $(".ss-gridfield-hasOneSelector-reset_button[data-relation]").entwine({
+            onclick: function() {
+                this
+                    .parents('.ss-gridfield:first')
+                    .find('td[data-relation="' + this.data('relation') + '"] ')
+                    .each(function() {
+                        $(this).find('input').prop('checked', false);
+                });
+
+                return false;
+            }
+        });
+
         $(".ss-gridfield.ss-gridfield-add-inline-extended--table").entwine({
             reload: function(opts, success) {
                 var $grid  = this,
@@ -139,7 +152,7 @@
                         $this.toggleClass('ss-gridfield-editable-row--toggle_open');
 
                         if($this.hasClass('ss-gridfield-editable-row--toggle_open')) {
-                            $editable.removeClass('ss-gridfield-editable-row--row_hide');
+                            $editable.removeClass('ss-gridfield-editable-row--row_hide').find("input:first").focus();
                         }
                         else {
                             $editable.addClass('ss-gridfield-editable-row--row_hide');

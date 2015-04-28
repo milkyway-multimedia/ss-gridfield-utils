@@ -2,15 +2,16 @@ GridField Utilities
 ======
 **GridField Utilities** are a collection of GridField components that you can use with any GridField.
 
-Includes the following:
-- Milkyway\SS\GridFieldUtils\AddNewInlineExtended: A more complex version of GridFieldAddNewInlineButton, allowing you to set custom fields, rather than copying GridFieldEditableColumns (defaults to this behaviour)
-- Milkyway\SS\GridFieldUtils\EditableRow: A more complex version of GridFieldEditableColumns, allowing you to set custom fields. This makes the GridField act like a Tree, with nested GridFields working as expected
-- Milkyway\SS\GridFieldUtils\RangeSlider: Filter your GridField using a slider, for a more user-friendly option for viewing lots of records
-- Milkyway\SS\GridFieldUtils\HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
-- Milkyway\SS\GridFieldUtils\SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
-- Milkyway\SS\GridFieldUtils\DisplayAsTimeline: Will change the display of your GridField to a timeline (probably not be compatible with custom GridField Components, but compatible with framework GridField Components)
-- Milkyway\SS\GridFieldUtils\GridFieldDetailForm: Works exactly the same as the standard GridFieldDetailForm, with ability to change the url segment (hence having multiple GridFieldDetailForms on the one GridField)
-- Milkyway\SS\GridFieldUtils\GridFieldAddNewButton: An add button for the above GridFieldDetailForm
+Includes the following (note they all live in the namespace Milkyway\SS\GridFieldUtils):
+- HasOneSelector: Allow you to select a has one from the current GridField (for example, you have a bunch of slides but want to make one do something special)
+- AddNewInlineExtended: A more complex version of GridFieldAddNewInlineButton, allowing you to set custom fields, rather than copying GridFieldEditableColumns (defaults to this behaviour)
+- EditableRow: A more complex version of GridFieldEditableColumns, allowing you to set custom fields. This makes the GridField act like a Tree, with nested GridFields working as expected
+- RangeSlider: Filter your GridField using a slider, for a more user-friendly option for viewing lots of records
+- HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
+- SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
+- DisplayAsTimeline: Will change the display of your GridField to a timeline (probably not be compatible with custom GridField Components, but compatible with framework GridField Components)
+- GridFieldDetailForm: Works exactly the same as the standard GridFieldDetailForm, with ability to change the url segment (hence having multiple GridFieldDetailForms on the one GridField)
+- GridFieldAddNewButton: An add button for the above GridFieldDetailForm
 
 ### Caveats
 - The DisplayAsTimeline component is very hacky at this stage, due to the lack of support for templates in GridField. It has only been tested in Google Chrome
