@@ -209,26 +209,38 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	}
 
 	protected function getFieldList($record, $grid = null) {
+		$fields = null;
+
 		if($this->fields) {
 			if($this->fields instanceof \FieldList)
-				return $this->fields;
+				$fields = $this->fields;
 			elseif(is_callable($this->fields))
-				return call_user_func_array($this->fields, [$record, $grid, $this]);
+				$fields = call_user_func_array($this->fields, [$record, $grid, $this]);
 			else
-				return \FieldList::create($this->fields);
+				$fields = \FieldList::create($this->fields);
 		}
 
-		if($grid) {
+		if(!$fields && $grid) {
 			if($editable = $grid->getConfig()->getComponentByType('GridFieldDetailForm')) {
 				if($editable->getFields())
-					return $editable->getFields();
+					$fields = $editable->getFields();
 				else {
-					return \Object::create($editable->getItemRequestClass(), $grid, $editable, $record, $grid->getForm()->getController(), $editable->getName())->ItemEditForm()->Fields();
+					$fields = \Object::create($editable->getItemRequestClass(), $grid, $editable, $record, $grid->getForm()->getController(), $editable->getName())->ItemEditForm()->Fields();
 				}
 			}
 		}
 
-		return $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
+		if(!$fields)
+			$fields = $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
+
+		if($grid && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
+			$editableColumns = $editable->getFields($grid, $record);
+
+			foreach($editableColumns as $column)
+				$fields->removeByName($column->Name);
+		}
+
+		return $fields;
 	}
 
 	protected function getValidatorForForm($record, $grid = null) {

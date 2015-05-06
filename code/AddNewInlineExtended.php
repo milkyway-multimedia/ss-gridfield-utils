@@ -9,11 +9,17 @@
 
 namespace Milkyway\SS\GridFieldUtils;
 
-class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler
+class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler, \Flushable
 {
 	public $urlSegment = 'extendedInline';
 
+	public $loadViaAjax = true;
+
+	public $cacheAjaxLoading = true;
+
 	public $hideUnlessOpenedWithEditableColumns = false;
+
+	public $rowTemplate;
 
 	protected $fragment;
 
@@ -27,15 +33,19 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 	private $workingGrid;
 
+	private $cache;
+
 	private static $allowed_actions = [
+		'loadItem',
 		'handleForm',
 	];
 
-	public function getURLHandlers($gridField)
-	{
-		return array(
-			$this->urlSegment . '/$Form!' => 'handleForm',
-		);
+	public static function flush() {
+		singleton(__CLASS__)->cleanCache();
+	}
+
+	public function cleanCache() {
+		$this->cache->clean();
 	}
 
 	/**
@@ -45,9 +55,20 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	 */
 	public function __construct($fragment = 'buttons-before-left', $title = '', $fields = null)
 	{
+		parent::__construct();
 		$this->fragment = $fragment;
 		$this->title = $title ? : _t('GridFieldExtensions.ADD', 'Add');
 		$this->fields = $fields;
+
+		$this->cache = \SS_Cache::factory($this->getCacheKey(['holder' => __CLASS__]), 'Output', ['lifetime' => 6 * 60 * 60]);
+	}
+
+	public function getURLHandlers($gridField)
+	{
+		return [
+			$this->urlSegment .'/load' => 'loadItem',
+			$this->urlSegment . '/$Form!' => 'handleForm',
+		];
 	}
 
 	/**
@@ -144,52 +165,66 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 			return [];
 		}
 
-		$fragment = $this->getFragment();
+		$this->workingGrid = $grid;
+
 		$grid->addExtraClass('ss-gridfield-add-inline-extended--table');
 
-		\Requirements::javascript(THIRDPARTY_DIR . '/javascript-templates/tmpl.js');
+		$fragments = [
+			$this->getFragment() => \ArrayData::create([
+				'Title' => $this->getTitle(),
+				'Ajax' => $this->loadViaAjax,
+			    'Link' => $this->loadViaAjax ? $this->Link('load') : '',
+			])->renderWith('GridField_AddNewInlineExtended_Button'),
+		];
+
+		if(!$this->loadViaAjax) {
+			\Requirements::javascript(THIRDPARTY_DIR . '/javascript-templates/tmpl.js');
+			$fragments['after'] = $this->getRowTemplate($grid);
+		}
+
 		Utilities::include_requirements();
 
-		$data = \ArrayData::create([
-			'Title' => $this->getTitle(),
-		]);
-
-		return array(
-			$fragment => $data->renderWith('GridField_AddNewInlineExtended_Button'),
-			'after' => $this->getRowTemplate($grid)
-		);
+		return $fragments;
 	}
 
 	protected function getRowTemplate($grid)
 	{
+		return \ArrayData::create($this->getRowTemplateVariables($grid))
+			->renderWith(array_merge((array)$this->template, ['GridField_AddNewInlineExtended']));
+	}
+
+	protected function getRowTemplateVariables($grid, $placeholder = '{%=o.num%}')
+	{
 		$class = str_replace('\\', '_', __CLASS__);
-		$form = $this->getForm($grid, '-{%=o.num%}')->setHTMLID('Form-' . $class . '-{%=o.num%}');
+		$form = $this->getForm($grid, '-'.$placeholder)->setHTMLID('Form-' . $class . '-'.$placeholder);
 		$fields = $form->Fields()->dataFields();
 		$editableColumnsTemplate = null;
 		$countUntilThisColumn = 0;
 
 		foreach ($fields as $field) {
-			$field->setName(sprintf(
-				'%s[%s][{%%=o.num%%}][%s]', $grid->getName(), $class, $field->getName()
+			$field->setName(str_replace(
+				['$gridfield', '$class', '$placeholder', '$field'],
+				[$grid->getName(), $class, $placeholder, $field->getName()],
+				'$gridfield[$class][$placeholder][$field]'
 			));
 		}
 
 		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns')) && ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))) {
 			$ecFragments = (new \GridFieldAddNewInlineButton())->getHTMLFragments($grid);
 			$editableColumnsTemplate = str_replace([
-					'GridFieldAddNewInlineButton',
-			        'ss-gridfield-editable-row--icon-holder">',
-			        'ss-gridfield-inline-new"',
-			        'ss-gridfield-delete-inline'
-				],
+				'GridFieldAddNewInlineButton',
+				'ss-gridfield-editable-row--icon-holder">',
+				'ss-gridfield-inline-new"',
+				'ss-gridfield-delete-inline'
+			],
 				[
 					str_replace('\\', '_', __CLASS__),
-				    'ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle"></i>',
-				    'ss-gridfield-inline-new-extended" data-inline-new-extended-row="{%=o.num%}"',
-				    'ss-gridfield-inline-new-extended--row-delete'
-				 ], str_replace([
-				'<script type="text/x-tmpl" class="ss-gridfield-add-inline-template">', '</script>'
-			], '', $ecFragments['after']));
+					'ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle"></i>',
+					'ss-gridfield-inline-new-extended" data-inline-new-extended-row="' . $placeholder . '"',
+					'ss-gridfield-inline-new-extended--row-delete'
+				], str_replace([
+					'<script type="text/x-tmpl" class="ss-gridfield-add-inline-template">', '</script>'
+				], '', $ecFragments['after']));
 
 
 
@@ -204,7 +239,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 				$countUntilThisColumn = 0;
 		}
 
-		return \ArrayData::create([
+		return [
 				'EditableColumns' => $editableColumnsTemplate,
 				'Form' => $form,
 				'AllColumnsCount' => count($grid->getColumns()),
@@ -212,8 +247,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 				'ColumnCountWithoutActions' => count($grid->getColumns()) - $countUntilThisColumn - 1,
 				'PrevColumnsCount' => $countUntilThisColumn,
 				'Model' => (($record = $this->getRecordFromGrid($grid)) && $record->hasMethod('i18n_singular_name')) ? $record->i18n_singular_name() : _t('GridFieldUtils.ITEM', 'Item'),
-			]
-		)->renderWith(array_merge((array)$this->template, ['GridField_AddNewInlineExtended']));
+			];
 	}
 
 	public function handleSave(\GridField $grid, \DataObjectInterface $record)
@@ -254,26 +288,41 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 	protected function getFieldList($grid = null)
 	{
+		$fields = null;
+
 		if ($this->fields) {
 			if ($this->fields instanceof \FieldList)
-				return $this->fields;
+				$fields = $this->fields;
 			elseif (is_callable($this->fields))
-				return call_user_func_array($this->fields, [$this->getRecordFromGrid($grid), $grid, $this]);
+				$fields = call_user_func_array($this->fields, [$this->getRecordFromGrid($grid), $grid, $this]);
 			else
-				return \FieldList::create($this->fields);
+				$fields = \FieldList::create($this->fields);
 		}
 
-		if ($grid) {
+		if (!$fields && $grid) {
 			if ($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
-				return $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
+				$fields = $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
 			if ($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
-				return $editable->getFields($grid, $this->getRecordFromGrid($grid));
+				$fields = $editable->getFields($grid, $this->getRecordFromGrid($grid));
 		}
 
-		if ($record = $this->getRecordFromGrid($grid))
-			return $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
+		if (!$fields && $record = $this->getRecordFromGrid($grid))
+			$fields = $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
 
-		throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
+		if(!$fields)
+			throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
+
+		if($grid && $this->canEditWithEditableColumns($grid) && (isset($editable) || $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))) {
+			if(!isset($record))
+				$record = $this->getRecordFromGrid($grid);
+
+			$editableColumns = $editable->getFields($grid, $record);
+
+			foreach($editableColumns as $column)
+				$fields->removeByName($column->Name);
+		}
+
+		return $fields;
 	}
 
 	protected function getValidatorForForm($grid = null)
@@ -316,13 +365,39 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		return $form;
 	}
 
-	public function Link()
+	public function loadItem($grid, $request) {
+		$cacheKey = $this->getCacheKey([
+			'class' => get_class($this->getRecordFromGrid($grid)),
+			'id' => spl_object_hash($this),
+		]);
+
+		if(!$this->cacheAjaxLoading || !($template = unserialize($this->cache->load($cacheKey)))) {
+			$template = \ArrayData::create(array_merge(
+				$this->getRowTemplateVariables($grid, '{{ placeholder }}'), [
+					'Ajax' => true,
+					'placeholder' => '{{ placeholder }}',
+				]
+			))->renderWith(array_merge((array)$this->template, ['GridField_AddNewInlineExtended_Row']));
+
+			$this->cache->save(serialize($template), $cacheKey);
+		}
+
+		$template = str_replace('{{ placeholder }}', $request->getVar('_datanum'), $template);
+
+		return $template;
+	}
+
+	public function Link($action = '')
 	{
-		return $this->workingGrid ? \Controller::join_links($this->workingGrid->Link($this->urlSegment)) : null;
+		return $this->workingGrid ? \Controller::join_links($this->workingGrid->Link($this->urlSegment), $action) : null;
 	}
 
 	public function canEditWithEditableColumns($gridField)
 	{
 		return $this->hideUnlessOpenedWithEditableColumns && $gridField->Config->getComponentByType('GridFieldEditableColumns') && $gridField->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow');
+	}
+
+	protected function getCacheKey(array $vars = []) {
+		return preg_replace('/[^a-zA-Z0-9_]/', '', __CLASS__ . '_' . urldecode(http_build_query($vars, '', '_')));
 	}
 }

@@ -53,6 +53,19 @@
             }
         });
 
+        $(".ss-gridfield-hasOneSelector-toggle[data-relation]").entwine({
+            onclick: function() {
+                var checked = this.prop('checked');
+
+                this
+                    .parents('.ss-gridfield:first')
+                    .find('td[data-relation="' + this.data('relation') + '"] ')
+                    .each(function() {
+                        $(this).find('input').prop('checked', !checked);
+                    });
+            }
+        });
+
         $(".ss-gridfield.ss-gridfield-add-inline-extended--table").entwine({
             reload: function(opts, success) {
                 var $grid  = this,
@@ -67,29 +80,70 @@
                     if(success) success.apply($grid, arguments);
                 });
             },
-            onaddnewinlinextended: function(e) {
+            onaddnewinlinextended: function(e, $trigger) {
                 if(e.target != this[0])
                     return;
 
-                var tmpl = window.tmpl,
-                    row = this.find(".ss-gridfield-add-inline-extended--template:last"),
+                var $tbody = this.find("tbody:first"),
                     num = this.data("add-inline-num") || 1;
 
-                tmpl.cache[this[0].id + "-ss-gridfield-add-inline-extended--template"] = tmpl(row.html());
+                if($trigger && $trigger.data('ajax')) {
+                    if(!$trigger.hasClass('ss-gridfield-add-inline-extended--loading')) {
+                        var isConstructive = $trigger.hasClass('ss-ui-action-constructive');
 
-                var item = $(tmpl(this[0].id + "-ss-gridfield-add-inline-extended--template", { num: num }));
+                        $trigger.addClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
+                        $trigger.find('.ui-icon').addClass('ss-ui-loading-icon');
 
-                this.find("tbody:first").append(item);
-                this.find("tbody:first").children(".ss-gridfield-no-items:first").hide();
+                        if(isConstructive)
+                            $trigger.removeClass('ss-ui-action-constructive');
+
+                        $.ajax({
+                            url:      $trigger[0].href,
+                            dataType: 'html',
+                            data: {
+                                '_datanum': num
+                            },
+                            success:  function (data) {
+                                $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
+                                $trigger.find('.ui-icon').removeClass('ss-ui-loading-icon');
+
+                                var $data = $(data);
+                                $data.find('ss-gridfield-editable-row--toggle');
+                                $tbody.append($data);
+                                $tbody.children(".ss-gridfield-no-items:first").hide();
+                                $data.find("input:first").focus();
+
+                                if(isConstructive)
+                                    $trigger.addClass('ss-ui-action-constructive');
+                            },
+                            error:    function (e) {
+                                alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
+                                $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled');
+                            }
+                        });
+                    }
+                }
+                else {
+                    var tmpl = window.tmpl,
+                        row = this.find(".ss-gridfield-add-inline-extended--template:last");
+
+                    tmpl.cache[this[0].id + "-ss-gridfield-add-inline-extended--template"] = tmpl(row.html());
+
+                    var item = $(tmpl(this[0].id + "-ss-gridfield-add-inline-extended--template", {num: num}));
+
+                    $tbody.append(item);
+                    $tbody.children(".ss-gridfield-no-items:first").hide();
+
+                    item.find("input:first").focus();
+                }
+
                 this.data("add-inline-num", num + 1);
-
-                item.find("input:first").focus();
             }
         });
 
         $(".ss-gridfield-add-new-inline-extended--button").entwine({
             onclick: function() {
-                this.getGridField().trigger("addnewinlinextended");
+                this.getGridField().trigger("addnewinlinextended", [this]);
                 return false;
             }
         });
