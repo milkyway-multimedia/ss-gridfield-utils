@@ -193,7 +193,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 				continue;
 			}
 
-			$form = $this->getForm($grid, $item);
+			$form = $this->getForm($grid, $item, false);
 			$form->loadDataFrom($fields);
 			$form->saveInto($item);
 			$extra = method_exists($list, 'getExtraFields') ? array_intersect_key($form->Data, (array)$list->getExtraFields()) : [];
@@ -203,12 +203,12 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 		}
 	}
 
-	public function getForm($grid, $record) {
+	public function getForm($grid, $record, $removeEditableColumnFields = true) {
 		$this->workingGrid = $grid;
-		return \Form::create($this, $grid->ID().'-EditableRow-'.$record->ID, $this->getFieldList($record, $grid), \FieldList::create(), $this->getValidatorForForm($record, $grid))->loadDataFrom($record)->setFormAction($this->Link('form', $record->ID))->disableSecurityToken();
+		return \Form::create($this, $grid->ID().'-EditableRow-'.$record->ID, $this->getFieldList($record, $grid, $removeEditableColumnFields), \FieldList::create(), $this->getValidatorForForm($record, $grid))->loadDataFrom($record)->setFormAction($this->Link('form', $record->ID))->disableSecurityToken();
 	}
 
-	protected function getFieldList($record, $grid = null) {
+	protected function getFieldList($record, $grid = null, $removeEditableColumnFields = true) {
 		$fields = null;
 
 		if($this->fields) {
@@ -233,7 +233,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 		if(!$fields)
 			$fields = $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
 
-		if($grid && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
+		if($removeEditableColumnFields && $grid && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
 			$editableColumns = $editable->getFields($grid, $record);
 
 			foreach($editableColumns as $column)
@@ -258,7 +258,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 				return $editable->getValidator();
 		}
 
-		return $record->getCMSValidator();
+		return $record->hasMethod('getCMSValidator') ? $record->getCMSValidator() : null;
 	}
 
 	public function handleForm($grid, $request) {

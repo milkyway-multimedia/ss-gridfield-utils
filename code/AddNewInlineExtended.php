@@ -218,6 +218,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 			$editableColumnsTemplate = str_replace([
 				'GridFieldAddNewInlineButton',
 				'GridFieldEditableColumns',
+				'{%=o.num%}',
 				'ss-gridfield-editable-row--icon-holder">',
 				'ss-gridfield-inline-new"',
 				'ss-gridfield-delete-inline'
@@ -225,6 +226,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 				[
 					str_replace('\\', '_', __CLASS__),
 					str_replace('\\', '_', __CLASS__),
+					$placeholder,
 					sprintf('ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle%s"></i>', $toggleClasses),
 					'ss-gridfield-inline-new-extended" data-inline-new-extended-row="' . $placeholder . '"',
 					'ss-gridfield-inline-new-extended--row-delete'
@@ -273,7 +275,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 			return;
 		}
 
-		$form = $this->getForm($grid);
+		$form = $this->getForm($grid, '', false);
 
 		foreach ($value[$className] as $fields) {
 			$item = \Object::create($class);
@@ -287,13 +289,13 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		}
 	}
 
-	protected function getForm($grid, $append = '')
+	protected function getForm($grid, $append = '', $removeEditableColumnFields = true)
 	{
 		$this->workingGrid = $grid;
-		return \Form::create($this, 'Form-' . $grid->getModelClass() . $append, $this->getFieldList($grid), \FieldList::create(), $this->getValidatorForForm($grid))->loadDataFrom($this->getRecordFromGrid($grid));
+		return \Form::create($this, 'Form-' . $grid->getModelClass() . $append, $this->getFieldList($grid, $removeEditableColumnFields), \FieldList::create(), $this->getValidatorForForm($grid))->loadDataFrom($this->getRecordFromGrid($grid));
 	}
 
-	protected function getFieldList($grid = null)
+	protected function getFieldList($grid = null, $removeEditableColumnFields = true)
 	{
 		$fields = null;
 
@@ -308,7 +310,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 		if (!$fields && $grid) {
 			if ($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
-				$fields = $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
+				$fields = $editable->getForm($grid, $this->getRecordFromGrid($grid), $removeEditableColumnFields)->Fields();
 			elseif ($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
 				$fields = $editable->getFields($grid, $this->getRecordFromGrid($grid));
 		}
@@ -319,7 +321,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		if(!$fields)
 			throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
 
-		if($grid && $this->canEditWithEditableColumns($grid) && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
+		if($removeEditableColumnFields && $grid && $this->canEditWithEditableColumns($grid) && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
 			if(!isset($record))
 				$record = $this->getRecordFromGrid($grid);
 
