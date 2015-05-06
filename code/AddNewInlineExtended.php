@@ -280,7 +280,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 			$form->loadDataFrom($fields);
 			$form->saveInto($item);
-			$extra = array_intersect_key($form->Data, (array)$list->getExtraFields());
+			$extra = method_exists($list, 'getExtraFields') ? array_intersect_key($form->Data, (array)$list->getExtraFields()) : [];
 
 			$item->write();
 			$list->add($item, $extra);
