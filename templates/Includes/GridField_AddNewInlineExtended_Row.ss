@@ -1,7 +1,7 @@
     $EditableColumns
     
 	<tr class="ss-gridfield-inline-new-extended--row<% if $EditableColumns %>
-     ss-gridfield-inline-new-extended--row--has-columns<% end_if %>" data-inline-new-extended-row="$placeholder">
+     ss-gridfield-inline-new-extended--row--has-columns<% if $OpenByDefault %> ss-gridfield-inline-new-extended--row--has-columns_open<% end_if %><% end_if %>" data-inline-new-extended-row="$placeholder">
 
 	<% if $PrevColumnsCount %>
                     <td class="ss-gridfield-inline-new-extended--row--table--fieldsHolder_before" colspan="$PrevColumnsCount">

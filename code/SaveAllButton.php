@@ -39,7 +39,7 @@ class SaveAllButton implements \GridField_HTMLProvider, \GridField_ActionProvide
 		}
 
 		if(!$this->buttonName) {
-			if($this->publish)
+			if($this->publish && $singleton->hasExtension('Versioned'))
 				$this->buttonName = _t('GridField.SAVE_ALL_AND_PUBLISH', 'Save all and publish');
 			else
 				$this->buttonName = _t('GridField.SAVE_ALL', 'Save all');

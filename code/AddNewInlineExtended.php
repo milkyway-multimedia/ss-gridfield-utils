@@ -17,7 +17,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 	public $cacheAjaxLoading = true;
 
-	public $hideUnlessOpenedWithEditableColumns = false;
+	public $hideUnlessOpenedWithEditableColumns = true;
+
+	public $openToggleByDefault = false;
 
 	public $rowTemplate;
 
@@ -211,15 +213,19 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns')) && ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))) {
 			$ecFragments = (new \GridFieldAddNewInlineButton())->getHTMLFragments($grid);
+			$toggleClasses = $this->openToggleByDefault ? ' ss-gridfield-add-inline-extended--toggle_open' : '';
+
 			$editableColumnsTemplate = str_replace([
 				'GridFieldAddNewInlineButton',
+				'GridFieldEditableColumns',
 				'ss-gridfield-editable-row--icon-holder">',
 				'ss-gridfield-inline-new"',
 				'ss-gridfield-delete-inline'
 			],
 				[
 					str_replace('\\', '_', __CLASS__),
-					'ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle"></i>',
+					str_replace('\\', '_', __CLASS__),
+					sprintf('ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle%s"></i>', $toggleClasses),
 					'ss-gridfield-inline-new-extended" data-inline-new-extended-row="' . $placeholder . '"',
 					'ss-gridfield-inline-new-extended--row-delete'
 				], str_replace([
@@ -241,6 +247,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 		return [
 				'EditableColumns' => $editableColumnsTemplate,
+				'OpenByDefault' => $this->openToggleByDefault,
 				'Form' => $form,
 				'AllColumnsCount' => count($grid->getColumns()),
 				'ColumnCount' => count($grid->getColumns()) - $countUntilThisColumn,
@@ -302,7 +309,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		if (!$fields && $grid) {
 			if ($editable = $grid->getConfig()->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))
 				$fields = $editable->getForm($grid, $this->getRecordFromGrid($grid))->Fields();
-			if ($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
+			elseif ($editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))
 				$fields = $editable->getFields($grid, $this->getRecordFromGrid($grid));
 		}
 
@@ -312,7 +319,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		if(!$fields)
 			throw new \Exception(sprintf('Please setFields on your %s component', __CLASS__));
 
-		if($grid && $this->canEditWithEditableColumns($grid) && (isset($editable) || $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns'))) {
+		if($grid && $this->canEditWithEditableColumns($grid) && $editable = $grid->getConfig()->getComponentByType('GridFieldEditableColumns')) {
 			if(!isset($record))
 				$record = $this->getRecordFromGrid($grid);
 
@@ -369,6 +376,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 		$cacheKey = $this->getCacheKey([
 			'class' => get_class($this->getRecordFromGrid($grid)),
 			'id' => spl_object_hash($this),
+		    'open' => $this->openToggleByDefault,
 		]);
 
 		if(!$this->cacheAjaxLoading || !($template = unserialize($this->cache->load($cacheKey)))) {
