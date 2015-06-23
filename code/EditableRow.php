@@ -12,6 +12,7 @@ namespace Milkyway\SS\GridFieldUtils;
 class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler, \GridField_ColumnProvider {
 	public $column = '_OpenRowForEditing';
 	public $urlSegment = 'editableRow';
+	public $setWorkingParentOnRecordTo = 'Parent';
 
 	protected $fields;
 
@@ -326,6 +327,11 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 
 		if(!$record = $list->byID($id)) {
 			throw new \SS_HTTPResponse_Exception(null, 404);
+		}
+
+		if($this->setWorkingParentOnRecordTo) {
+			if($grid->List && ($grid->List instanceof \ManyManyList) && $grid->Form && $grid->Form->Record)
+				$record->{$this->setWorkingParentOnRecordTo} = $grid->Form->Record;
 		}
 
 		return $record;

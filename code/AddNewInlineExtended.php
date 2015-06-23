@@ -351,7 +351,24 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 	protected function getRecordFromGrid($grid)
 	{
 		if ($grid->getList()) {
-			return \Object::create($grid->getModelClass());
+			$record = \Object::create($grid->getModelClass());
+
+			if($grid->List && ($grid->List instanceof \HasManyList) && $grid->Form && $grid->Form->Record) {
+				$record->{$grid->Name} = $grid->Form->Record;
+				$record->{$grid->Name.'ID'} = $grid->Form->Record->ID;
+			}
+			else {
+				$workingParent = $this->setWorkingParentOnRecordTo;
+				if (!$workingParent && $grid->Config && $editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow')) {
+					$workingParent = $editableRow->setWorkingParentOnRecordTo;
+				}
+
+				if ($workingParent && $grid->List && $grid->Form && $grid->Form->Record) {
+					$record->{$workingParent} = $grid->Form->Record;
+				}
+			}
+
+			return $record;
 		}
 
 		return null;
@@ -404,7 +421,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
 	public function canEditWithEditableColumns($gridField)
 	{
-		return $this->hideUnlessOpenedWithEditableColumns && $gridField->Config->getComponentByType('GridFieldEditableColumns') && $gridField->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow');
+		return $this->hideUnlessOpenedWithEditableColumns && $gridField->Config->getComponentByType('GridFieldEditableColumns');
 	}
 
 	protected function getCacheKey(array $vars = []) {
