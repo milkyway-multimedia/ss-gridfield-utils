@@ -34,8 +34,6 @@
 
         $(".ss-gridfield-treeView--toggle").entwine({
             onclick: function() {
-
-
                 return false;
             }
         });
@@ -88,8 +86,21 @@
                     num = this.data("add-inline-num") || 1;
 
                 if($trigger && $trigger.data('ajax')) {
-                    if(!$trigger.hasClass('ss-gridfield-add-inline-extended--loading')) {
-                        var isConstructive = $trigger.hasClass('ss-ui-action-constructive');
+                    //if(!$trigger.hasClass('ss-gridfield-add-inline-extended--loading')) {
+                        var isConstructive = $trigger.hasClass('ss-ui-action-constructive'),
+                            $classSelector = $trigger.siblings('.ss-gridfield-inline-new-extended--class-selector:first'),
+                            data ={
+                                '_datanum': num
+                            };
+
+                        if($classSelector.length) {
+                            if(!$classSelector.val()) {
+                                alert('Please select a type to create');
+                                return;
+                            }
+
+                            data[this.attr('id') + '_modelClass'] = $classSelector.val();
+                        }
 
                         $trigger.addClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
                         $trigger.find('.ui-icon').addClass('ss-ui-loading-icon');
@@ -100,9 +111,7 @@
                         $.ajax({
                             url:      $trigger[0].href,
                             dataType: 'html',
-                            data: {
-                                '_datanum': num
-                            },
+                            data: data,
                             success:  function (data) {
                                 $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
                                 $trigger.find('.ui-icon').removeClass('ss-ui-loading-icon');
@@ -121,7 +130,7 @@
                                 $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled');
                             }
                         });
-                    }
+                    //}
                 }
                 else {
                     var tmpl = window.tmpl,
