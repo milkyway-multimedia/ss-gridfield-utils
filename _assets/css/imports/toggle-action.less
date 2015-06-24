@@ -1,0 +1,50 @@
+@fa-font-path: "../../mwm-utilities/thirdparty/font-awesome/fonts";
+
+@import "../../../../mwm-utilities/thirdparty/font-awesome/less/mixins";
+@import "../../../../mwm-utilities/thirdparty/font-awesome/less/path";
+
+.gridfield-button-toggle-action {
+	position: relative;
+	overflow: visible;
+	height: 16px;
+	line-height: 16px;
+
+	.ui-icon {
+		background: none;
+		position: static;
+		text-indent: 0;
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 16px;
+
+		&:after {
+			.fa-icon();
+			content:@fa-var-eye;
+			vertical-align: middle;
+		}
+
+		&.btn-icon-eye-slash:after {
+			content:@fa-var-eye-slash;
+		}
+	}
+
+	.ui-button-text {
+		position: absolute;
+		height:20px;
+		top:100%;
+		margin-top:-8px;
+		//background-color:rgba(0,0,0,0.2);
+		color:rgba(0,0,0,0.5);
+		display: none;
+		padding: 0 5px;
+		line-height: 20px;
+		font-size: 10px;
+		font-weight:normal;
+		transform: translate(-25%,25%);
+	}
+
+	&:hover .ui-button-text,
+	.ui-icon:hover + .ui-button-text {
+		display: block;
+	}
+}

@@ -4,13 +4,13 @@
      ss-gridfield-inline-new-extended--row--has-columns<% if $OpenByDefault %> ss-gridfield-inline-new-extended--row--has-columns_open<% end_if %><% end_if %>" data-inline-new-extended-row="$placeholder">
 
 	<% if $PrevColumnsCount %>
-                    <td class="ss-gridfield-inline-new-extended--row--table--fieldsHolder_before" colspan="$PrevColumnsCount">
+                    <td class="ss-gridfield-inline-new-extended--row--table--fieldsHolder_before ss-gridfield-editable-row--fieldsHolder_before" colspan="$PrevColumnsCount">
                     </td>
                     <% end_if %>
 
-	    <td class="ss-gridfield-inline-new-extended--fieldsHolder" colspan="$ColumnCountWithoutActions">
+	    <td class="ss-gridfield-inline-new-extended--fieldsHolder ss-gridfield-editable-row--fieldsHolder" colspan="$ColumnCountWithoutActions">
 	    <h6>New $Model ($placeholder)</h6>
-		    <fieldset class="ss-gridfield-inline-new-extended--fields">
+		    <fieldset class="ss-gridfield-inline-new-extended--fields ss-gridfield-editable-row--fields">
                 <% loop $Form.Fields %>
     $FieldHolder
 <% end_loop %>
