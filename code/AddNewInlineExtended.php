@@ -224,7 +224,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 			));
 		}
 
-		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns')) && ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow'))) {
+		if ($this->canEditWithEditableColumns($grid) && ($editableColumns = $grid->Config->getComponentByType('GridFieldEditableColumns'))) {
 			$currentModelClass = $grid->getModelClass();
 			$grid->setModelClass($modelClass);
 			$ecFragments = (new \GridFieldAddNewInlineButton())->getHTMLFragments($grid);
@@ -251,16 +251,17 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 				], '', $ecFragments['after']));
 
 
+			if($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow')) {
+				foreach ($grid->getColumns() as $column) {
+					$countUntilThisColumn++;
 
-			foreach ($grid->getColumns() as $column) {
-				$countUntilThisColumn++;
+					if (in_array($column, $editableRow->getColumnsHandled($grid)))
+						break;
+				}
 
-				if (in_array($column, $editableRow->getColumnsHandled($grid)))
-					break;
+				if ($countUntilThisColumn == count($grid->getColumns()))
+					$countUntilThisColumn = 0;
 			}
-
-			if ($countUntilThisColumn == count($grid->getColumns()))
-				$countUntilThisColumn = 0;
 		}
 
 		return [
