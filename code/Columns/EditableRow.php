@@ -32,6 +32,7 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	 */
 	public function __construct($fields = null) {
 		$this->fields = $fields;
+		parent::__construct();
 	}
 
 	/**
@@ -258,6 +259,9 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 			if($editable = $grid->getConfig()->getComponentByType('GridFieldDetailForm'))
 				return $editable->getValidator();
 		}
+
+		if($record->hasMethod('getEditableRowValidator'))
+			return $record->getEditableRowValidator($grid);
 
 		return $record->hasMethod('getCMSValidator') ? $record->getCMSValidator() : null;
 	}

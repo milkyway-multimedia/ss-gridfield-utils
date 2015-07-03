@@ -11,6 +11,8 @@ use GridField_ActionProvider;
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 abstract class Action implements GridField_ColumnProvider, GridField_ActionProvider {
+	protected $actionColumn = 'Actions';
+
 	/**
 	 * Add a column 'Delete'
 	 *
@@ -18,8 +20,8 @@ abstract class Action implements GridField_ColumnProvider, GridField_ActionProvi
 	 * @param array $columns
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		if(!in_array('Actions', $columns)) {
-			$columns[] = 'Actions';
+		if(!in_array($this->actionColumn, $columns)) {
+			$columns[] = $this->actionColumn;
 		}
 	}
 
@@ -32,7 +34,7 @@ abstract class Action implements GridField_ColumnProvider, GridField_ActionProvi
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array('class' => 'col-buttons');
+		return ['class' => 'col-buttons'];
 	}
 
 	/**
@@ -43,8 +45,8 @@ abstract class Action implements GridField_ColumnProvider, GridField_ActionProvi
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'Actions') {
-			return array('title' => '');
+		if($columnName == $this->actionColumn) {
+			return ['title' => ''];
 		}
 	}
 
@@ -55,6 +57,6 @@ abstract class Action implements GridField_ColumnProvider, GridField_ActionProvi
 	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('Actions');
+		return [$this->actionColumn];
 	}
 }
