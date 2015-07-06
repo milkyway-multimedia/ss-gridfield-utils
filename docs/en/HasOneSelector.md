@@ -4,7 +4,7 @@ HasOneSelector
 The `Milkyway\SS\GridFieldUtils\HasOneSelector` component allows you to select a has one from the current GridField
 
 ```php
-    $grid->getConfig()->addComponent(new Milkyway\SS\GridFieldUtils\HasOneSelector($relation = 'FeaturedItem', $columnTitle = ''));
+    $grid->getConfig()->addComponent($component = new Milkyway\SS\GridFieldUtils\HasOneSelector($relation = 'FeaturedItem', $columnTitle = ''));
 ```
 
 ## Public properties

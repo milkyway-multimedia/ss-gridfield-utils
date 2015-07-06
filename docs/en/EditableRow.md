@@ -6,7 +6,7 @@ The `Milkyway\SS\GridFieldUtils\EditableRow` component adds an expandable form t
 If no fields are set, it will pull fields from either the GridFieldDetailForm component on the current grid, or default to the getEditableRowFields($record) or getCMSFields methods on the record respectively.
 
 ```php
-    $grid->getConfig()->addComponent(new Milkyway\SS\GridFieldUtils\EditableRow($fields = null));
+    $grid->getConfig()->addComponent($component = new Milkyway\SS\GridFieldUtils\EditableRow($fields = null));
 ```
 
 ## Public properties
