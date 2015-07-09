@@ -13,6 +13,8 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 	public $column = '_OpenRowForEditing';
 	public $urlSegment = 'editableRow';
 	public $setWorkingParentOnRecordTo = 'Parent';
+	public $disableToggleStateSave = false;
+	public $cacheToggleStateSave = false;
 
 	protected $fields;
 
@@ -144,6 +146,13 @@ class EditableRow extends \RequestHandler implements \GridField_HTMLProvider, \G
 		Utilities::include_requirements();
 
 		$gridField->addExtraClass('ss-gridfield-editable-rows');
+
+		if($this->disableToggleStateSave)
+			$gridField->addExtraClass('ss-gridfield-editable-rows_disableToggleState');
+
+		if($this->cacheToggleStateSave)
+			$gridField->addExtraClass('ss-gridfield-editable-rows_allowCachedToggles');
+
 		$this->workingGrid = $gridField;
 
 		return [
