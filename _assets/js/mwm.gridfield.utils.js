@@ -30,6 +30,14 @@
             }
         });
 
+        $(".ss-gridfield").entwine({
+            showNoItemsMessage: function() {
+                if(this.find('.ss-gridfield-items:first').children().not('.ss-gridfield-no-items').length === 0) {
+                    this.find('.ss-gridfield-no-items').show();
+                }
+            }
+        });
+
         $(".gridfield-help-button-dialog").entwine({
             loadDialog: function(deferred) {
                 var dialog = this.addClass("loading").children(".ui-dialog-content").empty();
@@ -97,7 +105,8 @@
         $(".ss-gridfield.ss-gridfield-add-inline-extended--table").entwine({
             reload: function(opts, success) {
                 var $grid  = this,
-                    $added = $grid.find("tbody:first").find(".ss-gridfield-inline-new-extended--row").detach();
+                    $added = $grid.find("tbody:first").find(".ss-gridfield-inline-new-extended--row").detach(),
+                    args = arguments;
 
                 this._super(opts, function() {
                     if($added.length) {
@@ -105,7 +114,7 @@
                         $grid.find("tbody:first").children(".ss-gridfield-no-items:first").hide();
                     }
 
-                    if(success) success.apply($grid, arguments);
+                    if(success) success.apply($grid, args);
                 });
             },
             onaddnewinlinextended: function(e, $trigger) {
@@ -189,11 +198,15 @@
 
         $(".ss-gridfield-inline-new-extended--row-delete").entwine({
             onclick: function() {
+                var $grid = this.parents('.ss-gridfield:first');
+
                 if(confirm(ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?"))) {
                     this.parents('tbody:first')
                         .find('tr[data-inline-new-extended-row=' +
                             this.parents('tr[data-inline-new-extended-row]:first').data('inlineNewExtendedRow') + ']'
                         ).remove();
+
+                    $grid.showNoItemsMessage();
                 }
 
                 return false;
@@ -215,11 +228,12 @@
         $(".ss-gridfield.ss-gridfield-editable-rows").entwine({
             reload: function (opts, success) {
                 var $grid = this,
-                    openToggles = $grid.getOpenToggles();
+                    openToggles = $grid.getOpenToggles(),
+                    args = arguments;
 
                 this._super(opts, function () {
                     $grid.reopenToggles(openToggles);
-                    if (success) success.apply($grid, arguments);
+                    if (success) success.apply($grid, args);
                 });
             },
             getOpenToggles: function() {
