@@ -1,0 +1,7 @@
+{
+    "name"         : "milkyway-multimedia/ss-mwm-zen-forms",
+    "private"      : true,
+    "devDependencies" : {
+        "material-design-iconic-font": "~2"
+    }
+}

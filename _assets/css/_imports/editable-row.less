@@ -1,23 +1,12 @@
-@import "../../../../mwm-utilities/thirdparty/font-awesome/less/variables";
-
-@fa-font-path: "../../mwm-utilities/thirdparty/font-awesome/fonts";
-
-@import "../../../../mwm-utilities/thirdparty/font-awesome/less/mixins";
-@import "../../../../mwm-utilities/thirdparty/font-awesome/less/path";
 @import (reference) "add-new-inline-extended";
 
 .cms .ss-gridfield-editable-row--row:extend(.cms .ss-gridfield-inline-new-extended--row all) {}
 
 .ss-gridfield-editable-row--toggle {
-	cursor: pointer;
-
-	&:after {
-		.fa-icon();
-		content:@fa-var-plus;
-	}
+	&:extend(.ss-gridfield-add-inline-extended--toggle all);
 
 	&.ss-gridfield-editable-row--toggle_open:after {
-		content:@fa-var-minus;
+		content: '\2212';
 	}
 }
 

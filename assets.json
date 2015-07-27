@@ -1,37 +1,16 @@
 {
     "css"   : {
-        "all"   : [
-            "_assets/css/**/*",
-            "!_assets/css/imports/**/*"
-        ],
-        "src"   : [
-            "_assets/css/**/*",
-            "!_assets/css/imports/**/*",
-            "!_assets/css/imports",
-            "!_assets/css/old/**/*",
-            "!_assets/css/old"
-        ],
-        "watch" : [
-            "_assets/css/**/*.less",
-            "_assets/css/**/*.scss"
-        ],
-        "dest"  : "css/"
+        "dest": "css/"
     },
     "js"   : {
-        "all"   : [
-            "_assets/js/**/*",
-            "!_assets/js/imports/**/*"
-        ],
-        "src"   : [
-            "_assets/js/**/*",
-            "!_assets/js/imports/**/*",
-            "!_assets/js/imports",
-            "!_assets/js/old/**/*",
-            "!_assets/js/old"
-        ],
-        "watch" : [
-            "_assets/js/**/*"
-        ],
-        "dest"  : "js/"
-    }
+        "dest": "js/"
+    },
+    "copy" : [
+        {
+            "src"    : [
+                "bower_components/material-design-iconic-font/dist/fonts/**/*"
+            ],
+            "dest"   : "fonts/"
+        }
+    ]
 }

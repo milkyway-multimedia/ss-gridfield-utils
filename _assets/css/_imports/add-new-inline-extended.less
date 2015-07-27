@@ -72,14 +72,17 @@
 
 .ss-gridfield-add-inline-extended--toggle {
 	cursor: pointer;
+	display:inline-block;
+	padding:3px;
 
 	&:after {
-		.fa-icon();
-		content:@fa-var-plus;
+		content: '+';
+		font-size:16px;
+		font-weight: bold;
 	}
 
 	&.ss-gridfield-add-inline-extended--toggle_open:after {
-		content:@fa-var-minus;
+		content: '\2212';
 	}
 }
 
