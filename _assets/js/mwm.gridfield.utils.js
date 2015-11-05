@@ -433,7 +433,7 @@
             getDialog:                function () {
                 return this.closest(".add-existing-search-dialog").children(".ui-dialog-content:first");
             },
-            addItems:                 function ($dialog, itemsToAdd, link, callback) {
+            addItems:                 function ($dialog, itemsToAdd, link, callback, async) {
                 var that = this;
 
                 if (!$dialog) {
@@ -465,9 +465,46 @@
                 }
 
                 that.clearItemsToAdd($dialog);
-                $dialog.parent().addClass('loading loading_hiddenContents');
+                if(!async) {
+                    $dialog.parent().addClass('loading loading_hiddenContents');
+                }
 
                 $.post(link, {ids: itemsToAdd}, callback).always(function() {
+                    $dialog.parent().removeClass('loading loading_hiddenContents');
+                });
+            },
+            undoItems:                 function (items, $dialog, link, callback, async) {
+                var that = this;
+
+                if (!$dialog) {
+                    $dialog = that.getDialog();
+                }
+
+                if(!items.length) {
+                    return;
+                }
+
+                if (!link) {
+                    link = $dialog.find(".add-existing-picker-items").data("undo-link");
+                }
+
+                if (!callback) {
+                    callback = function () {
+                        if ($dialog.data("grid")) {
+                            $dialog.data("grid").reload();
+                        }
+                    };
+                }
+
+                if(!async) {
+                    $dialog.parent().addClass('loading loading_hiddenContents');
+                }
+
+                $.post(link, {ids: items}, function() {
+                    var args = [].slice.call(arguments);
+                    args.push($dialog);
+                    callback.apply(this, args);
+                }).always(function() {
                     $dialog.parent().removeClass('loading loading_hiddenContents');
                 });
             },
@@ -507,31 +544,82 @@
             }
         });
 
+        $(".add-existing-picker-item--undo-holder .add-existing-picker-item--undo").entwine({
+            onclick: function(e) {
+                var id = this.data("id"),
+                    link = this.data("undoLink"),
+                    title = this.data("title"),
+                    $item = $('.add-existing-picker-items[data-undo-link="' + link + '"]').find('.add-existing-picker-item--link[data-id="' + id + '"]');
+
+                $item.undoItem(id, true, function(data, status, xhr, $dialog) {
+                    $dialog.data("grid").reload();
+                    $.noticeRemove($(".notice-item.add-existing-picker-item--undo-holder"));
+                    statusMessage(ss.i18n.sprintf(
+                        ss.i18n._t("GridField_AddExistingPicker.ITEM_REMOVED", "%s has been removed."),
+                        title
+                    ));
+                    $item.parent('li:first').show();
+                });
+
+                e.preventDefault()
+            }
+        });
+
         $(".add-existing-search-dialog .add-existing-search-items.add-existing-picker-items a").entwine({
             onclick:                  function (e) {
                 var $button = this.getButton(),
                     $dialog = $button.getDialog(),
+                    $grid = $dialog.data("grid"),
                     $li = this.parent(),
                     items = $dialog.data("items-to-add") || [],
                     id = this.data('id');
 
-                $button.addCloseDialogIfRequired($dialog);
+                if($grid && $grid.hasClass("ss-gridfield-add-existing-picker_async")) {
+                    var undoLink = $dialog.find(".add-existing-picker-items").data("undo-link"),
+                        title = this.text();
 
-                if (items.indexOf(id) === -1) {
-                    items.push(id);
-                    $li.addClass('add-existing-picker-item_toAdd');
+                    $li.addClass('loading add-existing-picker-item_toAdd');
+
+                    $button.addItems($dialog, [id], '', function() {
+                        if ($dialog.data("grid")) {
+                            $dialog.data("grid").reload();
+                        }
+
+                        $li.removeClass('add-existing-picker-item_toAdd loading').hide();
+
+                        $.noticeAdd({text: ss.i18n.sprintf(
+                            ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
+                            title,
+                            ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s">%s</button>', id, undoLink, title, ss.i18n._t("UNDO", "Undo"))
+                        ), type: 'add-existing-picker-item--undo-holder', stay: true});
+                    }, true);
                 }
                 else {
-                    items.splice(items.indexOf(id), 1);
-                    $li.removeClass('add-existing-picker-item_toAdd');
-                }
+                    $button.addCloseDialogIfRequired($dialog);
 
-                $dialog.data("items-to-add", items);
+                    if (items.indexOf(id) === -1) {
+                        items.push(id);
+                        $li.addClass('add-existing-picker-item_toAdd');
+                    }
+                    else {
+                        items.splice(items.indexOf(id), 1);
+                        $li.removeClass('add-existing-picker-item_toAdd');
+                    }
+
+                    $dialog.data("items-to-add", items);
+                }
 
                 e.preventDefault();
             },
             getButton:                function () {
-                return this.closest(".add-existing-search-dialog").find("..add-existing-picker-actions--add-items:first");
+                return this.closest(".add-existing-search-dialog").find(".add-existing-picker-actions--add-items:first");
+            },
+            undoItem: function(id, async, callback) {
+                if(!id) id = this.data("id");
+
+                var $button = this.getButton();
+
+                $button.undoItems([id], null, '', callback, async);
             }
         });
     });

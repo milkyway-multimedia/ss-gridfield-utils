@@ -18,6 +18,7 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
     private static $allowed_actions = [
         'index',
         'add',
+        'undo',
     ];
 
     public function index() {
@@ -28,15 +29,45 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
     }
 
     public function add($request) {
-        if($addHandler = $this->button->getAddHandler()) {
-            return call_user_func($addHandler, $request, $this->grid, $this->button);
+        if($handler = $this->button->getAddHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button);
         }
 
-        $ids = array_unique((array)$request->postVar('ids'));
+        $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
 
+        if($items === false) {
+            return;
+        }
+
+        $list = $this->grid->getList();
+
+        foreach($items as $item) {
+            $list->add($item);
+        }
+    }
+
+    public function undo($request) {
+        if($handler = $this->button->getUndoHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button);
+        }
+
+        $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
+
+        if($items === false) {
+            return;
+        }
+
+        $list = $this->grid->getList();
+
+        foreach($items as $item) {
+            $list->remove($item);
+        }
+    }
+
+    protected function checkAccess($ids) {
         if(!$ids || !count($ids)) {
             $this->httpError(400);
-            return;
+            return false;
         }
 
         $items = [];
@@ -47,14 +78,16 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
 
             if(!$item) {
                 $this->httpError(400);
-                return;
+                return false;
             }
 
             $items[] = $item;
         }
 
-        foreach($items as $item) {
-            $list->add($item);
-        }
+        return count($items) ? $items : false;
+    }
+
+    public function isAsync() {
+        return $this->button->isAsync();
     }
 }

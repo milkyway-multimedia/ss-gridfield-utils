@@ -4,13 +4,13 @@ $SearchForm
 
 <div class="Actions add-existing-picker-actions">
 
-    <a href="$Link('add')" class="action ss-ui-action-constructive icon-accept ss-ui-button ui-button ui-widget ui-state-default ui-corner-all add-existing-picker-actions--add-items" role="button" aria-disabled="false"><% _t("GridField_AddExistingPicker.ADD_SELECTED_ITEMS", "Add Selected Items") %></a>
+    <a href="$Link('add')" class="action ss-ui-action-constructive icon-accept ss-ui-button ui-button ui-widget ui-state-default ui-corner-all add-existing-picker-actions--add-items<% if $isAsync %> hide<% end_if %>" role="button" aria-disabled="false"><% _t("GridField_AddExistingPicker.ADD_SELECTED_ITEMS", "Add Selected Items") %></a>
 
 </div>
 
 <div class="add-existing-search-results">
 	<% if $Items %>
-		<ul class="add-existing-search-items add-existing-picker-items" data-add-link="$Link('add')">
+		<ul class="add-existing-search-items add-existing-picker-items" data-add-link="$Link('add')" data-undo-link="$Link('undo')">
 			<% loop $Items %>
 				<li class="add-existing-picker-item $EvenOdd"><a href="#" data-id="$ID" class="add-existing-picker-item--link">$Title</a></li>
 			<% end_loop %>

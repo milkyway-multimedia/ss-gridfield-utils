@@ -22,6 +22,8 @@ class AddExistingPicker extends AddExistingSearchButton
 {
     protected $searchHandlerFactory;
     protected $addHandler;
+    protected $undoHandler;
+    protected $async = true;
 
     /**
      * Sets a custom list to use to provide the searchable items.
@@ -63,6 +65,46 @@ class AddExistingPicker extends AddExistingSearchButton
         return $this->addHandler;
     }
 
+    /**
+     * Sets a custom list to use to provide the searchable items.
+     *
+     * @param \Closure $undoHandler
+     * @return self $this
+     */
+    public function setUndoHandler($undoHandler)
+    {
+        $this->undoHandler = $undoHandler;
+        return $this;
+    }
+
+    /**
+     * @return \Closure|null
+     */
+    public function getUndoHandler()
+    {
+        return $this->undoHandler;
+    }
+
+    /**
+     * Sets a custom list to use to provide the searchable items.
+     *
+     * @param bool $async
+     * @return self $this
+     */
+    public function async($async = true)
+    {
+        $this->async = $async;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAsync()
+    {
+        return $this->async;
+    }
+
     public function handleSearch($grid, $request)
     {
         if ($this->searchHandlerFactory) {
@@ -85,6 +127,10 @@ class AddExistingPicker extends AddExistingSearchButton
             'Title' => $this->getTitle(),
             'Link'  => $grid->Link('add-existing-search'),
         ]);
+
+        if($this->async) {
+            $grid->addExtraClass('ss-gridfield-add-existing-picker_async');
+        }
 
         return [
             $this->fragment => $data->renderWith([
