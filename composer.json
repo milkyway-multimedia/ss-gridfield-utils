@@ -1,23 +1,29 @@
 {
-    "name":        "milkyway-multimedia/ss-gridfield-utils",
-    "description": "You can never have too many GridField components!",
-    "type":        "silverstripe-module",
-    "keywords":    ["silverstripe", "utilities", "mwm", "gridfield"],
-    "license":     "MIT",
-    "authors":     [
-        {
-            "name":  "Mellisa Hankins",
-            "email": "mell@milkywaymultimedia.com.au"
-        }
-    ],
-    "require":     {
-        "silverstripe/framework":     "~3.1",
-        "milkyway-multimedia/ss-mwm": "dev-master"
-    },
-    "suggest"     : {
-        "milkyway-multimedia/ss-mwm-formfields"     : "(Not yet available for download) You can only use the RangeSlider with this module installed."
-    },
-    "extra":       {
-        "installer-name": "gridfield-utils"
+  "name"        : "milkyway-multimedia/ss-gridfield-utils",
+  "description" : "You can never have too many GridField components!",
+  "type"        : "silverstripe-module",
+  "keywords"    : [
+    "silverstripe",
+    "utilities",
+    "mwm",
+    "gridfield"
+  ],
+  "license"     : "MIT",
+  "authors"     : [
+    {
+      "name"  : "Mellisa Hankins",
+      "email" : "mell@milkywaymultimedia.com.au"
     }
+  ],
+  "require"     : {
+    "silverstripe/framework"     : "~3.1",
+    "milkyway-multimedia/ss-mwm" : "dev-master"
+  },
+  "suggest"     : {
+    "milkyway-multimedia/ss-mwm-formfields"      : "(Not yet available for download) You can only use the RangeSlider with this module installed.",
+    "silverstripe-australia/gridfieldextensions" : "This module is compatible and extends the components of the gridfieldextensions module."
+  },
+  "extra"       : {
+    "installer-name" : "gridfield-utils"
+  }
 }
