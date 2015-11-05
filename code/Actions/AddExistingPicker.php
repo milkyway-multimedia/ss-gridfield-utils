@@ -4,7 +4,7 @@
  * Milkyway Multimedia
  * AddExistingPicker.php
  *
- * @package dispoze.com.au
+ * @package milkyway-multimedia/ss-gridfield-utils
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
@@ -14,7 +14,6 @@ if (!class_exists('GridFieldAddExistingSearchButton')) {
 
 use GridFieldAddExistingSearchButton as AddExistingSearchButton;
 use GridFieldExtensions;
-use Milkyway\SS\GridFieldUtils\Utilities;
 use ArrayData;
 use Milkyway\SS\GridFieldUtils\Controllers\AddExistingPicker as Controller;
 
@@ -23,12 +22,13 @@ class AddExistingPicker extends AddExistingSearchButton
     protected $searchHandlerFactory;
     protected $addHandler;
     protected $undoHandler;
-    protected $async = true;
+    public $async = true;
 
     /**
-     * Sets a custom list to use to provide the searchable items.
+     * Set a search handler factory, which can create a custom RequestHandler
+     * to be used for searching
      *
-     * @param \Closure $searchHandlerFactory
+     * @param callable $searchHandlerFactory
      * @return self $this
      */
     public function setSearchHandlerFactory($searchHandlerFactory)
@@ -38,7 +38,7 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * @return \Closure|null
+     * @return callable|null
      */
     public function getSearchHandlerFactory()
     {
@@ -46,9 +46,9 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * Sets a custom list to use to provide the searchable items.
+     * Sets a custom handler for when the add action is called
      *
-     * @param \Closure $addHandler
+     * @param callable $addHandler
      * @return self $this
      */
     public function setAddHandler($addHandler)
@@ -58,7 +58,7 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * @return \Closure|null
+     * @return callable|null
      */
     public function getAddHandler()
     {
@@ -66,9 +66,9 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * Sets a custom list to use to provide the searchable items.
+     * Sets a custom handler for undoing the add action
      *
-     * @param \Closure $undoHandler
+     * @param callable $undoHandler
      * @return self $this
      */
     public function setUndoHandler($undoHandler)
@@ -78,7 +78,7 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * @return \Closure|null
+     * @return callable|null
      */
     public function getUndoHandler()
     {
@@ -86,7 +86,8 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
-     * Sets a custom list to use to provide the searchable items.
+     * Enable the async picker, when an item is clicked in the list
+     * it is automatically added to the list, with an undo option.
      *
      * @param bool $async
      * @return self $this

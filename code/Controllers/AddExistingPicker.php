@@ -3,7 +3,7 @@
  * Milkyway Multimedia
  * AddExistingPicker.php
  *
- * @package dispoze.com.au
+ * @package milkyway-multimedia/ss-gridfield-utils
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
