@@ -1,61 +1,33 @@
-(function($) {
-    $.entwine("ss", function($) {
-        $('.cms-container').entwine({
-            OpenGridFieldToggles: {},
-            saveTabState: function() {
-                var $that = this,
-                    OpenGridFieldToggles = $that.getOpenGridFieldToggles();
-
-                $that._super();
-
-                $that.find('.ss-gridfield.ss-gridfield-editable-rows').each(function() {
-                    var $this = $(this),
-                        openToggles = $this.getOpenToggles();
-
-                    if(openToggles.length)
-                        OpenGridFieldToggles[$this.attr('id')] = $this.getOpenToggles();
-                });
-            },
-            restoreTabState: function(overrideStates) {
-                var $that = this,
-                    OpenGridFieldToggles = $that.getOpenGridFieldToggles();
-
-                $that._super(overrideStates);
-
-                $.each(OpenGridFieldToggles, function(id, openToggles) {
-                    $that.find('#' + id + '.ss-gridfield.ss-gridfield-editable-rows').reopenToggles(openToggles);
-                });
-
-                $that.setOpenGridFieldToggles({});
-            }
-        });
-
+(function ($) {
+    $.entwine("ss", function ($) {
+        // A global method on grid fields to display the no items message if no rows are found
         $(".ss-gridfield").entwine({
-            showNoItemsMessage: function() {
-                if(this.find('.ss-gridfield-items:first').children().not('.ss-gridfield-no-items').length === 0) {
+            showNoItemsMessage: function () {
+                if (this.find('.ss-gridfield-items:first').children().not('.ss-gridfield-no-items').length === 0) {
                     this.find('.ss-gridfield-no-items').show();
                 }
             }
         });
 
+        // Milkyway\SS\GridFieldUtils\HelpButton
         $(".gridfield-help-button-dialog").entwine({
-            loadDialog: function(deferred) {
+            loadDialog: function (deferred) {
                 var dialog = this.addClass("loading").children(".ui-dialog-content").empty();
 
-                deferred.done(function(data) {
+                deferred.done(function (data) {
                     dialog.html(data).parent().removeClass("loading");
                 });
             }
         });
 
         $(".ss-gridfield .gridfield-help-button").entwine({
-            onclick: function() {
+            onclick: function () {
                 var dialog = $("<div></div>").appendTo("body").dialog({
-                    modal: false,
+                    modal:     false,
                     resizable: true,
-                    width: 600,
-                    height: 600,
-                    close: function() {
+                    width:     600,
+                    height:    600,
+                    close:     function () {
                         $(this).dialog("destroy").remove();
                     }
                 });
@@ -70,105 +42,109 @@
             }
         });
 
-        $(".ss-gridfield-treeView--toggle").entwine({
-            onclick: function() {
-                return false;
-            }
-        });
+
+        // Milkyway\SS\GridFieldUtils\HasOneSelector
 
         $(".ss-gridfield-hasOneSelector-reset_button[data-relation]").entwine({
-            onclick: function() {
+            onclick: function () {
                 this
                     .parents('.ss-gridfield:first')
                     .find('td[data-relation="' + this.data('relation') + '"] ')
-                    .each(function() {
+                    .each(function () {
                         $(this).find('input').prop('checked', false);
-                });
+                    });
 
                 return false;
             }
         });
 
         $(".ss-gridfield-hasOneSelector-toggle[data-relation]").entwine({
-            onclick: function() {
+            onclick: function () {
                 var checked = this.prop('checked');
 
                 this
                     .parents('.ss-gridfield:first')
                     .find('td[data-relation="' + this.data('relation') + '"] ')
-                    .each(function() {
+                    .each(function () {
                         $(this).find('input').prop('checked', !checked);
                     });
             }
         });
 
+        // Milkyway\SS\GridFieldUtils\AddNewInlineExtended
+
         $(".ss-gridfield.ss-gridfield-add-inline-extended--table").entwine({
-            reload: function(opts, success) {
-                var $grid  = this,
+            reload:                function (opts, success) {
+                var $grid = this,
                     $added = $grid.find("tbody:first").find(".ss-gridfield-inline-new-extended--row").detach(),
                     args = arguments;
 
-                this._super(opts, function() {
-                    if($added.length) {
+                this._super(opts, function () {
+                    if ($added.length) {
                         $added.appendTo($grid.find("tbody:first"));
                         $grid.find("tbody:first").children(".ss-gridfield-no-items:first").hide();
                     }
 
-                    if(success) success.apply($grid, args);
+                    if (success) {
+                        success.apply($grid, args);
+                    }
                 });
             },
-            onaddnewinlinextended: function(e, $trigger) {
-                if(e.target != this[0])
+            onaddnewinlinextended: function (e, $trigger) {
+                if (e.target != this[0]) {
                     return;
+                }
 
                 var $tbody = this.find("tbody:first"),
                     num = this.data("add-inline-num") || 1;
 
-                if($trigger && $trigger.data('ajax')) {
+                if ($trigger && $trigger.data('ajax')) {
                     //if(!$trigger.hasClass('ss-gridfield-add-inline-extended--loading')) {
-                        var isConstructive = $trigger.hasClass('ss-ui-action-constructive'),
-                            $classSelector = $trigger.siblings('.ss-gridfield-inline-new-extended--class-selector:first'),
-                            data ={
-                                '_datanum': num
-                            };
+                    var isConstructive = $trigger.hasClass('ss-ui-action-constructive'),
+                        $classSelector = $trigger.siblings('.ss-gridfield-inline-new-extended--class-selector:first'),
+                        data = {
+                            '_datanum': num
+                        };
 
-                        if($classSelector.length) {
-                            if(!$classSelector.val()) {
-                                alert('Please select a type to create');
-                                return;
-                            }
-
-                            data[this.attr('id') + '_modelClass'] = $classSelector.val();
+                    if ($classSelector.length) {
+                        if (!$classSelector.val()) {
+                            alert('Please select a type to create');
+                            return;
                         }
 
-                        $trigger.addClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
-                        $trigger.find('.ui-icon').addClass('ss-ui-loading-icon');
+                        data[this.attr('id') + '_modelClass'] = $classSelector.val();
+                    }
 
-                        if(isConstructive)
-                            $trigger.removeClass('ss-ui-action-constructive');
+                    $trigger.addClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
+                    $trigger.find('.ui-icon').addClass('ss-ui-loading-icon');
 
-                        $.ajax({
-                            url:      $trigger[0].href,
-                            dataType: 'html',
-                            data: data,
-                            success:  function (data) {
-                                $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
-                                $trigger.find('.ui-icon').removeClass('ss-ui-loading-icon');
+                    if (isConstructive) {
+                        $trigger.removeClass('ss-ui-action-constructive');
+                    }
 
-                                var $data = $(data);
-                                $data.find('ss-gridfield-editable-row--toggle');
-                                $tbody.append($data);
-                                $tbody.children(".ss-gridfield-no-items:first").hide();
-                                $data.find("input:first").focus();
+                    $.ajax({
+                        url:      $trigger[0].href,
+                        dataType: 'html',
+                        data:     data,
+                        success:  function (data) {
+                            $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
+                            $trigger.find('.ui-icon').removeClass('ss-ui-loading-icon');
 
-                                if(isConstructive)
-                                    $trigger.addClass('ss-ui-action-constructive');
-                            },
-                            error:    function (e) {
-                                alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
-                                $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled');
+                            var $data = $(data);
+                            $data.find('ss-gridfield-editable-row--toggle');
+                            $tbody.append($data);
+                            $tbody.children(".ss-gridfield-no-items:first").hide();
+                            $data.find("input:first").focus();
+
+                            if (isConstructive) {
+                                $trigger.addClass('ss-ui-action-constructive');
                             }
-                        });
+                        },
+                        error:    function (e) {
+                            alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
+                            $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled');
+                        }
+                    });
                     //}
                 }
                 else {
@@ -190,17 +166,17 @@
         });
 
         $(".ss-gridfield-add-new-inline-extended--button").entwine({
-            onclick: function() {
+            onclick: function () {
                 this.getGridField().trigger("addnewinlinextended", [this]);
                 return false;
             }
         });
 
         $(".ss-gridfield-inline-new-extended--row-delete").entwine({
-            onclick: function() {
+            onclick: function () {
                 var $grid = this.parents('.ss-gridfield:first');
 
-                if(confirm(ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?"))) {
+                if (confirm(ss.i18n._t("GridFieldExtensions.CONFIRMDEL", "Are you sure you want to delete this?"))) {
                     this.parents('tbody:first')
                         .find('tr[data-inline-new-extended-row=' +
                             this.parents('tr[data-inline-new-extended-row]:first').data('inlineNewExtendedRow') + ']'
@@ -214,7 +190,7 @@
         });
 
         $(".ss-gridfield-add-inline-extended--toggle").entwine({
-            onclick: function() {
+            onclick: function () {
                 var $parent = this.parents('tr:first');
 
                 this.toggleClass('ss-gridfield-add-inline-extended--toggle_open');
@@ -225,62 +201,100 @@
             }
         });
 
+        // Milkyway\SS\GridFieldUtils\EditableRow
+
+        $('.cms-container').entwine({
+            OpenGridFieldToggles: {},
+            saveTabState:         function () {
+                var $that = this,
+                    OpenGridFieldToggles = $that.getOpenGridFieldToggles();
+
+                $that._super();
+
+                $that.find('.ss-gridfield.ss-gridfield-editable-rows').each(function () {
+                    var $this = $(this),
+                        openToggles = $this.getOpenToggles();
+
+                    if (openToggles.length) {
+                        OpenGridFieldToggles[$this.attr('id')] = $this.getOpenToggles();
+                    }
+                });
+            },
+            restoreTabState:      function (overrideStates) {
+                var $that = this,
+                    OpenGridFieldToggles = $that.getOpenGridFieldToggles();
+
+                $that._super(overrideStates);
+
+                $.each(OpenGridFieldToggles, function (id, openToggles) {
+                    $that.find('#' + id + '.ss-gridfield.ss-gridfield-editable-rows').reopenToggles(openToggles);
+                });
+
+                $that.setOpenGridFieldToggles({});
+            }
+        });
+
         $(".ss-gridfield.ss-gridfield-editable-rows").entwine({
-            reload: function (opts, success) {
+            reload:         function (opts, success) {
                 var $grid = this,
                     openToggles = $grid.getOpenToggles(),
                     args = arguments;
 
                 this._super(opts, function () {
                     $grid.reopenToggles(openToggles);
-                    if (success) success.apply($grid, args);
+                    if (success) {
+                        success.apply($grid, args);
+                    }
                 });
             },
-            getOpenToggles: function() {
+            getOpenToggles: function () {
                 var $grid = this,
                     openToggles = [];
 
-                if($grid.hasClass('ss-gridfield-editable-rows_disableToggleState'))
+                if ($grid.hasClass('ss-gridfield-editable-rows_disableToggleState')) {
                     return openToggles;
+                }
 
-                $grid.find(".ss-gridfield-editable-row--toggle_open").each(function(key) {
+                $grid.find(".ss-gridfield-editable-row--toggle_open").each(function (key) {
                     var $this = $(this),
                         $holder = $this.parents('td:first'),
                         $parent = $this.parents('tr:first'),
                         $currentGrid = $parent.parents('.ss-gridfield:first'),
                         $editable = $parent.next();
 
-                    if(!$editable.hasClass('ss-gridfield-editable-row--row') || $editable.data('id') != $parent.data('id') || $editable.data('class') != $parent.data('class')) {
+                    if (!$editable.hasClass('ss-gridfield-editable-row--row') || $editable.data('id') != $parent.data('id') || $editable.data('class') != $parent.data('class')) {
                         $editable = null;
                     }
-                    else if($currentGrid.hasClass('ss-gridfield-editable-rows_disableToggleState')) {
+                    else if ($currentGrid.hasClass('ss-gridfield-editable-rows_disableToggleState')) {
                         return true;
                     }
 
-                    openToggles[key] =  {
+                    openToggles[key] = {
                         link: $holder.data('link')
                     };
 
-                    if($editable) {
-                        $editable.find('.ss-tabset.ui-tabs').each(function() {
-                            if(!openToggles[key].tabs)
+                    if ($editable) {
+                        $editable.find('.ss-tabset.ui-tabs').each(function () {
+                            if (!openToggles[key].tabs) {
                                 openToggles[key].tabs = {};
+                            }
 
                             openToggles[key].tabs[this.id] = $(this).tabs('option', 'selected');
                         });
 
-                        if($currentGrid.hasClass('ss-gridfield-editable-rows_allowCachedToggles'))
+                        if ($currentGrid.hasClass('ss-gridfield-editable-rows_allowCachedToggles')) {
                             openToggles[key].row = $editable.detach();
+                        }
                     }
                 });
 
                 return openToggles;
             },
-            reopenToggles: function(openToggles) {
+            reopenToggles:  function (openToggles) {
                 var $grid = this,
-                    openTabsInToggle = function(currentToggle, $row) {
-                        if(currentToggle.hasOwnProperty('tabs') && currentToggle.tabs) {
-                            $.each(currentToggle.tabs, function(key, value) {
+                    openTabsInToggle = function (currentToggle, $row) {
+                        if (currentToggle.hasOwnProperty('tabs') && currentToggle.tabs) {
+                            $.each(currentToggle.tabs, function (key, value) {
                                 $row.find('#' + key + '.ss-tabset.ui-tabs').tabs({
                                     active: value
                                 });
@@ -288,32 +302,35 @@
                         }
                     };
 
-                if($grid.hasClass('ss-gridfield-editable-rows_disableToggleState'))
+                if ($grid.hasClass('ss-gridfield-editable-rows_disableToggleState')) {
                     return;
+                }
 
-                $.each(openToggles, function(key) {
-                    if(openToggles[key].hasOwnProperty('link') && openToggles[key].link) {
+                $.each(openToggles, function (key) {
+                    if (openToggles[key].hasOwnProperty('link') && openToggles[key].link) {
                         var $toggleHolder = $grid.find("td.ss-gridfield-editable-row--icon-holder[data-link='" + openToggles[key].link + "']");
 
-                        if(!$toggleHolder.length)
+                        if (!$toggleHolder.length) {
                             return true;
+                        }
                     }
-                    else  {
+                    else {
                         return true;
                     }
 
-                    if(openToggles[key].hasOwnProperty('row') && openToggles[key].row) {
+                    if (openToggles[key].hasOwnProperty('row') && openToggles[key].row) {
                         var $parent = $toggleHolder.parents('tr:first');
 
                         $toggleHolder
                             .find(".ss-gridfield-editable-row--toggle")
                             .addClass('ss-gridfield-editable-row--toggle_loaded ss-gridfield-editable-row--toggle_open');
 
-                        if(!$parent.next().hasClass('ss-gridfield-editable-row--row'))
+                        if (!$parent.next().hasClass('ss-gridfield-editable-row--row')) {
                             $parent.after(openToggles[key].row);
+                        }
                     }
-                    else if(openToggles[key].hasOwnProperty('link') && openToggles[key].link) {
-                        $toggleHolder.find(".ss-gridfield-editable-row--toggle").trigger('click', function($newRow) {
+                    else if (openToggles[key].hasOwnProperty('link') && openToggles[key].link) {
+                        $toggleHolder.find(".ss-gridfield-editable-row--toggle").trigger('click', function ($newRow) {
                             $grid.find('.ss-gridfield.ss-gridfield-editable-rows').reopenToggles(openToggles);
                             openTabsInToggle(openToggles[key], $newRow);
                         }, false);
@@ -323,47 +340,49 @@
         });
 
         $(".ss-gridfield-editable-row--toggle").entwine({
-            onclick: function(e, callback, noFocus) {
+            onclick: function (e, callback, noFocus) {
                 var $this = this,
                     $holder = $this.parents('td:first'),
                     link = $holder.data('link'),
                     $parent = $this.parents('tr:first');
 
-                if($parent.hasClass('ss-gridfield-editable-row--loading'))
+                if ($parent.hasClass('ss-gridfield-editable-row--loading')) {
                     return false;
+                }
 
-                if(link && !$this.hasClass('ss-gridfield-editable-row--toggle_loaded')) {
+                if (link && !$this.hasClass('ss-gridfield-editable-row--toggle_loaded')) {
                     $parent.addClass('ss-gridfield-editable-row--loading');
 
                     $.ajax({
-                        url: link,
+                        url:      link,
                         dataType: 'html',
-                        success: function(data) {
+                        success:  function (data) {
                             var $data = $(data);
                             $this.addClass('ss-gridfield-editable-row--toggle_loaded ss-gridfield-editable-row--toggle_open');
                             $parent.removeClass('ss-gridfield-editable-row--loading');
                             $parent.after($data);
 
-                            if(noFocus !== false)
+                            if (noFocus !== false) {
                                 $data.find("input:first").focus();
+                            }
 
-                            if(typeof callback === 'function') {
+                            if (typeof callback === 'function') {
                                 callback($data, $this, $parent);
                             }
                         },
-                        error: function(e) {
+                        error:    function (e) {
                             alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
                             $parent.removeClass('ss-gridfield-editable-row--loading');
                         }
                     });
                 }
-                else if(link) {
+                else if (link) {
                     var $editable = $parent.next();
 
-                    if($editable.hasClass('ss-gridfield-editable-row--row') && $editable.data('id') == $parent.data('id') && $editable.data('class') == $parent.data('class')) {
+                    if ($editable.hasClass('ss-gridfield-editable-row--row') && $editable.data('id') == $parent.data('id') && $editable.data('class') == $parent.data('class')) {
                         $this.toggleClass('ss-gridfield-editable-row--toggle_open');
 
-                        if($this.hasClass('ss-gridfield-editable-row--toggle_open')) {
+                        if ($this.hasClass('ss-gridfield-editable-row--toggle_open')) {
                             $editable.removeClass('ss-gridfield-editable-row--row_hide').find("input:first").focus();
                         }
                         else {
@@ -376,20 +395,143 @@
             }
         });
 
+        // Milkyway\SS\GridFieldUtils\RangeSlider
+
         var sliderTimeStamp;
         $(".ss-gridfield-range-slider--field.rangeslider.has-rangeslider").entwine({
-            onchange: function(e) {
-                if(e.timeStamp == sliderTimeStamp)
+            onchange: function (e) {
+                if (e.timeStamp == sliderTimeStamp) {
                     return;
+                }
 
                 sliderTimeStamp = e.timeStamp;
 
                 var $parent = this.parents('.ss-gridfield-range-slider:first'),
                     $button = $parent.find('.ss-gridfield-range-slider--button');
 
-                if($button.length) {
+                if ($button.length) {
                     $button.click();
                 }
+            }
+        });
+
+        // Milkyway\SS\GridFieldUtils\AddExistingPicker
+        $(".add-existing-picker-actions--add-items").entwine({
+            onclick:                  function (e, callback) {
+                var $dialog = this.getDialog();
+
+                this.addCloseDialogIfRequired($dialog);
+                this.addItems(null, null, '', function() {
+                    if(callback) {
+                        callback();
+                    }
+                    $dialog.data("grid").reload();
+                    $dialog.dialog("close");
+                });
+                e.preventDefault();
+            },
+            getDialog:                function () {
+                return this.closest(".add-existing-search-dialog").children(".ui-dialog-content:first");
+            },
+            addItems:                 function ($dialog, itemsToAdd, link, callback) {
+                var that = this;
+
+                if (!$dialog) {
+                    $dialog = that.getDialog();
+                }
+
+                if (!itemsToAdd) {
+                    itemsToAdd = $dialog.data("items-to-add") || [];
+                }
+
+                if(!itemsToAdd.length) {
+                    statusMessage(ss.i18n._t("GridField_AddExistingPicker.NO_ITEMS", "No items selected"), 'error');
+
+                    if(!$dialog.find(".add-existing-search-items").children().length) {
+                        $dialog.dialog("close");
+                    }
+                }
+
+                if (!link) {
+                    link = $dialog.find(".add-existing-picker-items").data("add-link");
+                }
+
+                if (!callback) {
+                    callback = function () {
+                        if ($dialog.data("grid")) {
+                            $dialog.data("grid").reload();
+                        }
+                    };
+                }
+
+                that.clearItemsToAdd($dialog);
+                $dialog.parent().addClass('loading loading_hiddenContents');
+
+                $.post(link, {ids: itemsToAdd}, callback).always(function() {
+                    $dialog.parent().removeClass('loading loading_hiddenContents');
+                });
+            },
+            clearItemsToAdd: function($dialog) {
+                if (!$dialog) {
+                    $dialog = this.getDialog();
+                }
+
+                $dialog.data("items-to-add", []);
+            },
+            addCloseDialogIfRequired: function ($dialog) {
+                if (!$dialog) {
+                    $dialog = this.getDialog();
+                }
+
+                if ($dialog.data("onClose")) {
+                    return;
+                }
+
+                var that = this;
+
+                $dialog.on('dialogbeforeclose', function(e, ui) {
+                    var $this = $(this),
+                        itemsToAdd = $this.data("items-to-add") || [];
+
+                    if (itemsToAdd.length && confirm(ss.i18n.sprintf(ss.i18n._t("GridField_AddExistingPicker.CONFIRM", "Would you like to add %s selected items to the current list?"), itemsToAdd.length))) {
+                        that.addItems($this, itemsToAdd, '', function () {
+                            $this.data("grid").reload();
+                        });
+                    }
+                    else {
+                        that.clearItemsToAdd($this);
+                    }
+                });
+
+                $dialog.data("onClose", true);
+            }
+        });
+
+        $(".add-existing-search-dialog .add-existing-search-items.add-existing-picker-items a").entwine({
+            onclick:                  function (e) {
+                var $button = this.getButton(),
+                    $dialog = $button.getDialog(),
+                    $li = this.parent(),
+                    items = $dialog.data("items-to-add") || [],
+                    id = this.data('id');
+
+                $button.addCloseDialogIfRequired($dialog);
+
+                if (items.indexOf(id) === -1) {
+                    items.push(id);
+                    $li.addClass('add-existing-picker-item_toAdd');
+                }
+                else {
+                    items.splice(items.indexOf(id), 1);
+                    $li.removeClass('add-existing-picker-item_toAdd');
+                }
+
+                $dialog.data("items-to-add", items);
+
+                e.preventDefault();
+            },
+            getButton:                function () {
+                return this.closest(".add-existing-search-dialog").find("..add-existing-picker-actions--add-items:first");
             }
         });
     });

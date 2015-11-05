@@ -1,0 +1,83 @@
+@keyframes gf-utils-check {
+	0% {
+		height: 0;
+		width: 0;
+		opacity: 0;
+	}
+
+	25% {
+		height: 0;
+		width: 5px;
+	}
+
+	50% {
+		height: 10px;
+		width: 5px;
+		opacity: 1;
+	}
+}
+
+.add-existing-search-dialog.loading_hiddenContents * {
+	opacity: 0;
+}
+
+.ui-dialog-content {
+	.add-existing-search-dialog & {
+		position: relative;
+		transform: translateZ(0);
+	}
+}
+
+.add-existing-picker-actions {
+	.cms .ui-dialog-content & {
+		position: fixed;
+		bottom: -13px;
+		right: 0;
+		z-index: 1000;
+	}
+}
+
+.add-existing-picker-item--link {
+	position: relative;
+	overflow: hidden;
+
+	&:before {
+		content: '';
+		display: inline-block !important;
+		float: right;
+		transform: scaleX(-1) rotate(180deg + -45deg);
+		transform-origin: left top;
+		border-right: 4px solid #93BE3F;
+		border-top: 4px solid #93BE3F;
+		width: 5px;
+		height: 10px;
+		position: relative;
+		top: 6px;
+		right: 6px;
+		opacity: 0;
+	}
+
+	&:after {
+		content: '';
+		display: block !important;
+		position: absolute;
+		top: 0;
+		left:0;
+		right:0;
+		bottom:0;
+		opacity:0;
+		background-color:fade(#93BE3F, 15%);
+		transition: opacity .3s ease-in-out;
+	}
+
+	.add-existing-picker-item_toAdd & {
+		&:before {
+			opacity: 1;
+			animation: gf-utils-check 0.8s;
+		}
+
+		&:after {
+			opacity: 1;
+		}
+	}
+}

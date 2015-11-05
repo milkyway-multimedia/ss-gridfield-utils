@@ -6,6 +6,7 @@ Includes the following (note they all live in the namespace Milkyway\SS\GridFiel
 * [AddNewInlineExtended](docs/en/AddNewInlineExtended.md): A more complex version of GridFieldAddNewInlineButton, allowing you to set custom fields, rather than copying GridFieldEditableColumns (defaults to this behaviour)
 * [EditableRow](docs/en/EditableRow.md): adds an expandable form to each row in the GridField, allowing you to edit records directly from the GridField.
 * [HasOneSelector](docs/en/HasOneSelector.md): Allow you to select a has one relation from the current GridField
+* AddExistingCompleter: Works exactly like the one in gridfieldextensions, except it allows you to add more before closing the window - allowing for a faster workflow (requires silverstripe-australia/gridfieldextensions)
 * RangeSlider: Filter your GridField using a slider, for a more user-friendly option for viewing lots of records
 * HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
 * SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
