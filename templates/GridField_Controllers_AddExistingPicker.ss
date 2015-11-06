@@ -2,9 +2,9 @@ $SearchForm
 
 <h3><% _t("RESULTS", "Results") %></h3>
 
-<div class="Actions add-existing-picker-actions">
+<div class="Actions add-existing-picker-actions<% if $isAsync %> hide<% end_if %>">
 
-    <a href="$Link('add')" class="action ss-ui-action-constructive icon-accept ss-ui-button ui-button ui-widget ui-state-default ui-corner-all add-existing-picker-actions--add-items<% if $isAsync %> hide<% end_if %>" role="button" aria-disabled="false"><% _t("GridField_AddExistingPicker.ADD_SELECTED_ITEMS", "Add Selected Items") %></a>
+    <a href="$Link('add')" class="action ss-ui-action-constructive icon-accept ss-ui-button ui-button ui-widget ui-state-default ui-corner-all add-existing-picker-actions--add-items" role="button" aria-disabled="false"><% _t("GridField_AddExistingPicker.ADD_SELECTED_ITEMS", "Add Selected Items") %></a>
 
 </div>
 

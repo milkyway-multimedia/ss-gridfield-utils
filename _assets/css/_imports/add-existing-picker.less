@@ -29,6 +29,10 @@
 }
 
 .add-existing-picker-actions {
+	&.hide  {
+		display: none;
+	}
+
 	.cms .ui-dialog-content & {
 		position: fixed;
 		bottom: -13px;
@@ -90,11 +94,15 @@ button.add-existing-picker-item--undo {
 	text-decoration: underline !important;
 	text-shadow: none !important;
 
-	.notice-item & {
-		color: white;
-	}
+	//.notice-item & {
+	//	color: white;
+	//}
 
 	.ui-button-text {
 		padding:0;
 	}
+}
+
+.notice-item.add-existing-picker-item--undo-holder {
+	position: static;
 }

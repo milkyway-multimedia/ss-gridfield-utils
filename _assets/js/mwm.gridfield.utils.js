@@ -591,7 +591,7 @@
                             ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
                             title,
                             ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s">%s</button>', id, undoLink, title, ss.i18n._t("UNDO", "Undo"))
-                        ), type: 'add-existing-picker-item--undo-holder', stay: true});
+                        ), type: 'add-existing-picker-item--undo-holder', stayTime: 10000});
                     }, true);
                 }
                 else {
