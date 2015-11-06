@@ -238,10 +238,17 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public function getForm($grid, $record, $removeEditableColumnFields = true)
     {
         $this->workingGrid = $grid;
-        return \Form::create($this, $grid->ID() . '-EditableRow-' . $record->ID,
+        $form = \Form::create($this, $grid->ID() . '-EditableRow-' . $record->ID,
             $this->getFieldList($record, $grid, $removeEditableColumnFields), \FieldList::create(),
             $this->getValidatorForForm($record, $grid))->loadDataFrom($record)->setFormAction($this->Link('form',
             $record->ID))->disableSecurityToken();
+
+        if($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
+            $root->setTemplate('');
+            $form->removeExtraClass('cms-tabset');
+        }
+
+        return $form;
     }
 
     protected function getFieldList($record, $grid = null, $removeEditableColumnFields = true)
@@ -334,15 +341,8 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public function loadItem($grid, $request)
     {
         $record = $this->getRecordFromRequest($grid, $request);
-
         $form = $this->getForm($grid, $record);
-
-        foreach ($form->Fields()->dataFields() as $field) {
-            $class = str_replace('\\', '_', __CLASS__);
-            $field->setName(sprintf(
-                '%s[%s][%s][%s]', $grid->getName(), $class, $record->ID, $field->getName()
-            ));
-        }
+        $this->renameFieldsInCompositeField($form->Fields(), $grid, $record);
 
         if (!$record->canEdit()) {
             $form->makeReadonly();
@@ -395,5 +395,18 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     {
         return $this->workingGrid ? \Controller::join_links($this->workingGrid->Link($this->urlSegment), $action,
             $id) : null;
+    }
+
+    protected function renameFieldsInCompositeField($fields, $grid, $record) {
+        foreach ($fields as $field) {
+            $class = str_replace('\\', '_', __CLASS__);
+            $field->setName(sprintf(
+                '%s[%s][%s][%s]', $grid->getName(), $class, $record->ID, $field->getName()
+            ));
+
+            if($field->isComposite()) {
+                $this->renameFieldsInCompositeField($field->FieldList(), $grid, $record);
+            }
+        }
     }
 }

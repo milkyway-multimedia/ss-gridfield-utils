@@ -359,7 +359,7 @@
                         success:  function (data) {
                             var $data = $(data);
                             $this.addClass('ss-gridfield-editable-row--toggle_loaded ss-gridfield-editable-row--toggle_open');
-                            $parent.removeClass('ss-gridfield-editable-row--loading');
+                            $parent.addClass('ss-gridfield-editable-row--reference').removeClass('ss-gridfield-editable-row--loading');
                             $parent.after($data);
 
                             if (noFocus !== false) {
@@ -591,7 +591,7 @@
                             ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
                             title,
                             ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s">%s</button>', id, undoLink, title, ss.i18n._t("UNDO", "Undo"))
-                        ), type: 'add-existing-picker-item--undo-holder', stayTime: 10000});
+                        ), type: 'add-existing-picker-item--undo-holder', stayTime: 5000});
                     }, true);
                 }
                 else {

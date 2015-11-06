@@ -80,12 +80,9 @@
 	}
 }
 
-.ss-gridfield-editable-row--row {
-	&:hover .ss-gridfield-editable-row--fieldsHolder_before ~ * {
-		background-color:white;
+.ss-gridfield-editable-row--reference {
+	&:hover,
+	&:hover + tr > .ss-gridfield-editable-row--fieldsHolder_before {
+		background-color:#FFFAD6;
 	}
-
-	 > * {
-		 border-bottom: 2px solid fade(black, 10%);
-	 }
 }

@@ -256,21 +256,6 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
                     '<script type="text/x-tmpl" class="ss-gridfield-add-inline-template">',
                     '</script>',
                 ], '', $ecFragments['after']));
-
-
-            if ($editableRow = $grid->Config->getComponentByType('Milkyway\SS\GridFieldUtils\EditableRow')) {
-                foreach ($grid->getColumns() as $column) {
-                    $countUntilThisColumn++;
-
-                    if (in_array($column, $editableRow->getColumnsHandled($grid))) {
-                        break;
-                    }
-                }
-
-                if ($countUntilThisColumn == count($grid->getColumns())) {
-                    $countUntilThisColumn = 0;
-                }
-            }
         }
 
         return [
@@ -321,9 +306,16 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     protected function getForm($grid, $append = '', $removeEditableColumnFields = true, $modelClass = '')
     {
         $this->workingGrid = $grid;
-        return \Form::create($this, 'Form-' . $grid->getModelClass() . $append,
+        $form = \Form::create($this, 'Form-' . $grid->getModelClass() . $append,
             $this->getFieldList($grid, $removeEditableColumnFields, $modelClass), \FieldList::create(),
             $this->getValidatorForForm($grid, $modelClass))->loadDataFrom($this->getRecordFromGrid($grid, $modelClass));
+
+        if($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
+            $root->setTemplate('');
+            $form->removeExtraClass('cms-tabset');
+        }
+
+        return $form;
     }
 
     protected function getFieldList($grid = null, $removeEditableColumnFields = true, $modelClass = '')
@@ -428,11 +420,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         if (preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $class), $remaining,
                 $matches) && isset($matches[1])
         ) {
-            foreach ($form->Fields()->dataFields() as $field) {
-                $field->setName(sprintf(
-                    '%s[%s][%s][%s]', $grid->getName(), $class, $matches[1], $field->getName()
-                ));
-            }
+            $this->renameFieldsInCompositeField($form->Fields(), $grid, $matches[1]);
         }
 
         return $form;
@@ -477,5 +465,18 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     protected function getCacheKey(array $vars = [])
     {
         return preg_replace('/[^a-zA-Z0-9_]/', '', __CLASS__ . '_' . urldecode(http_build_query($vars, '', '_')));
+    }
+
+    protected function renameFieldsInCompositeField($fields, $grid, $rowNumber = 1) {
+        foreach ($fields as $field) {
+            $class = str_replace('\\', '_', __CLASS__);
+            $field->setName(sprintf(
+                '%s[%s][%s][%s]', $grid->getName(), $class, $rowNumber, $field->getName()
+            ));
+
+            if($field->isComposite()) {
+                $this->renameFieldsInCompositeField($field->FieldList(), $grid, $rowNumber);
+            }
+        }
     }
 }
