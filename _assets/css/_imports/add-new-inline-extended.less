@@ -91,16 +91,24 @@
 	box-shadow: none;
 
 	.cms .ss-gridfield .left > & {
-		padding: .4em 1em .4em 2.1em;
+		//padding: .4em 1em .4em 2.1em;
+		padding-right:0;
 		width: auto;
+		margin-top: 0 !important;
 		margin-right: 0 !important;
-		height: 33px;
-		border-top-right-radius:0;
-		border-bottom-right-radius:0;
+		//height: 33px;
+
+		.chzn-single {
+			border-top-right-radius:0;
+			border-bottom-right-radius:0;
+			border-right:0;
+		}
 
 		+ .ss-gridfield-add-new-inline-extended--button {
 			border-top-left-radius:0;
 			border-bottom-left-radius:0;
+			padding-bottom: 2px;
+			padding-top: 2px;
 		}
 	}
 }

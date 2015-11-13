@@ -7,9 +7,9 @@
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
-use Controller;
+use GridFieldDetailForm as Original;
 
-class GridFieldDetailForm extends \GridFieldDetailForm {
+class GridFieldDetailForm extends Original {
 	public $uriSegment = 'item';
 
 	public function __construct($name = 'DetailForm', $uriSegment = 'item') {
@@ -31,12 +31,5 @@ class GridFieldDetailForm extends \GridFieldDetailForm {
 
 	public function getUriSegment() {
 		return $this->uriSegment;
-	}
-}
-
-class GridFieldDetailForm_ItemRequest extends \GridFieldDetailForm_ItemRequest {
-	public function Link($action = null) {
-		return Controller::join_links($this->gridField->Link($this->component->getUriSegment()),
-			$this->record->ID ? $this->record->ID : 'new', $action);
 	}
 }

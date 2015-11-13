@@ -169,7 +169,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
     public function getHTMLFragments($grid)
     {
-        if ($grid->getList() && !singleton($grid->getModelClass())->canCreate()) {
+        if (!$this->canCreate($grid)) {
             return [];
         }
 
@@ -478,5 +478,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
                 $this->renameFieldsInCompositeField($field->FieldList(), $grid, $rowNumber);
             }
         }
+    }
+
+    protected function canCreate($grid) {
+        return $grid->getList() && singleton($grid->getModelClass())->canCreate();
     }
 }

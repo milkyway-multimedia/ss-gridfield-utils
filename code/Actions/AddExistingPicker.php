@@ -22,6 +22,7 @@ class AddExistingPicker extends AddExistingSearchButton
     protected $searchHandlerFactory;
     protected $addHandler;
     protected $undoHandler;
+    protected $urlSegment;
     public $async = true;
 
     /**
@@ -86,6 +87,23 @@ class AddExistingPicker extends AddExistingSearchButton
     }
 
     /**
+     * @return string
+     */
+    public function getUrlSegment()
+    {
+        return $this->urlSegment;
+    }
+
+    /**
+     * @param string $urlSegment
+     */
+    public function setUrlSegment($urlSegment = '')
+    {
+        $this->urlSegment = $urlSegment;
+        return $this;
+    }
+
+    /**
      * Enable the async picker, when an item is clicked in the list
      * it is automatically added to the list, with an undo option.
      *
@@ -126,10 +144,10 @@ class AddExistingPicker extends AddExistingSearchButton
 
         $data = ArrayData::create([
             'Title' => $this->getTitle(),
-            'Link'  => $grid->Link('add-existing-search'),
+            'Link'  => $grid->Link($this->urlSegment ?: 'add-existing-search'),
         ]);
 
-        if($this->async) {
+        if ($this->async) {
             $grid->addExtraClass('ss-gridfield-add-existing-picker_async');
         }
 
@@ -138,6 +156,13 @@ class AddExistingPicker extends AddExistingSearchButton
                 'GridField_AddExistingPicker',
                 'GridFieldAddExistingSearchButton',
             ]),
+        ];
+    }
+
+    public function getURLHandlers($grid)
+    {
+        return [
+            $this->urlSegment ?: 'add-existing-search' => 'handleSearch',
         ];
     }
 }

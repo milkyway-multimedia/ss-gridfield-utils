@@ -13,12 +13,12 @@ class AddNewInlineExtended_MultiClass extends AddNewInlineExtended
 
 	public $showEmptyString = true;
 
-	private $useAllowedClasses;
+	private $useAllowedClasses = [];
 
 	public function getHTMLFragments($grid) {
 		$classes = $this->getAllowedClasses($grid);
 
-		if(count($classes)) {
+		if(!empty($classes)) {
 			$this->useAllowedClasses = $classes;
 			return parent::getHTMLFragments($grid);
 		}
@@ -84,5 +84,9 @@ class AddNewInlineExtended_MultiClass extends AddNewInlineExtended
 			'Link' => $this->Link('load'),
 			'ClassField' => $field,
 		])->renderWith($this->buttonTemplate);
+	}
+
+	protected function canCreate($grid) {
+		return $grid->getList() && !empty($this->useAllowedClasses);
 	}
 }

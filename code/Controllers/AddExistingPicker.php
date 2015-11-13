@@ -11,7 +11,8 @@ if(!class_exists('GridFieldAddExistingSearchButton')) {
     return;
 }
 
-use DataList;
+use Controller;
+use PaginatedList;
 
 class AddExistingPicker extends \GridFieldAddExistingSearchHandler
 {
@@ -29,11 +30,11 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
     }
 
     public function add($request) {
-        if($handler = $this->button->getAddHandler()) {
-            return call_user_func($handler, $request, $this->grid, $this->button);
-        }
-
         $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
+
+        if($handler = $this->button->getAddHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button, $items);
+        }
 
         if($items === false) {
             return;
@@ -47,11 +48,11 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
     }
 
     public function undo($request) {
-        if($handler = $this->button->getUndoHandler()) {
-            return call_user_func($handler, $request, $this->grid, $this->button);
-        }
-
         $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
+
+        if($handler = $this->button->getUndoHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button, $items);
+        }
 
         if($items === false) {
             return;
@@ -64,6 +65,22 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
         }
     }
 
+    public function Items() {
+        $list = $this->getSearchList();
+
+        if($list->dataClass() == $this->grid->getModelClass()) {
+            $list = $list->subtract($this->grid->getList());
+        }
+
+        $list = new PaginatedList($list, $this->request);
+
+        return $list;
+    }
+
+    public function isAsync() {
+        return $this->button->isAsync();
+    }
+
     protected function checkAccess($ids) {
         if(!$ids || !count($ids)) {
             $this->httpError(400);
@@ -71,10 +88,9 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
         }
 
         $items = [];
-        $list = $this->grid->getList();
 
         foreach($ids as $id) {
-            $item = DataList::create($list->dataClass())->byID($id);
+            $item = $this->getSearchList()->byID($id);
 
             if(!$item) {
                 $this->httpError(400);
@@ -87,7 +103,7 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
         return count($items) ? $items : false;
     }
 
-    public function isAsync() {
-        return $this->button->isAsync();
+    public function Link($action = null) {
+        return Controller::join_links($this->grid->Link(), ($this->button->getUrlSegment() ?: 'add-existing-search'), $action);
     }
 }
