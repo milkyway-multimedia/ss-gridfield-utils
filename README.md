@@ -7,6 +7,7 @@ Includes the following (note they all live in the namespace Milkyway\SS\GridFiel
 * [EditableRow](docs/en/EditableRow.md): adds an expandable form to each row in the GridField, allowing you to edit records directly from the GridField.
 * [HasOneSelector](docs/en/HasOneSelector.md): Allow you to select a has one relation from the current GridField
 * [AddExistingPicker](docs/en/AddExistingPicker.md): Works exactly like the one in gridfieldextensions, except it allows you to add more before closing the window - allowing for a faster workflow (requires silverstripe-australia/gridfieldextensions)
+* [MinorActionsHolder](docs/en/MinorActionsHolder.md): Defines a new fragment that will holds SS UI buttons as a dropdown (not touch friendly)
 * RangeSlider: Filter your GridField using a slider, for a more user-friendly option for viewing lots of records
 * HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
 * SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
@@ -45,6 +46,8 @@ Add the following to your composer.json file
 - [silverstripe-australia](https://github.com/silverstripe-australia "silverstripe-australia on Github"): They now look after the GridFieldExtensions module, and have done some updates which I have probably borrowed
 
 ## TODO
+* Screenshots!!
+* Make MinorActionsHolder touch friendly
 * Get DisplayAsTimeline to work with sorting (just in case)
 * Test EditableRow with tabs...
 * Make RangeSlider work with Date Range Fields / Any Range Fields

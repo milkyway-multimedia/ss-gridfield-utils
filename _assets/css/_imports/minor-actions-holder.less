@@ -1,0 +1,135 @@
+.ss-gridfield--minorActions {
+	display          : inline-block;
+	height           : 33px;
+	width            : 250px;
+	position         : relative;
+	padding-right    : 30px;
+	background-color : #ffffff;
+	border-radius    : 5px;
+	margin-bottom    : 5px;
+	overflow         : hidden;
+	border           : 1px solid #aaa;
+	vertical-align   : middle;
+
+	&-dropdown {
+		position      : absolute;
+		top           : 0;
+		left          : 0;
+		right         : 0;
+		border-radius : 5px;
+		border        : 1px solid transparent;
+	}
+
+	&:hover {
+		overflow     : visible;
+		border-color : transparent;
+	}
+
+	&:hover &-dropdown {
+		z-index          : 2;
+		background-color : #98AAB8;
+		border-color     : #999;
+		box-shadow       : 1px 1px 5px fade(#000, 0.8);
+	}
+
+	.cms .ss-gridfield &-dropdown > *,
+	&-dropdown > * {
+		background    : none;
+		border        : 0;
+		box-shadow    : none;
+		border-radius : 0;
+		display       : block;
+		text-align    : left;
+		text-shadow   : none;
+		margin        : 0;
+		margin-bottom : 0 !important;
+		padding       : 4px;
+		line-height   : 26px;
+
+		&:hover,
+		&:active {
+			background    : none;
+			border        : 0;
+			box-shadow    : none;
+			border-radius : 0;
+			display       : block;
+			text-align    : left;
+			text-shadow   : none;
+		}
+
+		&:first-child {
+			border-top-left-radius  : 5px;
+			border-top-right-radius : 5px;
+		}
+
+		&:first-child {
+			position : relative;
+
+			&:before {
+				content          : '\203A';
+				display          : block;
+				position         : absolute;
+				top              : 3px;
+				right            : 10px;
+				font-size        : 20px;
+				opacity          : .5;
+				transform        : scale(1, .75);
+				transform-origin : center;
+				transition       : transform .3s ease-in-out;
+				z-index          : 3;
+			}
+
+			&:not(:nth-last-child(1)) {
+				&:before {
+					transform : rotate(90deg) scale(1, .75);
+				}
+			}
+		}
+
+		&:last-child {
+			border-bottom-left-radius  : 5px;
+			border-bottom-right-radius : 5px;
+		}
+
+		&:hover {
+			background-color : #3875d7;
+		}
+	}
+
+	.cms .ss-gridfield &:hover &-dropdown > *,
+	&:hover &-dropdown > * {
+		color : #ffffff;
+
+		&:first-child:not(:nth-last-child(1)) {
+			&:before {
+				color   : #ffffff;
+				opacity : 1;
+			}
+		}
+
+		&:first-child:not(:nth-last-child(1)) {
+			&:before {
+				transform : rotate(270deg) scale(1, .75);
+			}
+		}
+	}
+}
+
+.ss-gridfield--minorActions-title {
+	opacity     : 0.7;
+	text-indent : 5px;
+	font-size   : 12px;
+
+	&:hover {
+		background-color : transparent !important;
+		text-shadow      : none;
+	}
+}
+
+.ss-gridfield--minorActions-label {
+	display: inline-block;
+	height: 33px;
+	line-height: 33px;
+	padding: 0 5px;
+	opacity: 0.7;
+}
