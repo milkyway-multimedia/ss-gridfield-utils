@@ -580,17 +580,23 @@
 
                     $li.addClass('loading add-existing-picker-item_toAdd');
 
-                    $button.addItems($dialog, [id], '', function() {
+                    $button.addItems($dialog, [id], '', function(data) {
+                        var keep = data && data.hasOwnProperty('keep') && data.keep;
+
                         if ($dialog.data("grid")) {
                             $dialog.data("grid").reload();
                         }
 
-                        $li.removeClass('add-existing-picker-item_toAdd loading').hide();
+                        $li.removeClass('add-existing-picker-item_toAdd loading');
+
+                        if(!keep) {
+                            $li.hide();
+                        }
 
                         $.noticeAdd({text: ss.i18n.sprintf(
                             ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
                             title,
-                            ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s">%s</button>', id, undoLink, title, ss.i18n._t("UNDO", "Undo"))
+                            ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s" data-keep="%s">%s</button>', id, undoLink, title, (keep ? 'true' : 'false'), ss.i18n._t("UNDO", "Undo"))
                         ), type: 'add-existing-picker-item--undo-holder', stayTime: 5000});
                     }, true);
                 }
