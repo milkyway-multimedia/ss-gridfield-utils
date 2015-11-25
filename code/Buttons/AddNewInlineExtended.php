@@ -342,7 +342,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
             }
         }
 
-        if (!$fields && $record = $this->getRecordFromGrid($grid)) {
+        if (!$fields && $record = $this->getRecordFromGrid($grid, $modelClass)) {
             $fields = $record->hasMethod('getEditableRowFields') ? $record->getEditableRowFields($grid) : $record->getCMSFields();
         }
 
