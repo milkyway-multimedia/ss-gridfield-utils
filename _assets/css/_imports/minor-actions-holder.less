@@ -66,14 +66,18 @@
 			position : relative;
 
 			&:before {
-				content          : '\203A';
+				content          : '';
 				display          : block;
+				border-color     : #000 transparent transparent transparent;
+				border-style     : solid;
+				border-width     : 5px 4px 0 4px;
+				width            : 0;
+				height           : 0;
 				position         : absolute;
-				top              : 3px;
+				top              : 50%;
 				right            : 10px;
-				font-size        : 20px;
 				opacity          : .5;
-				transform        : scale(1, .75);
+				transform        : rotate(270deg) translateX(50%);
 				transform-origin : center;
 				transition       : transform .3s ease-in-out;
 				z-index          : 3;
@@ -81,7 +85,7 @@
 
 			&:not(:nth-last-child(1)) {
 				&:before {
-					transform : rotate(90deg) scale(1, .75);
+					transform : translate(0, -50%);
 				}
 			}
 		}
@@ -100,16 +104,16 @@
 	&:hover &-dropdown > * {
 		color : #ffffff;
 
-		&:first-child:not(:nth-last-child(1)) {
+		&:first-child {
 			&:before {
-				color   : #ffffff;
-				opacity : 1;
+				border-color : #fff transparent transparent transparent;
+				opacity      : 1;
 			}
 		}
 
 		&:first-child:not(:nth-last-child(1)) {
 			&:before {
-				transform : rotate(270deg) scale(1, .75);
+				transform : rotate(180deg) translateY(50%);
 			}
 		}
 	}
@@ -127,9 +131,9 @@
 }
 
 .ss-gridfield--minorActions-label {
-	display: inline-block;
-	height: 33px;
-	line-height: 33px;
-	padding: 0 5px;
-	opacity: 0.7;
+	display     : inline-block;
+	height      : 33px;
+	line-height : 33px;
+	padding     : 0 5px;
+	opacity     : 0.7;
 }

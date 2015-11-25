@@ -1,4 +1,5 @@
 <?php namespace Milkyway\SS\GridFieldUtils\Controllers;
+
 /**
  * Milkyway Multimedia
  * AddExistingPicker.php
@@ -7,12 +8,13 @@
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
-if(!class_exists('GridFieldAddExistingSearchButton')) {
+if (!class_exists('GridFieldAddExistingSearchButton')) {
     return;
 }
 
 use Controller;
 use PaginatedList;
+use SS_HTTPRequest;
 
 class AddExistingPicker extends \GridFieldAddExistingSearchHandler
 {
@@ -22,53 +24,57 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
         'undo',
     ];
 
-    public function index() {
+    public function index()
+    {
         return $this->renderWith([
             'GridField_Controllers_AddExistingPicker',
             'GridFieldAddExistingSearchHandler',
         ]);
     }
 
-    public function add($request) {
-        $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
-
-        if($handler = $this->button->getAddHandler()) {
-            return call_user_func($handler, $request, $this->grid, $this->button, $items);
+    public function add($request)
+    {
+        if ($handler = $this->button->getAddHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button, $this->checkAccessCallback());
         }
 
-        if($items === false) {
+        $items = call_user_func($this->checkAccessCallback(), $request);
+
+        if ($items === false) {
             return;
         }
 
         $list = $this->grid->getList();
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $list->add($item);
         }
     }
 
-    public function undo($request) {
-        $items = $this->checkAccess(array_unique((array)$request->postVar('ids')));
-
-        if($handler = $this->button->getUndoHandler()) {
-            return call_user_func($handler, $request, $this->grid, $this->button, $items);
+    public function undo($request)
+    {
+        if ($handler = $this->button->getUndoHandler()) {
+            return call_user_func($handler, $request, $this->grid, $this->button, $this->checkAccessCallback());
         }
 
-        if($items === false) {
+        $items = call_user_func($this->checkAccessCallback(), $request);
+
+        if ($items === false) {
             return;
         }
 
         $list = $this->grid->getList();
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $list->remove($item);
         }
     }
 
-    public function Items() {
+    public function Items()
+    {
         $list = $this->getSearchList();
 
-        if($list->dataClass() == $this->grid->getModelClass()) {
+        if ($list->dataClass() == $this->grid->getModelClass()) {
             $list = $list->subtract($this->grid->getList());
         }
 
@@ -77,33 +83,43 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
         return $list;
     }
 
-    public function isAsync() {
+    public function isAsync()
+    {
         return $this->button->isAsync();
     }
 
-    protected function checkAccess($ids) {
-        if(!$ids || !count($ids)) {
-            $this->httpError(400);
-            return false;
-        }
+    protected function checkAccessCallback()
+    {
+        return function ($ids) {
+            if($ids instanceof SS_HTTPRequest) {
+                $ids = (array_unique((array)$ids->postVar('ids')));
+            }
 
-        $items = [];
-
-        foreach($ids as $id) {
-            $item = $this->getSearchList()->byID($id);
-
-            if(!$item) {
+            if (!$ids || empty($ids)) {
                 $this->httpError(400);
                 return false;
             }
 
-            $items[] = $item;
-        }
+            $items = [];
 
-        return count($items) ? $items : false;
+            foreach ($ids as $id) {
+                $item = $this->getSearchList()->byID($id);
+
+                if (!$item) {
+                    $this->httpError(400);
+                    return false;
+                }
+
+                $items[] = $item;
+            }
+
+            return count($items) ? $items : false;
+        };
     }
 
-    public function Link($action = null) {
-        return Controller::join_links($this->grid->Link(), ($this->button->getUrlSegment() ?: 'add-existing-search'), $action);
+    public function Link($action = null)
+    {
+        return Controller::join_links($this->grid->Link(), ($this->button->getUrlSegment() ?: 'add-existing-search'),
+            $action);
     }
 }
