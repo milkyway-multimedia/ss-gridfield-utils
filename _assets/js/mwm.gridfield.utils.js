@@ -95,13 +95,14 @@
                     return;
                 }
 
-                var $tbody = this.find("tbody:first"),
-                    num = this.data("add-inline-num") || 1;
+                var $grid = this,
+                    $tbody = $grid.find("tbody:first"),
+                    num = $grid.data("add-inline-num") || 1;
 
                 if ($trigger && $trigger.data('ajax')) {
                     //if(!$trigger.hasClass('ss-gridfield-add-inline-extended--loading')) {
                     var isConstructive = $trigger.hasClass('ss-ui-action-constructive'),
-                        $classSelector = $trigger.siblings('.ss-gridfield-inline-new-extended--class-selector:first'),
+                        $classSelector = $trigger.siblings('.ss-gridfield-inline-new-extended--class-selector:first').find(':input'),
                         data = {
                             '_datanum': num
                         };
@@ -112,7 +113,7 @@
                             return;
                         }
 
-                        data[this.attr('id') + '_modelClass'] = $classSelector.val();
+                        data[$grid.attr('id') + '_modelClass'] = $classSelector.val();
                     }
 
                     $trigger.addClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
@@ -132,7 +133,14 @@
 
                             var $data = $(data);
                             $data.find('ss-gridfield-editable-row--toggle');
-                            $tbody.append($data);
+
+                            if($grid.data('prepend')) {
+                                $tbody.prepend($data);
+                            }
+                            else {
+                                $tbody.append($data);
+                            }
+
                             $tbody.children(".ss-gridfield-no-items:first").hide();
                             $data.find("input:first").focus();
 
@@ -230,6 +238,8 @@
                     $that.find('#' + id + '.ss-gridfield.ss-gridfield-editable-rows').reopenToggles(openToggles);
                 });
 
+                $that.find('.ss-gridfield-editable-row--toggle_start').click();
+
                 $that.setOpenGridFieldToggles({});
             }
         });
@@ -242,6 +252,8 @@
 
                 this._super(opts, function () {
                     $grid.reopenToggles(openToggles);
+                    $grid.find('.ss-gridfield-editable-row--toggle_start').click();
+
                     if (success) {
                         success.apply($grid, args);
                     }
@@ -346,6 +358,8 @@
                     link = $holder.data('link'),
                     $parent = $this.parents('tr:first');
 
+                $this.removeClass('ss-gridfield-editable-row--toggle_start');
+
                 if ($parent.hasClass('ss-gridfield-editable-row--loading')) {
                     return false;
                 }
@@ -361,6 +375,8 @@
                             $this.addClass('ss-gridfield-editable-row--toggle_loaded ss-gridfield-editable-row--toggle_open');
                             $parent.addClass('ss-gridfield-editable-row--reference').removeClass('ss-gridfield-editable-row--loading');
                             $parent.after($data);
+
+                            $data.find('.ss-gridfield-editable-row--toggle_start').click();
 
                             if (noFocus !== false) {
                                 $data.find("input:first").focus();

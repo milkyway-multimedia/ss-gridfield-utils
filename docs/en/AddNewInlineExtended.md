@@ -15,6 +15,7 @@ If no fields are set, it will pull fields from either the [EditableRow](Editable
 * **$component->cacheAjaxLoading** New rows are cached via AJAX by default
 * **$component->openToggleByDefault** If true, open the toggle by default (only valid when [EditableRow](EditableRow.md) is also attached)
 * **$component->hideUnlessOpenedWithEditableColumns** If disabled, will override GridFieldEditableColumns for new rows
+* **$component->prepend** If enabled, will attach new records to the top of the GridField
 
 ## Public methods
 * **$component->setTitle($title)** Set the title of the button

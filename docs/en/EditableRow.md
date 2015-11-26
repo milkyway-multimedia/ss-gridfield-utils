@@ -17,6 +17,7 @@ If no fields are set, it will pull fields from either the GridFieldDetailForm co
 * **$component->cacheToggleStateSave** If set to true, toggle states will not be loaded in via AJAX (makes GridFields respond faster since there is less requests to make). If your records are not changing much during save (no additional processing done in background), I recommend setting this to true.
 * **$component->column** Column Name (defaults to _OpenRowForEditing). If you need more than one EditableRow component, you should to change this value.
 * **$component->urlSegment** URL of component (defaults to editableRow). If you need more than one EditableRow component, you should change this value.
+* **$component->openNewTogglesOnCreate** Open new toggles on create automatically (requires [AddNewInlineExtended](AddNewInlineExtended.md) to be available on the GridFieldConfig)
 
 ## Public methods
 * **$component->setFields($fields = null)** Set the fields to use (this can be a callable function, field list or array)

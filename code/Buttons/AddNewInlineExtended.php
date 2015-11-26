@@ -8,6 +8,8 @@
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
+use Session;
+
 class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLProvider, \GridField_SaveHandler, \GridField_URLHandler, \Flushable
 {
     public $urlSegment = 'extendedInline';
@@ -19,6 +21,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public $hideUnlessOpenedWithEditableColumns = true;
 
     public $openToggleByDefault = false;
+
+    public $prepend = false;
 
     public $rowTemplate;
 
@@ -176,6 +180,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         $this->workingGrid = $grid;
 
         $grid->addExtraClass('ss-gridfield-add-inline-extended--table');
+        $grid->setAttribute('data-prepend', $this->prepend);
 
         $fragments = [
             $this->getFragment() => $this->getButtonFragment($grid),
@@ -289,6 +294,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         }
 
         $form = $this->getForm($grid, '', false);
+        $id = $grid->ID();
 
         foreach ($value[$className] as $fields) {
             $item = isset($fields['_modelClass']) ? \Object::create($fields['_modelClass']) : \Object::create($class);
@@ -300,6 +306,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
             $item->write();
             $list->add($item, $extra);
+
+            Session::set('EditableRowToggles.' . $id . '.' . get_class($item) . '_' . $item->ID, true);
         }
     }
 
