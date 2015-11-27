@@ -12,42 +12,54 @@ namespace Milkyway\SS\GridFieldUtils;
 use ArrayData;
 use Controller;
 
-class GridFieldAddNewButton extends \GridFieldAddNewButton {
+class GridFieldAddNewButton extends \GridFieldAddNewButton
+{
 	public $gridFieldDetailForm;
 
-	public function __construct($targetFragment = 'before', $buttonName = '', $gridFieldDetailForm = null) {
+	protected $template;
+
+	public function __construct($targetFragment = 'before', $buttonName = '', $gridFieldDetailForm = null)
+	{
 		$this->targetFragment = $targetFragment;
 		$this->buttonName = $buttonName;
 		$this->gridFieldDetailForm = $gridFieldDetailForm;
 	}
 
-	public function getHTMLFragments($gridField) {
+	public function getHTMLFragments($gridField)
+	{
 		$singleton = singleton($gridField->getModelClass());
 
-		if(!$singleton->canCreate()) {
-			return array();
+		if (!$singleton->canCreate()) {
+			return [];
 		}
 
-		if(!$this->buttonName) {
+		if (!$this->buttonName) {
 			// provide a default button name, can be changed by calling {@link setButtonName()} on this component
 			$objectName = $singleton->i18n_singular_name();
-			$this->buttonName = _t('GridField.Add', 'Add {name}', array('name' => $objectName));
+			$this->buttonName = _t('GridField.Add', 'Add {name}', ['name' => $objectName]);
 		}
 
-		if($this->gridFieldDetailForm instanceof GridFieldDetailForm)
-			$link = $gridField->Link($this->gridFieldDetailForm->getUriSegment());
-		elseif($this->gridFieldDetailForm)
-			$link = $gridField->Link($this->gridFieldDetailForm);
-		else
-			$link = ($df = $gridField->Config->getComponentByType('GridFieldDetailForm')) && isset($df->uriSegment) ? $gridField->Link($df->getUriSegment()) : $gridField->Link('item');
+		$class = explode('\\', get_called_class());
 
-		$data = ArrayData::create(array(
-			'NewLink' => Controller::join_links($link, 'new'),
-			'ButtonName' => $this->buttonName,
-		));
+		return [
+			$this->targetFragment => ArrayData::create([
+				'NewLink' => Controller::join_links($this->getNewLink($gridField), 'new'),
+				'ButtonName' => $this->buttonName,
+			])->renderWith(array_filter([
+				$this->template,
+				'GridField_' . end($class),
+				'GridFieldAddNewButton',
+			])),
+		];
+	}
 
-		return array(
-			$this->targetFragment => $data->renderWith('GridFieldAddNewButton'),
-		);
+	protected function getNewLink($gridField) {
+		if ($this->gridFieldDetailForm instanceof GridFieldDetailForm) {
+			return $gridField->Link($this->gridFieldDetailForm->getUriSegment());
+		} elseif ($this->gridFieldDetailForm) {
+			return $gridField->Link($this->gridFieldDetailForm);
+		} else {
+			return ($df = $gridField->Config->getComponentByType('GridFieldDetailForm')) && isset($df->uriSegment) ? $gridField->Link($df->getUriSegment()) : $gridField->Link('item');
+		}
 	}
 } 

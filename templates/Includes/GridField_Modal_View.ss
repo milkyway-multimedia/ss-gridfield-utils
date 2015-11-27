@@ -1,0 +1,1 @@
+$ItemEditForm.addExtraClass('ss-gridfield-modal-form')

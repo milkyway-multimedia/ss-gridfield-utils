@@ -23,11 +23,12 @@
         $(".ss-gridfield .gridfield-help-button").entwine({
             onclick: function () {
                 var dialog = $("<div></div>").appendTo("body").dialog({
-                    modal:     false,
+                    modal: false,
                     resizable: true,
-                    width:     600,
-                    height:    600,
-                    close:     function () {
+                    width: 600,
+                    height: 600,
+                    close: function () {
+
                         $(this).dialog("destroy").remove();
                     }
                 });
@@ -42,6 +43,200 @@
             }
         });
 
+        // Milkyway\SS\GridFieldUtils\AddNewModal
+        window.GridFieldUtils_Modal = {
+            $trigger: null,
+            $dialog: null,
+            $grid: null,
+            reload: false,
+            closeOnStateChange: false
+        };
+
+        window.GridFieldUtils_Modal.open = function($trigger) {
+            var that = this;
+            that.$trigger = $trigger;
+
+            var $grid = $trigger.closest(".ss-gridfield"),
+                $dialog = $('<div class="ss-gridfield-modal"></div>'),
+                dimensions = $.extend({}, {
+                    width: 0.8,
+                    height: 0.8,
+                    resizable: false
+                }, ($grid.data("modalDimensions") || {})),
+                modifyIframe = function($iframe) {
+                    $iframe.find('html').addClass('ss-gridfield-modal--body');
+                    $iframe.find('.cms-menu').remove();
+                };
+
+            that.$grid = $grid;
+            that.$dialog = $dialog;
+
+            that.$dialog.ssdialog({
+                iframeUrl: $trigger[0].href,
+                width: dimensions.width < 1 ? dimensions.width * window.innerWidth : dimensions.width,
+                minWidth: dimensions.width < 1 ? dimensions.width * window.innerWidth : dimensions.width,
+                height: dimensions.height < 1 ? dimensions.height * window.innerHeight : dimensions.height,
+                minHeight: dimensions.height < 1 ? dimensions.height * window.innerHeight : dimensions.height,
+                resizable: dimensions.resizable,
+                close: function() {
+                    that.close();
+                }
+            });
+
+            that.$dialog.find('iframe').addClass('loading').off('load.reloading').one('load.reloading', function (e) {
+                var $this = $(this),
+                    $iframe = $this.contents();
+
+                $iframe.find('.ss-loading-screen').show();
+                $iframe.find('body').addClass('loading');
+                $this.addClass('ss-gridfield-modal_reloaded').attr('src', function (i, val) {
+                    return val;
+                });
+            });
+
+            that.$dialog.find('iframe').on('load.gridfield', function() {
+                var $this = $(this),
+                    $iframe = $this.contents();
+
+                modifyIframe($iframe);
+
+                if ($this.hasClass('ss-gridfield-modal_reloaded')) {
+                    $this.removeClass('loading');
+                }
+
+                that.initModal($iframe);
+            });
+
+            that.$dialog.ssdialog('open');
+        };
+
+        window.GridFieldUtils_Modal.initModal = function($iframe) {
+            if(!$iframe) {
+                $iframe = this.$dialog.find('iframe').contents();
+            }
+
+            $iframe.find(".ss-gridfield-modal-form:first").each(function() {
+                var $this = $(this),
+                    nonModalLink = $this.data('nonModalLink'),
+                    modalLink = $this.data('modalLink'),
+                    replaceAttributes = function($item, att) {
+                        $item.attr(att, $item.attr(att).replace(nonModalLink, modalLink))
+                    };
+
+                $iframe.find('[src^="' + nonModalLink + '"]').each(function() {
+                    replaceAttributes($(this), 'src');
+                });
+
+                $iframe.find('[action^="' + nonModalLink + '"]').each(function() {
+                    replaceAttributes($(this), 'action');
+                });
+
+                $iframe.find('[href^="' + nonModalLink + '"]').each(function() {
+                    replaceAttributes($(this), 'href');
+                });
+            });
+        };
+
+        window.GridFieldUtils_Modal.close = function(reload) {
+            this.$trigger.Dialog = null;
+
+            this.$dialog.ssdialog("destroy").remove();
+
+            if (this.reload || reload) {
+                this.$grid.reload();
+            }
+
+            this.$trigger = null;
+            this.$grid = null;
+            this.$dialog = null;
+            this.reload = false;
+        };
+
+        window.GridFieldUtils_Modal.reloadGrid = function() {
+            this.$grid.reload();
+        };
+
+        window.GridFieldUtils_Modal.reloadOnClose = function() {
+            this.reload = true;
+        };
+
+        window.GridFieldUtils_Modal.doCloseOnStateChange = function() {
+            this.closeOnStateChange = true;
+        };
+
+        $(".ss-gridfield-modal--button").entwine({
+            Dialog: null,
+            onclick: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.GridFieldUtils_Modal.open($(this));
+            }
+        });
+
+        $(".ss-gridfield-modal--body").entwine({
+            onadd: function () {
+                window.parent.GridFieldUtils_Modal.initModal();
+            }
+        });
+
+        $(".ss-gridfield-modal--body .cms_backlink a").entwine({
+            onclick: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.parent.GridFieldUtils_Modal.close();
+            }
+        });
+
+        $(".ss-gridfield-modal--body .breadcrumbs-wrapper a").entwine({
+            onclick: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if(this[0].href == window.parent.location.href) {
+                    window.parent.GridFieldUtils_Modal.close();
+                }
+                else {
+                    window.parent.location.href = this[0].href;
+                }
+            }
+        });
+
+        $(".ss-gridfield-modal--body form").entwine({
+            onsubmit: function() {
+                window.parent.GridFieldUtils_Modal.reloadOnClose();
+            },
+            onaftersubmitform: function(status, xhr, data) {
+                window.parent.GridFieldUtils_Modal.initModal();
+            }
+        });
+
+        $(".ss-gridfield-modal--body .cms-container").entwine({
+            onafterstatechange: function() {
+                window.parent.GridFieldUtils_Modal.initModal();
+            },
+            handleAjaxResponse: function(data, status, xhr, state) {
+                window.parent.GridFieldUtils_Modal.initModal();
+
+                var $form = this.find(".ss-gridfield-modal-form:first"),
+                    nonModalLink = $form.data('nonModalLink'),
+                    modalLink = $form.data('modalLink');
+
+                if(nonModalLink && modalLink && xhr.getResponseHeader('X-ControllerURL')) {
+                    var baseUrl = $('base').attr('href'),
+                        rawURL = xhr.getResponseHeader('X-ControllerURL'),
+                        url = $.path.isAbsoluteUrl(rawURL) ? rawURL : $.path.makeUrlAbsolute(rawURL, baseUrl);
+
+                    if(url.startsWith(($.path.isAbsoluteUrl(nonModalLink) ? nonModalLink : $.path.makeUrlAbsolute(nonModalLink, baseUrl)))) {
+                        url = url.replace(nonModalLink, modalLink);
+                    }
+
+                    window.location.href = url;
+                    return;
+                }
+
+                return this._super(data, status, xhr, state);
+            }
+        });
 
         // Milkyway\SS\GridFieldUtils\HasOneSelector
 
@@ -74,7 +269,7 @@
         // Milkyway\SS\GridFieldUtils\AddNewInlineExtended
 
         $(".ss-gridfield.ss-gridfield-add-inline-extended--table").entwine({
-            reload:                function (opts, success) {
+            reload: function (opts, success) {
                 var $grid = this,
                     $added = $grid.find("tbody:first").find(".ss-gridfield-inline-new-extended--row").detach(),
                     args = arguments;
@@ -124,17 +319,17 @@
                     }
 
                     $.ajax({
-                        url:      $trigger[0].href,
+                        url: $trigger[0].href,
                         dataType: 'html',
-                        data:     data,
-                        success:  function (data) {
+                        data: data,
+                        success: function (data) {
                             $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled ss-ui-button-loading');
                             $trigger.find('.ui-icon').removeClass('ss-ui-loading-icon');
 
                             var $data = $(data);
                             $data.find('ss-gridfield-editable-row--toggle');
 
-                            if($grid.data('prepend')) {
+                            if ($grid.data('prepend')) {
                                 $tbody.prepend($data);
                             }
                             else {
@@ -148,7 +343,7 @@
                                 $trigger.addClass('ss-ui-action-constructive');
                             }
                         },
-                        error:    function (e) {
+                        error: function (e) {
                             alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
                             $trigger.removeClass('ss-gridfield-add-inline-extended--loading disabled');
                         }
@@ -213,7 +408,7 @@
 
         $('.cms-container').entwine({
             OpenGridFieldToggles: {},
-            saveTabState:         function () {
+            saveTabState: function () {
                 var $that = this,
                     OpenGridFieldToggles = $that.getOpenGridFieldToggles();
 
@@ -228,7 +423,7 @@
                     }
                 });
             },
-            restoreTabState:      function (overrideStates) {
+            restoreTabState: function (overrideStates) {
                 var $that = this,
                     OpenGridFieldToggles = $that.getOpenGridFieldToggles();
 
@@ -245,7 +440,7 @@
         });
 
         $(".ss-gridfield.ss-gridfield-editable-rows").entwine({
-            reload:         function (opts, success) {
+            reload: function (opts, success) {
                 var $grid = this,
                     openToggles = $grid.getOpenToggles(),
                     args = arguments;
@@ -302,7 +497,7 @@
 
                 return openToggles;
             },
-            reopenToggles:  function (openToggles) {
+            reopenToggles: function (openToggles) {
                 var $grid = this,
                     openTabsInToggle = function (currentToggle, $row) {
                         if (currentToggle.hasOwnProperty('tabs') && currentToggle.tabs) {
@@ -368,9 +563,9 @@
                     $parent.addClass('ss-gridfield-editable-row--loading');
 
                     $.ajax({
-                        url:      link,
+                        url: link,
                         dataType: 'html',
-                        success:  function (data) {
+                        success: function (data) {
                             var $data = $(data);
                             $this.addClass('ss-gridfield-editable-row--toggle_loaded ss-gridfield-editable-row--toggle_open');
                             $parent.addClass('ss-gridfield-editable-row--reference').removeClass('ss-gridfield-editable-row--loading');
@@ -386,7 +581,7 @@
                                 callback($data, $this, $parent);
                             }
                         },
-                        error:    function (e) {
+                        error: function (e) {
                             alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
                             $parent.removeClass('ss-gridfield-editable-row--loading');
                         }
@@ -433,12 +628,12 @@
 
         // Milkyway\SS\GridFieldUtils\AddExistingPicker
         $(".add-existing-picker-actions--add-items").entwine({
-            onclick:                  function (e, callback) {
+            onclick: function (e, callback) {
                 var $dialog = this.getDialog();
 
                 this.addCloseDialogIfRequired($dialog);
-                this.addItems(null, null, '', function() {
-                    if(callback) {
+                this.addItems(null, null, '', function () {
+                    if (callback) {
                         callback();
                     }
                     $dialog.data("grid").reload();
@@ -446,10 +641,10 @@
                 });
                 e.preventDefault();
             },
-            getDialog:                function () {
+            getDialog: function () {
                 return this.closest(".add-existing-search-dialog").children(".ui-dialog-content:first");
             },
-            addItems:                 function ($dialog, itemsToAdd, link, callback, async) {
+            addItems: function ($dialog, itemsToAdd, link, callback, async) {
                 var that = this;
 
                 if (!$dialog) {
@@ -460,10 +655,10 @@
                     itemsToAdd = $dialog.data("items-to-add") || [];
                 }
 
-                if(!itemsToAdd.length) {
+                if (!itemsToAdd.length) {
                     statusMessage(ss.i18n._t("GridField_AddExistingPicker.NO_ITEMS", "No items selected"), 'error');
 
-                    if(!$dialog.find(".add-existing-search-items").children().length) {
+                    if (!$dialog.find(".add-existing-search-items").children().length) {
                         $dialog.dialog("close");
                     }
                 }
@@ -481,22 +676,22 @@
                 }
 
                 that.clearItemsToAdd($dialog);
-                if(!async) {
+                if (!async) {
                     $dialog.parent().addClass('loading loading_hiddenContents');
                 }
 
-                $.post(link, {ids: itemsToAdd}, callback).always(function() {
+                $.post(link, {ids: itemsToAdd}, callback).always(function () {
                     $dialog.parent().removeClass('loading loading_hiddenContents');
                 });
             },
-            undoItems:                 function (items, $dialog, link, callback, async) {
+            undoItems: function (items, $dialog, link, callback, async) {
                 var that = this;
 
                 if (!$dialog) {
                     $dialog = that.getDialog();
                 }
 
-                if(!items.length) {
+                if (!items.length) {
                     return;
                 }
 
@@ -512,19 +707,19 @@
                     };
                 }
 
-                if(!async) {
+                if (!async) {
                     $dialog.parent().addClass('loading loading_hiddenContents');
                 }
 
-                $.post(link, {ids: items}, function() {
+                $.post(link, {ids: items}, function () {
                     var args = [].slice.call(arguments);
                     args.push($dialog);
                     callback.apply(this, args);
-                }).always(function() {
+                }).always(function () {
                     $dialog.parent().removeClass('loading loading_hiddenContents');
                 });
             },
-            clearItemsToAdd: function($dialog) {
+            clearItemsToAdd: function ($dialog) {
                 if (!$dialog) {
                     $dialog = this.getDialog();
                 }
@@ -542,7 +737,7 @@
 
                 var that = this;
 
-                $dialog.on('dialogbeforeclose', function(e, ui) {
+                $dialog.on('dialogbeforeclose', function (e, ui) {
                     var $this = $(this),
                         itemsToAdd = $this.data("items-to-add") || [];
 
@@ -561,13 +756,13 @@
         });
 
         $(".add-existing-picker-item--undo-holder .add-existing-picker-item--undo").entwine({
-            onclick: function(e) {
+            onclick: function (e) {
                 var id = this.data("id"),
                     link = this.data("undoLink"),
                     title = this.data("title"),
                     $item = $('.add-existing-picker-items[data-undo-link="' + link + '"]').find('.add-existing-picker-item--link[data-id="' + id + '"]');
 
-                $item.undoItem(id, true, function(data, status, xhr, $dialog) {
+                $item.undoItem(id, true, function (data, status, xhr, $dialog) {
                     $dialog.data("grid").reload();
                     $.noticeRemove($(".notice-item.add-existing-picker-item--undo-holder"));
                     statusMessage(ss.i18n.sprintf(
@@ -582,7 +777,7 @@
         });
 
         $(".add-existing-search-dialog .add-existing-search-items.add-existing-picker-items a").entwine({
-            onclick:                  function (e) {
+            onclick: function (e) {
                 var $button = this.getButton(),
                     $dialog = $button.getDialog(),
                     $grid = $dialog.data("grid"),
@@ -590,13 +785,13 @@
                     items = $dialog.data("items-to-add") || [],
                     id = this.data('id');
 
-                if($grid && $grid.hasClass("ss-gridfield-add-existing-picker_async")) {
+                if ($grid && $grid.hasClass("ss-gridfield-add-existing-picker_async")) {
                     var undoLink = $dialog.find(".add-existing-picker-items").data("undo-link"),
                         title = this.text();
 
                     $li.addClass('loading add-existing-picker-item_toAdd');
 
-                    $button.addItems($dialog, [id], '', function(data) {
+                    $button.addItems($dialog, [id], '', function (data) {
                         var keep = data && data.hasOwnProperty('keep') && data.keep;
 
                         if ($dialog.data("grid")) {
@@ -605,15 +800,17 @@
 
                         $li.removeClass('add-existing-picker-item_toAdd loading');
 
-                        if(!keep) {
+                        if (!keep) {
                             $li.hide();
                         }
 
-                        $.noticeAdd({text: ss.i18n.sprintf(
-                            ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
-                            title,
-                            ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s" data-keep="%s">%s</button>', id, undoLink, title, (keep ? 'true' : 'false'), ss.i18n._t("UNDO", "Undo"))
-                        ), type: 'add-existing-picker-item--undo-holder', stayTime: 5000});
+                        $.noticeAdd({
+                            text: ss.i18n.sprintf(
+                                ss.i18n._t("GridField_AddExistingPicker.ITEM_ADDED", "%s has been added. %s"),
+                                title,
+                                ss.i18n.sprintf('<button type="button" class="add-existing-picker-item--undo" data-id="%s" data-undo-link="%s" data-title="%s" data-keep="%s">%s</button>', id, undoLink, title, (keep ? 'true' : 'false'), ss.i18n._t("UNDO", "Undo"))
+                            ), type: 'add-existing-picker-item--undo-holder', stayTime: 5000
+                        });
                     }, true);
                 }
                 else {
@@ -633,11 +830,11 @@
 
                 e.preventDefault();
             },
-            getButton:                function () {
+            getButton: function () {
                 return this.closest(".add-existing-search-dialog").find(".add-existing-picker-actions--add-items:first");
             },
-            undoItem: function(id, async, callback) {
-                if(!id) id = this.data("id");
+            undoItem: function (id, async, callback) {
+                if (!id) id = this.data("id");
 
                 var $button = this.getButton();
 
