@@ -296,6 +296,12 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         $form = $this->getForm($grid, '', false);
         $id = $grid->ID();
 
+        $orderable = $grid->Config->getComponentByType('GridFieldOrderableRows');
+        $sortField = $orderable ? $orderable->getSortField() : '';
+        $max = $sortField && !$this->prepend ? $orderable->getManipulatedData($grid, $list)->max($sortField) + 1 : false;
+        $count = 1;
+        $itemIds = [];
+
         foreach ($value[$className] as $fields) {
             $item = isset($fields['_modelClass']) ? \Object::create($fields['_modelClass']) : \Object::create($class);
 
@@ -304,10 +310,34 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
             $extra = method_exists($list, 'getExtraFields') ? array_intersect_key($form->Data,
                 (array)$list->getExtraFields()) : [];
 
+            if($sortField && $max !== false) {
+                $item->$sortField = $max;
+                $extra[$sortField] = $max;
+                $max++;
+            }
+            else if($sortField) {
+                $item->$sortField = $count;
+                $extra[$sortField] = $count;
+                $count++;
+            }
+
             $item->write();
             $list->add($item, $extra);
+            $itemIds[] = $item->ID;
 
             Session::set('EditableRowToggles.' . $id . '.' . get_class($item) . '_' . $item->ID, true);
+        }
+
+        // Fix other sorts for prepends in one query
+        if($sortField && $max === false) {
+            \DB::query(sprintf(
+                'UPDATE "%s" SET "%s" = %s + %d WHERE %s',
+                $orderable->getSortTable($list),
+                $sortField,
+                $sortField,
+                $count,
+                '"ID" NOT IN (' . implode(',',$itemIds) . ')'
+            ));
         }
     }
 
