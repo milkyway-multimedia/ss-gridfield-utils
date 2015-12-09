@@ -36,6 +36,10 @@
 .ss-gridfield-editable-row--fields {
 	> .tabset:first-child:not(.ss-tabset-tabshidden) {
 		margin-top: -50px;
+
+		> .ui-tabs-nav + * {
+			padding-top: 10px;
+		}
 	}
 
 	.cms .ss-gridfield-editable-row--row &,
@@ -76,10 +80,10 @@
 		background: lighten(#a4b4bf, 15%);
 	}
 
-	.ss-gridfield-inline-new-extended--fields h3[id] {
-		margin-right: -5px !important;
-		margin-left: -5px !important;
-	}
+	//.ss-gridfield-inline-new-extended--fields h3[id] {
+	//	margin-right: -5px !important;
+	//	margin-left: -5px !important;
+	//}
 
 	.cms & .field span.readonly {
 		padding-top: 8px !important;
