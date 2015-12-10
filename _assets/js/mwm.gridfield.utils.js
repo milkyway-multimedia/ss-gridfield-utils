@@ -52,7 +52,7 @@
             closeOnStateChange: false
         };
 
-        window.GridFieldUtils_Modal.open = function($trigger) {
+        window.GridFieldUtils_Modal.open = function ($trigger) {
             var that = this;
             that.$trigger = $trigger;
 
@@ -63,7 +63,7 @@
                     height: 0.8,
                     resizable: false
                 }, ($grid.data("modalDimensions") || {})),
-                modifyIframe = function($iframe) {
+                modifyIframe = function ($iframe) {
                     $iframe.find('html').addClass('ss-gridfield-modal--body');
                     $iframe.find('.cms-menu').remove();
                 };
@@ -78,7 +78,7 @@
                 height: dimensions.height < 1 ? dimensions.height * window.innerHeight : dimensions.height,
                 minHeight: dimensions.height < 1 ? dimensions.height * window.innerHeight : dimensions.height,
                 resizable: dimensions.resizable,
-                close: function() {
+                close: function () {
                     that.close();
                 }
             });
@@ -94,7 +94,7 @@
                 });
             });
 
-            that.$dialog.find('iframe').on('load.gridfield', function() {
+            that.$dialog.find('iframe').on('load.gridfield', function () {
                 var $this = $(this),
                     $iframe = $this.contents();
 
@@ -110,34 +110,34 @@
             that.$dialog.ssdialog('open');
         };
 
-        window.GridFieldUtils_Modal.initModal = function($iframe) {
-            if(!$iframe) {
+        window.GridFieldUtils_Modal.initModal = function ($iframe) {
+            if (!$iframe) {
                 $iframe = this.$dialog.find('iframe').contents();
             }
 
-            $iframe.find(".ss-gridfield-modal-form:first").each(function() {
+            $iframe.find(".ss-gridfield-modal-form:first").each(function () {
                 var $this = $(this),
                     nonModalLink = $this.data('nonModalLink'),
                     modalLink = $this.data('modalLink'),
-                    replaceAttributes = function($item, att) {
+                    replaceAttributes = function ($item, att) {
                         $item.attr(att, $item.attr(att).replace(nonModalLink, modalLink))
                     };
 
-                $iframe.find('[src^="' + nonModalLink + '"]').each(function() {
+                $iframe.find('[src^="' + nonModalLink + '"]').each(function () {
                     replaceAttributes($(this), 'src');
                 });
 
-                $iframe.find('[action^="' + nonModalLink + '"]').each(function() {
+                $iframe.find('[action^="' + nonModalLink + '"]').each(function () {
                     replaceAttributes($(this), 'action');
                 });
 
-                $iframe.find('[href^="' + nonModalLink + '"]').each(function() {
+                $iframe.find('[href^="' + nonModalLink + '"]').each(function () {
                     replaceAttributes($(this), 'href');
                 });
             });
         };
 
-        window.GridFieldUtils_Modal.close = function(reload) {
+        window.GridFieldUtils_Modal.close = function (reload) {
             this.$trigger.Dialog = null;
 
             this.$dialog.ssdialog("destroy").remove();
@@ -152,15 +152,15 @@
             this.reload = false;
         };
 
-        window.GridFieldUtils_Modal.reloadGrid = function() {
+        window.GridFieldUtils_Modal.reloadGrid = function () {
             this.$grid.reload();
         };
 
-        window.GridFieldUtils_Modal.reloadOnClose = function() {
+        window.GridFieldUtils_Modal.reloadOnClose = function () {
             this.reload = true;
         };
 
-        window.GridFieldUtils_Modal.doCloseOnStateChange = function() {
+        window.GridFieldUtils_Modal.doCloseOnStateChange = function () {
             this.closeOnStateChange = true;
         };
 
@@ -180,7 +180,7 @@
         });
 
         $(".ss-gridfield-modal--body .cms_backlink a").entwine({
-            onclick: function(e) {
+            onclick: function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 window.parent.GridFieldUtils_Modal.close();
@@ -188,11 +188,11 @@
         });
 
         $(".ss-gridfield-modal--body .breadcrumbs-wrapper a").entwine({
-            onclick: function(e) {
+            onclick: function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                if(this[0].href == window.parent.location.href) {
+                if (this[0].href == window.parent.location.href) {
                     window.parent.GridFieldUtils_Modal.close();
                 }
                 else {
@@ -202,31 +202,31 @@
         });
 
         $(".ss-gridfield-modal--body form").entwine({
-            onsubmit: function() {
+            onsubmit: function () {
                 window.parent.GridFieldUtils_Modal.reloadOnClose();
             },
-            onaftersubmitform: function(status, xhr, data) {
+            onaftersubmitform: function (status, xhr, data) {
                 window.parent.GridFieldUtils_Modal.initModal();
             }
         });
 
         $(".ss-gridfield-modal--body .cms-container").entwine({
-            onafterstatechange: function() {
+            onafterstatechange: function () {
                 window.parent.GridFieldUtils_Modal.initModal();
             },
-            handleAjaxResponse: function(data, status, xhr, state) {
+            handleAjaxResponse: function (data, status, xhr, state) {
                 window.parent.GridFieldUtils_Modal.initModal();
 
                 var $form = this.find(".ss-gridfield-modal-form:first"),
                     nonModalLink = $form.data('nonModalLink'),
                     modalLink = $form.data('modalLink');
 
-                if(nonModalLink && modalLink && xhr.getResponseHeader('X-ControllerURL')) {
+                if (nonModalLink && modalLink && xhr.getResponseHeader('X-ControllerURL')) {
                     var baseUrl = $('base').attr('href'),
                         rawURL = xhr.getResponseHeader('X-ControllerURL'),
                         url = $.path.isAbsoluteUrl(rawURL) ? rawURL : $.path.makeUrlAbsolute(rawURL, baseUrl);
 
-                    if(url.startsWith(($.path.isAbsoluteUrl(nonModalLink) ? nonModalLink : $.path.makeUrlAbsolute(nonModalLink, baseUrl)))) {
+                    if (url.startsWith(($.path.isAbsoluteUrl(nonModalLink) ? nonModalLink : $.path.makeUrlAbsolute(nonModalLink, baseUrl)))) {
                         url = url.replace(nonModalLink, modalLink);
                     }
 
@@ -237,6 +237,7 @@
                 return this._super(data, status, xhr, state);
             }
         });
+
 
         // Milkyway\SS\GridFieldUtils\HasOneSelector
 
@@ -839,6 +840,58 @@
                 var $button = this.getButton();
 
                 $button.undoItems([id], null, '', callback, async);
+            }
+        });
+
+        // TagsColumn
+        $("select.ss-gridfield--tags-column--selector.select2").entwine({
+            onmatch: function (e) {
+                this._super();
+
+                var $this = this,
+                    $grid = $this.parents('.gridfield:first'),
+                    newLink = $this.data('gfNewLink');
+
+                if(newLink) {
+                    this.data('select2').on('select', function (params) {
+                        if(!params || !params.data.hasOwnProperty('isNew') || !params.data.isNew) {
+                            return;
+                        }
+
+                        $this.prop("disabled", true);
+
+                        $.ajax({
+                            type:     'POST',
+                            url:      newLink.replace('{{ tag }}', params.data.id),
+                            success:  function (response) {
+
+                            },
+                            complete: function () {
+                                $this.prop("disabled", false);
+                                $grid.reload();
+                            }
+                        });
+                    });
+                }
+            },
+            configuration: function ($this) {
+                var options = this._super($this);
+
+                options.createTag = function (params) {
+                    var term = $.trim(params.term);
+
+                    if (term === '') {
+                        return null;
+                    }
+
+                    return {
+                        id: term,
+                        text: term,
+                        isNew: true
+                    };
+                };
+
+                return options;
             }
         });
     });

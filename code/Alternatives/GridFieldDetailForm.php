@@ -1,4 +1,5 @@
 <?php namespace Milkyway\SS\GridFieldUtils;
+
 /**
  * Milkyway Multimedia
  * GridFieldDetailForm.php
@@ -9,27 +10,32 @@
 
 use GridFieldDetailForm as Original;
 
-class GridFieldDetailForm extends Original {
-	public $uriSegment = 'item';
+class GridFieldDetailForm extends Original
+{
+    public $uriSegment = 'item';
 
-	public function __construct($name = 'DetailForm', $uriSegment = 'item') {
-		$this->uriSegment = $uriSegment;
-		parent::__construct($name);
-	}
+    public function __construct($name = 'DetailForm', $uriSegment = 'item')
+    {
+        $this->uriSegment = $uriSegment;
+        parent::__construct($name);
+    }
 
-	public function getURLHandlers($gridField) {
-		return [
-			$this->uriSegment . '/$ID' => 'handleItem',
-			'autocomplete' => 'handleAutocomplete',
-		];
-	}
+    public function getURLHandlers($gridField)
+    {
+        return [
+            $this->uriSegment . '/$ID' => 'handleItem',
+            'autocomplete'             => 'handleAutocomplete',
+        ];
+    }
 
-	public function setUriSegment($urlSegment) {
-		$this->uriSegment = $urlSegment;
-		return $this;
-	}
+    public function setUriSegment($urlSegment)
+    {
+        $this->uriSegment = $urlSegment;
+        return $this;
+    }
 
-	public function getUriSegment() {
-		return $this->uriSegment;
-	}
+    public function getUriSegment()
+    {
+        return $this->uriSegment;
+    }
 }
