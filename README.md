@@ -50,7 +50,6 @@ Add the following to your composer.json file
 * Screenshots!!
 * Make MinorActionsHolder touch friendly
 * Get DisplayAsTimeline to work with sorting (just in case)
-* Test EditableRow with tabs...
 * Make RangeSlider work with Date Range Fields / Any Range Fields
 * Test RangeSlider more
 
@@ -58,7 +57,7 @@ Add the following to your composer.json file
 * MIT
 
 ## Version
-* Version 0.2 - Alpha
+* Version 0.3 (Alpha)
 
 ## Contact
 #### Milkyway Multimedia
