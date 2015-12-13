@@ -276,7 +276,7 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     {
         $list = $grid->getList();
         $value = $grid->Value();
-        $className = str_replace('\\', '_', __CLASS__);
+        $className = $this->getComponentName();
 
         if (!isset($value[$className]) || !is_array($value[$className])) {
             return;
@@ -396,7 +396,7 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
         $id = $request->param('ID');
         $record = $this->getRecordFromRequest($grid, $request);
         $form = $this->getForm($grid, $record);
-        $class = str_replace('\\', '_', __CLASS__);
+        $class = $this->getComponentName();
 
         foreach ($form->Fields()->dataFields() as $field) {
             $field->setName(sprintf(
@@ -481,8 +481,9 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
 
     protected function renameFieldsInCompositeField($fields, $grid, $record)
     {
+        $class = $this->getComponentName();
+
         foreach ($fields as $field) {
-            $class = str_replace('\\', '_', __CLASS__);
             $field->setName(sprintf(
                 '%s[%s][%s][%s]', $grid->getName(), $class, $record->ID, $field->getName()
             ));
@@ -507,5 +508,9 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
             (!$this->permissionCallback && ($record->canView() || $record->canEdit()));
 
         return $this->canView[$record->ID];
+    }
+
+    protected function getComponentName() {
+        return str_replace(['\\', '-'], '_', __CLASS__ . '_' . $this->urlSegment);
     }
 }

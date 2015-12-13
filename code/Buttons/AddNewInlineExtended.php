@@ -242,10 +242,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
     protected function getRowTemplateVariables($grid, $placeholder = '{%=o.num%}', $modelClass = '')
     {
-        $class = str_replace('\\', '_', __CLASS__);
-
         $form = $this->getForm($grid, '-' . $placeholder, true,
-            $modelClass)->setHTMLID('Form-' . $class . '-' . $placeholder);
+            $modelClass)->setHTMLID('Form-' . $this->getComponentName() . '-' . $placeholder);
 
         if ($modelClass && !$form->Fields()->dataFieldByName('_modelClass')) {
             $form->Fields()->push(\HiddenField::create('_modelClass', '', $modelClass));
@@ -258,7 +256,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         foreach ($fields as $field) {
             $field->setName(str_replace(
                 ['$gridfield', '$class', '$placeholder', '$field'],
-                [$grid->getName(), $class, $placeholder, $field->getName()],
+                [$grid->getName(), $this->getComponentName(), $placeholder, $field->getName()],
                 '$gridfield[$class][$placeholder][$field]'
             ));
         }
@@ -279,8 +277,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
                 'ss-gridfield-delete-inline',
             ],
                 [
-                    str_replace('\\', '_', __CLASS__),
-                    str_replace('\\', '_', __CLASS__),
+                    $this->getComponentName(),
+                    $this->getComponentName(),
                     $placeholder,
                     sprintf('ss-gridfield-editable-row--icon-holder"><i class="ss-gridfield-add-inline-extended--toggle%s"></i>',
                         $toggleClasses),
@@ -310,9 +308,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     {
         $list = $grid->getList();
         $value = $grid->Value();
-        $className = str_replace('\\', '_', __CLASS__);
+        $componentName = $this->getComponentName();
 
-        if (!isset($value[$className]) || !is_array($value[$className])) {
+        if (!isset($value[$componentName]) || !is_array($value[$componentName])) {
             return;
         }
 
@@ -332,7 +330,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         $count = 1;
         $itemIds = [];
 
-        foreach ($value[$className] as $fields) {
+        foreach ($value[$componentName] as $fields) {
             $item = isset($fields['_modelClass']) ? \Object::create($fields['_modelClass']) : \Object::create($class);
 
             $form->loadDataFrom($fields);
@@ -490,9 +488,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         $remaining = $request->remaining();
         $modelClass = $request->getVar($grid->ID() . '_modelClass');
         $form = $this->getForm($grid, '', true, $modelClass);
-        $class = str_replace('\\', '_', __CLASS__);
 
-        if (preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $class), $remaining,
+        if (preg_match(sprintf('/\/%s\[%s\]\[([0-9]+)\]/', preg_quote($grid->Name), $this->getComponentName()), $remaining,
                 $matches) && isset($matches[1])
         ) {
             $this->renameFieldsInCompositeField($form->Fields(), $grid, $matches[1]);
@@ -539,13 +536,14 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
     protected function getCacheKey(array $vars = [])
     {
-        return preg_replace('/[^a-zA-Z0-9_]/', '', __CLASS__ . '_' . urldecode(http_build_query($vars, '', '_')));
+        return preg_replace('/[^a-zA-Z0-9_]/', '', $this->getComponentName() . '_' . urldecode(http_build_query($vars, '', '_')));
     }
 
     protected function renameFieldsInCompositeField($fields, $grid, $rowNumber = 1)
     {
+        $class = $this->getComponentName();
+
         foreach ($fields as $field) {
-            $class = str_replace('\\', '_', __CLASS__);
             $field->setName(sprintf(
                 '%s[%s][%s][%s]', $grid->getName(), $class, $rowNumber, $field->getName()
             ));
@@ -559,5 +557,9 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     protected function canCreate($grid)
     {
         return $grid->getList() && singleton($grid->getModelClass())->canCreate();
+    }
+
+    protected function getComponentName() {
+        return str_replace(['\\', '-'], '_', __CLASS__ . '_' . $this->urlSegment);
     }
 }

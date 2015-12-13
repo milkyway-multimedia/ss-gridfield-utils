@@ -100,7 +100,11 @@ class HelpButton implements
         $template = is_array($this->template) ? $this->template : [$this->template];
         array_push($template, 'GridFieldHelpButton_View');
 
-        return $record->customise(['Content' => $this->content])->renderWith($template);
+        if($this->content) {
+            $record = $record->customise(['Content' => $this->content]);
+        }
+
+        return $record->renderWith($template);
     }
 
     protected function makeSureIdIsUnique($grid)

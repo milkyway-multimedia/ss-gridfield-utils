@@ -910,7 +910,11 @@
         });
 
         $(".ss-gridfield-timeline.ss-gridfield-editable-rows tr.ss-gridfield-item").entwine({
-            onclick: function() {
+            onclick: function(e) {
+                if(e.target && ($(e.target).is('a,button,input') || $(e.target).parent().is('a,button,input'))) {
+                    return;
+                }
+
                 this.find('.ss-gridfield-editable-row--toggle:first').first().click();
             }
         });
