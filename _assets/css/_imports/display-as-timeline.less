@@ -13,253 +13,254 @@
 @brand-timeline-filter-bg: black;
 
 .cms .ss-gridfield-timeline table.ss-gridfield-table {
-	display: block;
-	width: 100%;
-	clear: both;
+  display: block;
+  width: 100%;
+  clear: both;
 
-	> thead,
-	> tbody,
-	> tfoot,
-	> tr,
-	> tr > th,
-	> tr > td,
-	> * > tr,
-	> * > tr > th,
-	> * > tr > td {
-		display: block;
-	}
+  > thead,
+  > tbody,
+  > tfoot,
+  > tr,
+  > tr > th,
+  > tr > td,
+  > * > tr,
+  > * > tr > th,
+  > * > tr > td {
+    display: block;
+  }
 
-	> thead,
-	> tbody,
-	> tfoot,
-	> tr,
-	> * > tr {
-		width: 100%;
-	}
+  > thead,
+  > tbody,
+  > tfoot,
+  > tr,
+  > * > tr {
+    width: 100%;
+  }
 
-	> thead > tr.title > th {
-		min-height: 1px;
-	}
+  > thead > tr.title > th {
+    min-height: 1px;
+  }
 
-	> thead > tr.title > th,
-	> tfoot,
-	> tfoot > tr > td,
-	> tbody > tr,
-	> thead > .filter-header {
-		.clearfix();
-	}
+  > thead > tr.title > th,
+  > tfoot,
+  > tfoot > tr > td,
+  > tbody > tr,
+  > thead > .filter-header {
+    .clearfix();
+  }
 
-	> tbody > tr {
-		background-color: #fff;
-		position: relative;
-		padding: 15px 0;
+  > tbody > tr {
+    background-color: #fff;
+    position: relative;
+    padding: 15px 0;
 
-		&:hover {
-			background-color: @brand-timeline !important;
-		}
+    &:hover {
+      background-color: @brand-timeline !important;
+    }
 
-		&:before {
-			content: '';
-			display: block;
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 43px;
-			width: 2px;
-			margin-left: -1px;
-			background-color: @brand-timeline;
-		}
-	}
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 43px;
+      width: 2px;
+      margin-left: -1px;
+      background-color: @brand-timeline;
+    }
+  }
 
-	> tr > td,
-	> * > tr > td {
-		border: 0;
-	}
+  > tr > td,
+  > * > tr > td {
+    border: 0;
+  }
 
-	> tbody > tr > td {
-		padding: 0;
-		max-width: none;
-		margin-right: 40px;
-		margin-left: 85px;
+  > tbody > tr > td {
+    padding: 0;
+    max-width: none;
+    margin-right: 40px;
+    margin-left: 85px;
 
-		&.bottom-all {
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
+    &.bottom-all {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
 
-			.datagrid-pagination .pagination-page-number input {
-				text-align: center;
-			}
-		}
-	}
+      .datagrid-pagination .pagination-page-number input {
+        text-align: center;
+      }
+    }
+  }
 
-	> tbody > tr > td.TimelineIcon {
-		float: left;
-		margin-right: 0;
-		margin-left: 0;
-	}
+  > tbody > tr > td.TimelineIcon {
+    //float: left;
+    position: absolute;
+    margin-right: 0;
+    margin-left: 0;
+  }
 
-	> tbody > tr > td.col-buttons {
-		position: absolute;
-		top: 50%;
-		margin-top: -10px;
-		margin-right: 0;
-		right: 40px;
-		margin-left: 0;
-		white-space: normal;
-	}
+  > tbody > tr > td.col-buttons {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    margin-right: 0;
+    right: 40px;
+    margin-left: 0;
+    white-space: normal;
+  }
 
-	> tbody > tr > td.TimelineIcon div {
-		padding: 0 15px;
-		width: 55px;
-		position: relative;
-		text-align: center;
+  > tbody > tr > td.TimelineIcon div {
+    padding: 0 15px;
+    width: 55px;
+    position: relative;
+    text-align: center;
 
-		i.fa {
-			font-size: 20px;
-			border-radius: 50%;
-			width: 40px;
-			height: 40px;
-			line-height: 40px;
-			text-align: center;
-			background-color: @brand-timeline;
-			color: @brand-timeline-icon;
-			position: relative;
-			z-index: 5;
+    i.fa {
+      font-size: 20px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      background-color: @brand-timeline;
+      color: @brand-timeline-icon;
+      position: relative;
+      z-index: 5;
 
-			&.icon-timeline--minor {
-				font-size: 10px;
-				width: 20px;
-				height: 20px;
-				line-height: 20px;
-			}
-		}
-	}
+      &.icon-timeline--minor {
+        font-size: 10px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+  }
 
-	> tbody > tr:hover > td.TimelineIcon div i.fa {
-		background-color: @brand-timeline-highlight;
-	}
+  > tbody > tr:hover > td.TimelineIcon div i.fa {
+    background-color: @brand-timeline-highlight;
+  }
 
-	> tfoot > * > td.bottom-all {
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
+  > tfoot > * > td.bottom-all {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
-	> thead > .sortable-header,
-	> thead > .sortable-header:hover {
-		text-align: right;
-		white-space: nowrap;
-		border-top: 1px solid @brand-timeline-sortable-border;
-		border-left: 1px solid @brand-timeline-sortable-border;
-		color: @brand-timeline-sortable-text;
-		background: @brand-timeline-sortable !important;
-		border-bottom: 1px solid @brand-timeline-sortable-margin-border;
+  > thead > .sortable-header,
+  > thead > .sortable-header:hover {
+    text-align: right;
+    white-space: nowrap;
+    border-top: 1px solid @brand-timeline-sortable-border;
+    border-left: 1px solid @brand-timeline-sortable-border;
+    color: @brand-timeline-sortable-text;
+    background: @brand-timeline-sortable !important;
+    border-bottom: 1px solid @brand-timeline-sortable-margin-border;
 
-		> th {
-			width: auto;
-			display: inline-block;
-		}
+    > th {
+      width: auto;
+      display: inline-block;
+    }
 
-		.col-TimelineIcon,
-		.non-sortable {
-			display: none;
-		}
+    .col-TimelineIcon,
+    .non-sortable {
+      display: none;
+    }
 
-		.col-Actions {
-			float: left;
-		}
-	}
+    .col-Actions {
+      float: left;
+    }
+  }
 
-	> thead > .filter-header {
-		background-color: @brand-timeline-filter-bg !important;
-		text-align: right;
-	}
+  > thead > .filter-header {
+    background-color: @brand-timeline-filter-bg !important;
+    text-align: right;
+  }
 
-	> thead > .filter-header > th {
-		display: inline-block;
-		margin: 5px;
+  > thead > .filter-header > th {
+    display: inline-block;
+    margin: 5px;
 
-		&:last-child {
-			float: left;
-		}
+    &:last-child {
+      float: left;
+    }
 
-		div {
-			padding-bottom: 0;
-			margin-bottom: 0;
-		}
-	}
+    div {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
 
-	> tbody > .ss-gridfield-inline-new-extended--row_hide,
-	> tbody > .ss-gridfield-editable-row--row_hide {
-		display: none;
-	}
+  > tbody > .ss-gridfield-inline-new-extended--row_hide,
+  > tbody > .ss-gridfield-editable-row--row_hide {
+    display: none;
+  }
 
-	> tbody > .ss-gridfield-inline-new-extended--row,
-	> tbody > .ss-gridfield-editable-row--row {
-		border-bottom:2px solid @brand-timeline;
-		cursor: pointer;
-	}
+  > tbody > .ss-gridfield-inline-new-extended--row,
+  > tbody > .ss-gridfield-editable-row--row {
+    border-bottom: 2px solid @brand-timeline;
+    cursor: pointer;
+  }
 
-	> tbody > * > td.ss-gridfield-inline-new-extended--fieldsHolder,
-	> tbody > * > td.ss-gridfield-editable-row--fieldsHolder {
-		margin: 0;
-	}
+  > tbody > * > td.ss-gridfield-inline-new-extended--fieldsHolder,
+  > tbody > * > td.ss-gridfield-editable-row--fieldsHolder {
+    margin: 0;
+  }
 
-	> tbody > tr.ss-gridfield-inline-new-extended--row,
-	> tbody > tr.ss-gridfield-editable-row--row {
-		padding: 0;
-		&:before {
-			display: none;
-		}
-	}
+  > tbody > tr.ss-gridfield-inline-new-extended--row,
+  > tbody > tr.ss-gridfield-editable-row--row {
+    padding: 0;
+    &:before {
+      display: none;
+    }
+  }
 
-	> tbody > tr > td > .ss-gridfield-add-inline-extended--toggle,
-	> tbody > tr > td > .ss-gridfield-editable-row--toggle {
-		position: absolute;
-		bottom: -3px;
+  > tbody > tr > td > .ss-gridfield-add-inline-extended--toggle,
+  > tbody > tr > td > .ss-gridfield-editable-row--toggle {
+    position: absolute;
+    bottom: -3px;
 
-		&:after {
-			content: '';
-			display: block;
-			width:0;
-			height:0;
-			border-style: solid;
-			border-width: 0 8px 8px 8px;
-			border-color: transparent transparent lighten(#a4b4bf, 10%) transparent;
-		}
+    &:after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 8px 8px 8px;
+      border-color: transparent transparent lighten(#a4b4bf, 10%) transparent;
+    }
 
-		display: none;
+    display: none;
 
-		&_open {
-			display: inline-block;
-		}
-	}
+    &_open {
+      display: inline-block;
+    }
+  }
 
-	> tbody > tr > .ss-gridfield-inline-new-extended--buttons.col-buttons {
-		top: 50px;
-		right: 0;
-		padding-left: 0;
-		width: 20px;
-		text-align: center;
-		background-color: #ECEFF1;
-		border-top-left-radius: 10px;
-		border-bottom-left-radius: 10px;
+  > tbody > tr > .ss-gridfield-inline-new-extended--buttons.col-buttons {
+    top: 50px;
+    right: 0;
+    padding-left: 0;
+    width: 20px;
+    text-align: center;
+    background-color: #ECEFF1;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 
-		> * {
-			margin-bottom: 4px;
-		}
-	}
+    > * {
+      margin-bottom: 4px;
+    }
+  }
 }
 
 .cms .ss-gridfield-timeline.ss-gridfield-editable-rows > table.ss-gridfield-table > tbody > tr:not(.ss-gridfield-timeline--row_with-details) {
-	&:hover {
-		background-color: white !important;
+  &:hover {
+    background-color: white !important;
 
-		> td.TimelineIcon div i.fa {
-			background-color: @brand-timeline;
-		}
-	}
+    > td.TimelineIcon div i.fa {
+      background-color: @brand-timeline;
+    }
+  }
 }
 
 .ss-gridfield-timeline.ss-gridfield-editable-rows > table > tbody > tr.ss-gridfield-timeline--row_with-details {
-	cursor: pointer !important;
+  cursor: pointer !important;
 }

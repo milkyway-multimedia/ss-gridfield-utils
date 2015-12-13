@@ -30,6 +30,8 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
 
     protected $permissionCallback;
 
+    protected $itemEditFormCallback;
+
     protected $fields;
 
     protected $template;
@@ -117,6 +119,29 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public function setPermissionCallback($permissionCallback)
     {
         $this->permissionCallback = $permissionCallback;
+
+        return $this;
+    }
+
+    /**
+     * Get the callback for changes on the edit form after constructing it
+     *
+     * @return callable
+     */
+    public function getItemEditFormCallback()
+    {
+        return $this->itemEditFormCallback;
+    }
+
+    /**
+     * Make changes on the edit form after constructing it.
+     *
+     * @param callable $itemEditFormCallback
+     * @return static $this
+     */
+    public function setItemEditFormCallback($itemEditFormCallback)
+    {
+        $this->itemEditFormCallback = $itemEditFormCallback;
 
         return $this;
     }
@@ -290,6 +315,12 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
         if ($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
             $root->setTemplate('');
             $form->removeExtraClass('cms-tabset');
+        }
+
+        $callback = $this->getItemEditFormCallback();
+
+        if ($callback) {
+            call_user_func($callback, $form, $this, $grid, $record, $removeEditableColumnFields);
         }
 
         return $form;
@@ -471,7 +502,8 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
         }
 
         $this->canView[$record->ID] =
-            ($this->permissionCallback && call_user_func($this->permissionCallback, $gridField, $record, $columnName)) ||
+            ($this->permissionCallback && call_user_func($this->permissionCallback, $gridField, $record,
+                    $columnName)) ||
             (!$this->permissionCallback && ($record->canView() || $record->canEdit()));
 
         return $this->canView[$record->ID];

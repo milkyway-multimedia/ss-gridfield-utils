@@ -28,6 +28,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
     public $setWorkingParentOnRecordTo = 'Parent';
 
+    protected $itemEditFormCallback;
+
     protected $fragment;
 
     protected $title;
@@ -171,6 +173,29 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public function setValidator($validator)
     {
         $this->validator = $validator;
+
+        return $this;
+    }
+
+    /**
+     * Get the callback for changes on the edit form after constructing it
+     *
+     * @return callable
+     */
+    public function getItemEditFormCallback()
+    {
+        return $this->itemEditFormCallback;
+    }
+
+    /**
+     * Make changes on the edit form after constructing it.
+     *
+     * @param callable $itemEditFormCallback
+     * @return static $this
+     */
+    public function setItemEditFormCallback($itemEditFormCallback)
+    {
+        $this->itemEditFormCallback = $itemEditFormCallback;
 
         return $this;
     }
@@ -357,6 +382,12 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         if ($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
             $root->setTemplate('');
             $form->removeExtraClass('cms-tabset');
+        }
+
+        $callback = $this->getItemEditFormCallback();
+
+        if ($callback) {
+            call_user_func($callback, $form, $this, $grid, $modelClass, $removeEditableColumnFields);
         }
 
         return $form;
