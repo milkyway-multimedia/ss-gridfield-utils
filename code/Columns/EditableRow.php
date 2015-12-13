@@ -28,6 +28,8 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public $cacheToggleStateSave = false;
     public $openNewTogglesOnCreate = true;
 
+    protected $permissionCallback;
+
     protected $fields;
 
     protected $template;
@@ -69,6 +71,7 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public function setFields($fields)
     {
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -91,6 +94,30 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
     public function setValidator($validator)
     {
         $this->validator = $validator;
+
+        return $this;
+    }
+
+    /**
+     * Get the permission callback for this column
+     *
+     * @return callable
+     */
+    public function getPermissionCallback()
+    {
+        return $this->permissionCallback;
+    }
+
+    /**
+     * Sets the permission callback for this column
+     *
+     * @param callable $permissionCallback
+     * @return static $this
+     */
+    public function setPermissionCallback($permissionCallback)
+    {
+        $this->permissionCallback = $permissionCallback;
+
         return $this;
     }
 
@@ -141,6 +168,10 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
      */
     public function getColumnContent($gridField, $record, $columnName)
     {
+        if (!$this->checkPermission($gridField, $record, $columnName)) {
+            return '';
+        }
+
         $classes = 'ss-gridfield-editable-row--icon';
 
         if ($record) {
@@ -149,7 +180,7 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
 
         $openToggleId = 'EditableRowToggles.' . $gridField->ID() . '.' . get_class($record) . '_' . $record->ID;
 
-        if($this->openNewTogglesOnCreate && Session::get($openToggleId)) {
+        if ($this->openNewTogglesOnCreate && Session::get($openToggleId)) {
             $classes .= ' ss-gridfield-editable-row--toggle_start';
         }
 
@@ -169,20 +200,11 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        \Requirements::css(SS_MWM_DIR . '/thirdparty/font-awesome/font-awesome.min.css');
-        Utilities::include_requirements();
-
-        $gridField->addExtraClass('ss-gridfield-editable-rows');
-
-        if ($this->disableToggleStateSave) {
-            $gridField->addExtraClass('ss-gridfield-editable-rows_disableToggleState');
-        }
-
-        if ($this->cacheToggleStateSave) {
-            $gridField->addExtraClass('ss-gridfield-editable-rows_allowCachedToggles');
-        }
-
         $this->workingGrid = $gridField;
+
+        if (!$this->checkPermission($gridField, $record, $columnName)) {
+            return [];
+        }
 
         return [
             'data-link' => $this->Link('load', $record->ID),
@@ -210,8 +232,19 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
 
     public function getHTMLFragments($grid)
     {
-        \Requirements::javascript(THIRDPARTY_DIR . '/javascript-templates/tmpl.js');
+        singleton('require')->css(SS_MWM_DIR . '/thirdparty/font-awesome/font-awesome.min.css');
+        $grid->addExtraClass('ss-gridfield-editable-rows');
         Utilities::include_requirements();
+
+        if ($this->disableToggleStateSave) {
+            $grid->addExtraClass('ss-gridfield-editable-rows_disableToggleState');
+        }
+
+        if ($this->cacheToggleStateSave) {
+            $grid->addExtraClass('ss-gridfield-editable-rows_allowCachedToggles');
+        }
+
+        $this->workingGrid = $grid;
     }
 
     public function handleSave(\GridField $grid, \DataObjectInterface $record)
@@ -355,7 +388,14 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
         $form = $this->getForm($grid, $record);
         $this->renameFieldsInCompositeField($form->Fields(), $grid, $record);
 
-        if (!$record->canEdit()) {
+        $canEdit = $record->canEdit();
+        $canView = $record->canView();
+
+        if (!$canEdit && !$canView) {
+            throw new \LogicException('You do not have permission to view this record');
+        }
+
+        if (!$canEdit) {
             $form->makeReadonly();
         }
 
@@ -420,5 +460,20 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
                 $this->renameFieldsInCompositeField($field->FieldList(), $grid, $record);
             }
         }
+    }
+
+    private $canView = [];
+
+    protected function checkPermission($gridField, $record, $columnName)
+    {
+        if (isset($this->canView[$record->ID])) {
+            return $this->canView[$record->ID];
+        }
+
+        $this->canView[$record->ID] =
+            ($this->permissionCallback && call_user_func($this->permissionCallback, $gridField, $record, $columnName)) ||
+            (!$this->permissionCallback && ($record->canView() || $record->canEdit()));
+
+        return $this->canView[$record->ID];
     }
 }

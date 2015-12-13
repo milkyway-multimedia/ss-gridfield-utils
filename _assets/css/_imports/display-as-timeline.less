@@ -1,37 +1,61 @@
 @import "../../../../bower_components/bootstrap/less/mixins";
 
+@brand-timeline: rgb(240, 244, 247);
+@brand-timeline-text: fade(black, 80%);
+@brand-timeline-icon: rgba(102, 102, 102, 0.8);
+@brand-timeline-highlight: #ffffff;
+
+@brand-timeline-sortable: #98aab6;
+@brand-timeline-sortable-border: #a4b4bf;
+@brand-timeline-sortable-text: #ffffff;
+@brand-timeline-sortable-margin-border: fade(black, 10%);
+
+@brand-timeline-filter-bg: black;
+
 .cms .ss-gridfield-timeline table.ss-gridfield-table {
 	display: block;
 	width: 100%;
 	clear: both;
 
-	thead, tbody, tfoot, tr, th, td {
+	> thead,
+	> tbody,
+	> tfoot,
+	> tr,
+	> tr > th,
+	> tr > td,
+	> * > tr,
+	> * > tr > th,
+	> * > tr > td {
 		display: block;
 	}
 
-	thead, tbody, tfoot, tr {
+	> thead,
+	> tbody,
+	> tfoot,
+	> tr,
+	> * > tr {
 		width: 100%;
 	}
 
-	tr.title th {
+	> thead > tr.title > th {
 		min-height: 1px;
 	}
 
-	tr.title th,
-	tfoot,
-	tfoot td,
-	tbody tr,
-	.filter-header {
+	> thead > tr.title > th,
+	> tfoot,
+	> tfoot > tr > td,
+	> tbody > tr,
+	> thead > .filter-header {
 		.clearfix();
 	}
 
-	tbody tr {
+	> tbody > tr {
 		background-color: #fff;
 		position: relative;
 		padding: 15px 0;
 
 		&:hover {
-			background-color: rgb(240, 244, 247) !important;
+			background-color: @brand-timeline !important;
 		}
 
 		&:before {
@@ -43,15 +67,16 @@
 			left: 43px;
 			width: 2px;
 			margin-left: -1px;
-			background-color: rgb(240, 244, 247);
+			background-color: @brand-timeline;
 		}
 	}
 
-	td {
+	> tr > td,
+	> * > tr > td {
 		border: 0;
 	}
 
-	tbody td {
+	> tbody > tr > td {
 		padding: 0;
 		max-width: none;
 		margin-right: 40px;
@@ -67,22 +92,23 @@
 		}
 	}
 
-	td.TimelineIcon {
+	> tbody > tr > td.TimelineIcon {
 		float: left;
 		margin-right: 0;
 		margin-left: 0;
 	}
 
-	td.col-buttons {
+	> tbody > tr > td.col-buttons {
 		position: absolute;
 		top: 50%;
 		margin-top: -10px;
 		margin-right: 0;
 		right: 40px;
 		margin-left: 0;
+		white-space: normal;
 	}
 
-	td.TimelineIcon div {
+	> tbody > tr > td.TimelineIcon div {
 		padding: 0 15px;
 		width: 55px;
 		position: relative;
@@ -95,8 +121,8 @@
 			height: 40px;
 			line-height: 40px;
 			text-align: center;
-			background-color: rgb(240, 244, 247);
-			color: rgba(102, 102, 102, 0.8);
+			background-color: @brand-timeline;
+			color: @brand-timeline-icon;
 			position: relative;
 			z-index: 5;
 
@@ -109,26 +135,26 @@
 		}
 	}
 
-	tbody tr:hover td.TimelineIcon div i.fa {
-		background-color: #fff;
+	> tbody > tr:hover > td.TimelineIcon div i.fa {
+		background-color: @brand-timeline-highlight;
 	}
 
-	tfoot td.bottom-all {
+	> tfoot > * > td.bottom-all {
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
 	}
 
-	.sortable-header,
-	.sortable-header:hover {
+	> thead > .sortable-header,
+	> thead > .sortable-header:hover {
 		text-align: right;
 		white-space: nowrap;
-		border-top: 1px solid #a4b4bf;
-		border-left: 1px solid #a4b4bf;
-		color: #fff;
-		background: #98aab6 !important;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		border-top: 1px solid @brand-timeline-sortable-border;
+		border-left: 1px solid @brand-timeline-sortable-border;
+		color: @brand-timeline-sortable-text;
+		background: @brand-timeline-sortable !important;
+		border-bottom: 1px solid @brand-timeline-sortable-margin-border;
 
-		th {
+		> th {
 			width: auto;
 			display: inline-block;
 		}
@@ -143,12 +169,12 @@
 		}
 	}
 
-	.filter-header {
-		background-color: #000000 !important;
+	> thead > .filter-header {
+		background-color: @brand-timeline-filter-bg !important;
 		text-align: right;
 	}
 
-	.filter-header > th {
+	> thead > .filter-header > th {
 		display: inline-block;
 		margin: 5px;
 
@@ -161,4 +187,79 @@
 			margin-bottom: 0;
 		}
 	}
+
+	> tbody > .ss-gridfield-inline-new-extended--row_hide,
+	> tbody > .ss-gridfield-editable-row--row_hide {
+		display: none;
+	}
+
+	> tbody > .ss-gridfield-inline-new-extended--row,
+	> tbody > .ss-gridfield-editable-row--row {
+		border-bottom:2px solid @brand-timeline;
+		cursor: pointer;
+	}
+
+	> tbody > * > td.ss-gridfield-inline-new-extended--fieldsHolder,
+	> tbody > * > td.ss-gridfield-editable-row--fieldsHolder {
+		margin: 0;
+	}
+
+	> tbody > tr.ss-gridfield-inline-new-extended--row,
+	> tbody > tr.ss-gridfield-editable-row--row {
+		padding: 0;
+		&:before {
+			display: none;
+		}
+	}
+
+	> tbody > tr > td > .ss-gridfield-add-inline-extended--toggle,
+	> tbody > tr > td > .ss-gridfield-editable-row--toggle {
+		position: absolute;
+		bottom: -3px;
+
+		&:after {
+			content: '';
+			display: block;
+			width:0;
+			height:0;
+			border-style: solid;
+			border-width: 0 8px 8px 8px;
+			border-color: transparent transparent lighten(#a4b4bf, 10%) transparent;
+		}
+
+		display: none;
+
+		&_open {
+			display: inline-block;
+		}
+	}
+
+	> tbody > tr > .ss-gridfield-inline-new-extended--buttons.col-buttons {
+		top: 50px;
+		right: 0;
+		padding-left: 0;
+		width: 20px;
+		text-align: center;
+		background-color: #ECEFF1;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+
+		> * {
+			margin-bottom: 4px;
+		}
+	}
+}
+
+.cms .ss-gridfield-timeline.ss-gridfield-editable-rows > table.ss-gridfield-table > tbody > tr:not(.ss-gridfield-timeline--row_with-details) {
+	&:hover {
+		background-color: white !important;
+
+		> td.TimelineIcon div i.fa {
+			background-color: @brand-timeline;
+		}
+	}
+}
+
+.ss-gridfield-timeline.ss-gridfield-editable-rows > table > tbody > tr.ss-gridfield-timeline--row_with-details {
+	cursor: pointer !important;
 }

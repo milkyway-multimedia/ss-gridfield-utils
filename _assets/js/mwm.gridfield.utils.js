@@ -277,7 +277,13 @@
 
                 this._super(opts, function () {
                     if ($added.length) {
-                        $added.appendTo($grid.find("tbody:first"));
+                        if($grid.data('prepend')) {
+                            $added.prependTo($grid.find("tbody:first"));
+                        }
+                        else {
+                            $added.appendTo($grid.find("tbody:first"));
+                        }
+
                         $grid.find("tbody:first").children(".ss-gridfield-no-items:first").hide();
                     }
 
@@ -892,6 +898,20 @@
                 };
 
                 return options;
+            }
+        });
+
+        // Milkyway\SS\GridFieldUtils\DisplayAsTimeline
+        $(".ss-gridfield-timeline.ss-gridfield-editable-rows .ss-gridfield-editable-row--toggle").entwine({
+            onmatch: function() {
+                this._super();
+                this.parents('tr:first').addClass('ss-gridfield-timeline--row_with-details')
+            }
+        });
+
+        $(".ss-gridfield-timeline.ss-gridfield-editable-rows tr.ss-gridfield-item").entwine({
+            onclick: function() {
+                this.find('.ss-gridfield-editable-row--toggle:first').first().click();
             }
         });
     });

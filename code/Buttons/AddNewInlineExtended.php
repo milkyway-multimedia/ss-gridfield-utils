@@ -102,6 +102,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public function setFragment($fragment)
     {
         $this->fragment = $fragment;
+
         return $this;
     }
 
@@ -124,6 +125,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -146,6 +148,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public function setFields($fields)
     {
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -168,6 +171,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
     public function setValidator($validator)
     {
         $this->validator = $validator;
+
         return $this;
     }
 
@@ -298,7 +302,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
 
         $orderable = $grid->Config->getComponentByType('GridFieldOrderableRows');
         $sortField = $orderable ? $orderable->getSortField() : '';
-        $max = $sortField && !$this->prepend ? $orderable->getManipulatedData($grid, $list)->max($sortField) + 1 : false;
+        $max = $sortField && !$this->prepend ? $orderable->getManipulatedData($grid,
+                $list)->max($sortField) + 1 : false;
         $count = 1;
         $itemIds = [];
 
@@ -310,15 +315,16 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
             $extra = method_exists($list, 'getExtraFields') ? array_intersect_key($form->Data,
                 (array)$list->getExtraFields()) : [];
 
-            if($sortField && $max !== false) {
+            if ($sortField && $max !== false) {
                 $item->$sortField = $max;
                 $extra[$sortField] = $max;
                 $max++;
-            }
-            else if($sortField) {
-                $item->$sortField = $count;
-                $extra[$sortField] = $count;
-                $count++;
+            } else {
+                if ($sortField) {
+                    $item->$sortField = $count;
+                    $extra[$sortField] = $count;
+                    $count++;
+                }
             }
 
             $item->write();
@@ -329,14 +335,14 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         }
 
         // Fix other sorts for prepends in one query
-        if($sortField && $max === false) {
+        if ($sortField && $max === false) {
             \DB::query(sprintf(
                 'UPDATE "%s" SET "%s" = %s + %d WHERE %s',
                 $orderable->getSortTable($list),
                 $sortField,
                 $sortField,
                 $count,
-                '"ID" NOT IN (' . implode(',',$itemIds) . ')'
+                '"ID" NOT IN (' . implode(',', $itemIds) . ')'
             ));
         }
     }
@@ -348,7 +354,7 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
             $this->getFieldList($grid, $removeEditableColumnFields, $modelClass), \FieldList::create(),
             $this->getValidatorForForm($grid, $modelClass))->loadDataFrom($this->getRecordFromGrid($grid, $modelClass));
 
-        if($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
+        if ($form->Fields()->hasTabSet() && ($root = $form->Fields()->findOrMakeTab('Root')) && $root->Template == 'CMSTabSet') {
             $root->setTemplate('');
             $form->removeExtraClass('cms-tabset');
         }
@@ -505,20 +511,22 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         return preg_replace('/[^a-zA-Z0-9_]/', '', __CLASS__ . '_' . urldecode(http_build_query($vars, '', '_')));
     }
 
-    protected function renameFieldsInCompositeField($fields, $grid, $rowNumber = 1) {
+    protected function renameFieldsInCompositeField($fields, $grid, $rowNumber = 1)
+    {
         foreach ($fields as $field) {
             $class = str_replace('\\', '_', __CLASS__);
             $field->setName(sprintf(
                 '%s[%s][%s][%s]', $grid->getName(), $class, $rowNumber, $field->getName()
             ));
 
-            if($field->isComposite()) {
+            if ($field->isComposite()) {
                 $this->renameFieldsInCompositeField($field->FieldList(), $grid, $rowNumber);
             }
         }
     }
 
-    protected function canCreate($grid) {
+    protected function canCreate($grid)
+    {
         return $grid->getList() && singleton($grid->getModelClass())->canCreate();
     }
 }
