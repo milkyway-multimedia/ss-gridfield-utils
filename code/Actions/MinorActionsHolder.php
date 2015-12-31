@@ -74,4 +74,4 @@ class MinorActionsHolder implements GridField_HTMLProvider
             ])->renderWith('GridField_MinorActionsHolder'),
         ];
     }
-} 
+}

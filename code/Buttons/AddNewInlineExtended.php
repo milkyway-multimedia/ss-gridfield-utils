@@ -559,7 +559,8 @@ class AddNewInlineExtended extends \RequestHandler implements \GridField_HTMLPro
         return $grid->getList() && singleton($grid->getModelClass())->canCreate();
     }
 
-    protected function getComponentName() {
+    protected function getComponentName()
+    {
         return str_replace(['\\', '-'], '_', __CLASS__ . '_' . $this->urlSegment);
     }
 }

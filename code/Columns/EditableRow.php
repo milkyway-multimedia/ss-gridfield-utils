@@ -13,10 +13,8 @@ use GridField_HTMLProvider;
 use GridField_SaveHandler;
 use GridField_URLHandler;
 use GridField_ColumnProvider;
-
 use Validator;
 use FieldList;
-
 use Session;
 
 class EditableRow extends RequestHandler implements GridField_HTMLProvider, GridField_SaveHandler, GridField_URLHandler, GridField_ColumnProvider
@@ -510,7 +508,8 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
         return $this->canView[$record->ID];
     }
 
-    protected function getComponentName() {
+    protected function getComponentName()
+    {
         return str_replace(['\\', '-'], '_', __CLASS__ . '_' . $this->urlSegment);
     }
 }

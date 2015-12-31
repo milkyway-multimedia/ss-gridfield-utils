@@ -65,7 +65,7 @@ class DetailForm_ItemRequest extends \Milkyway\SS\GridFieldUtils\GridFieldDetail
             ]);
         }
 
-        if(($toplevelController = $this->getToplevelController()) && $toplevelController instanceof LeftAndMain) {
+        if (($toplevelController = $this->getToplevelController()) && $toplevelController instanceof LeftAndMain) {
             $form = $toplevelController->getEditForm();
         } else {
             $form = new Form(Controller::curr(), 'Undo-Placeholder', new FieldList(), new FieldList());

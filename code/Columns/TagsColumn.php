@@ -21,7 +21,6 @@ use Form;
 use FieldList;
 use Controller;
 use Object;
-
 use SS_HTTPResponse_Exception;
 
 class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator, GridField_URLHandler, GridField_SaveHandler
@@ -96,7 +95,7 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
     {
         $form = $this->getForm($grid, $record);
 
-        if(!$form) {
+        if (!$form) {
             return '';
         }
 
@@ -138,7 +137,8 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
         return ['title' => $this->columnTitle];
     }
 
-    public function getURLHandlers($grid) {
+    public function getURLHandlers($grid)
+    {
         return array(
             'tag/' . $this->relation . '/form/$ID' => 'handleForm',
             'tag/' . $this->relation . '/new/$ID/$Tag' => 'handleAdd',
@@ -146,23 +146,23 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
         );
     }
 
-    public function handleAdd(GridField $grid, $request) {
-        if($this->addHandler) {
+    public function handleAdd(GridField $grid, $request)
+    {
+        if ($this->addHandler) {
             return call_user_func($this->addHandler, $request, $grid, $this->grabParamsCallback($grid, $request));
         }
 
         $params = call_user_func($this->grabParamsCallback($grid, $request));
 
-        if(!$params) {
+        if (!$params) {
             return;
         }
 
         $model = $this->sourceList ? $this->sourceList->dataClass() : $params['record']->{$this->relation}()->dataClass();
 
-        if($item = singleton($model)->get()->filter($this->referenceField, $params['tag'])->first()) {
+        if ($item = singleton($model)->get()->filter($this->referenceField, $params['tag'])->first()) {
             $params['record']->{$this->relation}()->add($item);
-        }
-        else {
+        } else {
             $item = Object::create($model);
             $item->{$this->referenceField} = $params['tag'];
             $item->write();
@@ -170,16 +170,17 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
         }
     }
 
-    public function handleForm(GridField $grid, $request) {
+    public function handleForm(GridField $grid, $request)
+    {
         $params = call_user_func($this->grabParamsCallback($grid, $request));
 
         $form = $this->getForm($grid, $params['record']);
 
-        if(!$form) {
+        if (!$form) {
             throw new SS_HTTPResponse_Exception(null, 400);
         }
 
-        foreach($form->Fields() as $field) {
+        foreach ($form->Fields() as $field) {
             $field->Name = $this->getFieldName($field->Name, $grid, $params['record']);
         }
 
@@ -193,10 +194,11 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
      * @param DataObjectInterface $record
      * @return \Form
      */
-    public function getForm(GridField $grid, DataObjectInterface $record) {
+    public function getForm(GridField $grid, DataObjectInterface $record)
+    {
         $dropdown = $this->getSelectField($record, $grid);
 
-        if(!$dropdown) {
+        if (!$dropdown) {
             return false;
         }
 
@@ -215,7 +217,8 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
         // TODO: Implement handleSave() method.
     }
 
-    protected function getFieldName($name,  GridField $grid, DataObjectInterface $record) {
+    protected function getFieldName($name,  GridField $grid, DataObjectInterface $record)
+    {
         return sprintf(
             '%s[%s][%s][%s]', $grid->getName(), str_replace('\\', '_', __CLASS__), $record->ID, $name
         );
@@ -223,7 +226,8 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
 
     protected $_saveSourceList;
 
-    protected function getSelectField($record, $grid) {
+    protected function getSelectField($record, $grid)
+    {
         $list = $record->{$this->relation}();
 
         if (!$list || !singleton($list->dataClass())->canView() || !$record->exists()) {
@@ -232,7 +236,7 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
 
         Utilities::include_requirements();
 
-        if(!$this->_saveSourceList) {
+        if (!$this->_saveSourceList) {
             $this->_saveSourceList = DataList::create($list->dataClass())->map()->toArray();
         }
 
@@ -255,15 +259,16 @@ class TagsColumn implements GridField_ColumnProvider, GridField_DataManipulator,
             ->requireSelection(!$this->allowNewItems);
     }
 
-    protected function grabParamsCallback($grid, $request) {
-        return function() use($grid, $request) {
+    protected function grabParamsCallback($grid, $request)
+    {
+        return function () use ($grid, $request) {
             $id = $request->param('ID');
 
-            if(!ctype_digit($id)) {
+            if (!ctype_digit($id)) {
                 throw new SS_HTTPResponse_Exception(null, 400);
             }
 
-            if(!$record = $grid->List->byID($id)) {
+            if (!$record = $grid->List->byID($id)) {
                 throw new SS_HTTPResponse_Exception(null, 404);
             }
 

@@ -66,4 +66,4 @@ class GridFieldAddNewButton extends \GridFieldAddNewButton
             return ($df = $gridField->Config->getComponentByType('Milkyway\SS\GridFieldUtils\GridFieldDetailForm')) && isset($df->uriSegment) ? $gridField->Link($df->getUriSegment()) : $gridField->Link('item');
         }
     }
-} 
+}

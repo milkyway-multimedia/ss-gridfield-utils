@@ -8,7 +8,6 @@
 
 namespace Milkyway\SS\GridFieldUtils;
 
-
 use Milkyway\SS\GridFieldUtils\Contracts\HasModal;
 use ArrayData;
 use Controller;
@@ -29,6 +28,6 @@ class EditInModal extends \GridFieldEditButton
         $this->htmlFragments($gridField);
         return ArrayData::create([
             'Link' => Controller::join_links($this->Link($gridField), $record->ID, 'edit'),
-        ])->renderWith(['GridField_EditInModal', 'GridFieldEditButton',]);
+        ])->renderWith(['GridField_EditInModal', 'GridFieldEditButton', ]);
     }
 }

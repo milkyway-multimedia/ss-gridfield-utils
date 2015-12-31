@@ -127,5 +127,4 @@ class DisplayAsTimeline implements \GridField_ColumnProvider
 
         return $iconField;
     }
-
-} 
+}

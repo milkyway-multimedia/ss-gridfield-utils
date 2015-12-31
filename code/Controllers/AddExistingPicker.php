@@ -91,7 +91,7 @@ class AddExistingPicker extends \GridFieldAddExistingSearchHandler
     protected function checkAccessCallback()
     {
         return function ($ids) {
-            if($ids instanceof SS_HTTPRequest) {
+            if ($ids instanceof SS_HTTPRequest) {
                 $ids = (array_unique((array)$ids->postVar('ids')));
             }
 
