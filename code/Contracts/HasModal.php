@@ -19,15 +19,17 @@ trait HasModal
         ];
     }
 
-    public function htmlFragments($gridField) {
+    public function htmlFragments($gridField)
+    {
         $gridField->setAttribute('data-modal-dimensions', json_encode($this->dimensions));
         Utilities::include_requirements();
     }
 
-    public function handleItem($gridField, $request) {
+    public function handleItem($gridField, $request)
+    {
         $detailForm = $gridField->Config->getComponentByType('GridFieldDetailForm');
 
-        if(!$detailForm) {
+        if (!$detailForm) {
             throw new Exception('A GridFieldDetailForm is required to use a modal via this component');
         }
 
@@ -38,14 +40,14 @@ trait HasModal
         $itemEditCallback = $detailForm->getItemEditFormCallback();
         $link = $this->Link($gridField);
 
-        $detailForm->setItemEditFormCallback(function($form, $controller) use($itemEditCallback, $link)  {
+        $detailForm->setItemEditFormCallback(function ($form, $controller) use ($itemEditCallback, $link) {
             $form->setAttribute('data-modal-link', $link);
             $nonModalLink = explode('/', $controller->Link());
             array_pop($nonModalLink);
             $nonModalLink = implode('/', $nonModalLink);
             $form->setAttribute('data-non-modal-link', $nonModalLink);
 
-            if($itemEditCallback) {
+            if ($itemEditCallback) {
                 $itemEditCallback($form, $controller);
             }
         });

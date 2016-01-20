@@ -100,7 +100,7 @@ class HelpButton implements
         $template = is_array($this->template) ? $this->template : [$this->template];
         array_push($template, 'GridFieldHelpButton_View');
 
-        if($this->content) {
+        if ($this->content) {
             $record = $record->customise(['Content' => $this->content]);
         }
 
@@ -131,4 +131,4 @@ class HelpButton implements
 
         return $this->id();
     }
-} 
+}

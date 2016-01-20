@@ -15,7 +15,6 @@ if (!class_exists('GridFieldAddNewInlineButton')) {
 }
 
 use Select2Field;
-
 use Convert;
 use Object;
 use ManyManyList;
@@ -25,7 +24,6 @@ use DataObjectInterface;
 use GridField;
 use GridField_ColumnProvider;
 use GridFieldDataColumns;
-
 use Exception;
 
 class AddNewOrExistingInlineButton extends \GridFieldAddNewInlineButton implements
