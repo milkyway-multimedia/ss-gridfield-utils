@@ -108,6 +108,8 @@ class FormatSwitcher implements GridField_HTMLProvider, GridField_DataManipulato
             return [];
         }
 
+        Utilities::include_requirements();
+
         $currentFormat = $this->getFormatState($gridField)->current;
         $formats = ArrayList::create();
         $icon = '<i class="ss-gridfield--format-switcher--button-icon"></i><i class="ss-gridfield--format-switcher--button-icon"></i><i class="ss-gridfield--format-switcher--button-icon"></i>';
