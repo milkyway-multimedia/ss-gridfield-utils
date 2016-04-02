@@ -8,7 +8,7 @@
  * @author Mellisa Hankins <mell@milkywaymultimedia.com.au>
  */
 
-use Milkyway\SS\GridFieldUtils\Contracts\Action;
+use Milkyway\SS\GridFieldUtils\Common\Action;
 use GridField_FormAction;
 use LogicException;
 use ValidationException;

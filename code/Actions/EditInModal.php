@@ -8,7 +8,7 @@
 
 namespace Milkyway\SS\GridFieldUtils;
 
-use Milkyway\SS\GridFieldUtils\Contracts\HasModal;
+use Milkyway\SS\GridFieldUtils\Common\HasModal;
 use ArrayData;
 use Controller;
 

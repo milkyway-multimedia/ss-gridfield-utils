@@ -10,9 +10,14 @@
 
 use DataObject;
 use GridField;
+use Milkyway\SS\GridFieldUtils\Common\FormatsGridField;
+use Milkyway\SS\GridFieldUtils\Contracts\Format;
+use GridField_ColumnProvider;
 
-class DisplayAsTimeline implements \GridField_ColumnProvider
+class DisplayAsTimeline implements GridField_ColumnProvider, Format
 {
+    use FormatsGridField;
+
     /** @var string */
     protected $iconField;
 
@@ -21,6 +26,9 @@ class DisplayAsTimeline implements \GridField_ColumnProvider
 
     /** @var string */
     protected $addAttributesFromMethodOnRecord;
+
+    public $formatState = 'timeline';
+    public $formatTitle = 'Timeline';
 
     public function __construct($iconField = '', $iconClasses = [], $addAttributesFromMethodOnRecord = null)
     {
@@ -83,9 +91,7 @@ class DisplayAsTimeline implements \GridField_ColumnProvider
      */
     public function getColumnAttributes($gridField, $record, $columnName)
     {
-        Utilities::include_requirements();
-        $gridField->addExtraClass('ss-gridfield-timeline');
-
+        $this->formatIfNoSwitcherAvailable($gridField);
         $iconClasses = array_merge([$this->getColumnForIcon($columnName), 'TimelineIcon'], $this->iconClasses);
 
         if ($this->addAttributesFromMethodOnRecord) {
@@ -126,5 +132,26 @@ class DisplayAsTimeline implements \GridField_ColumnProvider
         $iconField = $this->iconField ?: $columnName;
 
         return $iconField;
+    }
+
+    public function getFormatTitle()
+    {
+        return $this->formatTitle;
+    }
+
+    public function getFormatState()
+    {
+        return $this->formatState;
+    }
+
+    public function format(GridField $gridField)
+    {
+        Utilities::include_requirements();
+        $gridField->addExtraClass('ss-gridfield-timeline');
+    }
+
+    public function unformat(GridField $gridField)
+    {
+        $gridField->removeExtraClass('ss-gridfield-timeline');
     }
 }

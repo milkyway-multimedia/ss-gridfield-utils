@@ -918,5 +918,20 @@
                 this.find('.ss-gridfield-editable-row--toggle:first').first().click();
             }
         });
+
+        // Milkyway\SS\GridFieldUtils\FormatSwitcher
+        $(".ss-gridfield").entwine({
+            reload: function (opts, success) {
+                var $grid = this;
+
+                this._super(opts, function (data) {
+                    $grid.attr('class', $(data).attr('class'));
+
+                    if (success) {
+                        success.apply(this, arguments);
+                    }
+                });
+            }
+        });
     });
 })(jQuery);

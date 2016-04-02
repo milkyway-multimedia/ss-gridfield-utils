@@ -20,6 +20,11 @@ class MinorActionsHolder implements GridField_HTMLProvider
     protected $id;
     protected $showEmptyString;
 
+    /**
+     * @param string $targetFragment
+     * @param string $title
+     * @param string $id
+     */
     public function __construct($targetFragment = 'buttons-before-left', $title = '', $id = '')
     {
         $this->targetFragment = $targetFragment;
@@ -37,6 +42,7 @@ class MinorActionsHolder implements GridField_HTMLProvider
 
     /**
      * @param string $title
+     * @return static
      */
     public function setTitle($title)
     {
@@ -54,6 +60,7 @@ class MinorActionsHolder implements GridField_HTMLProvider
 
     /**
      * @param string $showEmptyString
+     * @return static
      */
     public function setShowEmptyString($showEmptyString = '')
     {
@@ -61,6 +68,9 @@ class MinorActionsHolder implements GridField_HTMLProvider
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getHTMLFragments($gridField)
     {
         $target = $this->id ? $this->targetFragment . '-' . $this->id : $this->targetFragment;

@@ -1,0 +1,107 @@
+@format-switcher-icon-colour: #333333;
+
+.ss-gridfield--format-switcher--button {
+    border-radius: 0;
+    float: left;
+
+    &:first-child {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+
+    &:last-child {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+
+    .cms .ss-gridfield .action&,
+    .cms .ss-gridfield > div.ss-gridfield-buttonrow-before .action& {
+        margin: 0;
+        border-left-width: 0;
+
+        &.ui-state-disabled {
+            opacity: 1;
+            background-image: none;
+
+            &:hover {
+                box-shadow: none;
+            }
+        }
+
+        &:first-child {
+            border-left-width: 1px;
+        }
+    }
+
+    &_unformatted,
+    &_timeline {
+        padding-left: 15px;
+    }
+
+    &_unformatted {
+        .ss-gridfield--format-switcher--button-icon:first-child {
+            &,
+            &:before,
+            &:after {
+                position: absolute;
+                top:62.5%;
+                left:6px;
+                width:13px;
+                height:2px;
+                background-color:@format-switcher-icon-colour;
+            }
+
+            &:before,
+            &:after {
+                content: '';
+                top: 0;
+                left: 0;
+            }
+
+            &:before {
+                margin-top: -62.5%;
+            }
+
+            &:after {
+                margin-top: -30%;
+            }
+        }
+    }
+
+    &_timeline {
+        .ss-gridfield--format-switcher--button-icon {
+            &,
+            &:before {
+                position: absolute;
+                top:31%;
+                left:10px;
+                width:10px;
+                height:2px;
+                background-color:@format-switcher-icon-colour;
+            }
+
+            &:before {
+                content: '';
+                margin-left: -3px;
+                margin-top: -1px;
+                width: 2px;
+                left: 0;
+                height: 2px;
+            }
+
+            + .ss-gridfield--format-switcher--button-icon {
+                &,
+                &:before {
+                    top: 45.5%;
+                }
+
+                + .ss-gridfield--format-switcher--button-icon {
+                    &,
+                    &:before {
+                        top: 62%;
+                    }
+                }
+            }
+        }
+    }
+}

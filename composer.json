@@ -1,32 +1,32 @@
 {
-  "name"       : "milkyway-multimedia/ss-gridfield-utils",
-  "description": "A collection of GridField components that you can use with any GridField, including Editable Rows and amy more",
-  "type"       : "silverstripe-module",
-  "keywords"   : [
-    "silverstripe",
-    "utilities",
-    "mwm",
-    "gridfield"
-  ],
-  "license"    : "MIT",
-  "authors"    : [
-    {
-      "name" : "Mellisa Hankins",
-      "email": "mell@milkywaymultimedia.com.au"
+    "name"       : "milkyway-multimedia/ss-gridfield-utils",
+    "description": "A collection of GridField components that you can use with any GridField, including Editable Rows and amy more",
+    "type"       : "silverstripe-module",
+    "keywords"   : [
+        "silverstripe",
+        "utilities",
+        "mwm",
+        "gridfield"
+    ],
+    "license"    : "MIT",
+    "authors"    : [
+        {
+            "name" : "Mellisa Hankins",
+            "email": "mell@milkywaymultimedia.com.au"
+        }
+    ],
+    "require"    : {
+        "silverstripe/framework"        : "~3.3",
+        "milkyway-multimedia/ss-mwm-env": "~0.3"
+    },
+    "suggest"    : {
+        "milkyway-multimedia/ss-mwm-formfields"     : "You can only use the RangeSlider with this module installed.",
+        "silverstripe-australia/gridfieldextensions": "This module is compatible and extends the components of the gridfieldextensions module."
+    },
+    "extra"      : {
+        "installer-name": "gridfield-utils",
+        "branch-alias"  : {
+            "dev-master": "0.4.x-dev"
+        }
     }
-  ],
-  "require"    : {
-    "silverstripe/framework"    : "~3.1",
-    "milkyway-multimedia/ss-mwm": "~0.3"
-  },
-  "suggest"    : {
-    "milkyway-multimedia/ss-mwm-formfields"     : "You can only use the RangeSlider with this module installed.",
-    "silverstripe-australia/gridfieldextensions": "This module is compatible and extends the components of the gridfieldextensions module."
-  },
-  "extra"      : {
-    "installer-name": "gridfield-utils",
-    "branch-alias"  : {
-      "dev-master": "0.3.x-dev"
-    }
-  }
 }

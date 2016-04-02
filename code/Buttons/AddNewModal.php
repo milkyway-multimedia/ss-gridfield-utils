@@ -1,6 +1,6 @@
 <?php namespace Milkyway\SS\GridFieldUtils;
 
-use Milkyway\SS\GridFieldUtils\Contracts\HasModal;
+use Milkyway\SS\GridFieldUtils\Common\HasModal;
 
 /**
  * Milkyway Multimedia

@@ -1,4 +1,4 @@
-<?php namespace Milkyway\SS\GridFieldUtils\Contracts;
+<?php namespace Milkyway\SS\GridFieldUtils\Common;
 
 use Milkyway\SS\GridFieldUtils\Utilities;
 use Exception;

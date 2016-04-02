@@ -8,7 +8,8 @@ Includes the following (note they all live in the namespace Milkyway\SS\GridFiel
 * [HasOneSelector](docs/en/HasOneSelector.md): Allow you to select a has one relation from the current GridField
 * [AddExistingPicker](docs/en/AddExistingPicker.md): Works exactly like the one in gridfieldextensions, except it allows you to add more before closing the window - allowing for a faster workflow (requires silverstripe-australia/gridfieldextensions)
 * [MinorActionsHolder](docs/en/MinorActionsHolder.md): Defines a new fragment that will holds SS UI buttons as a dropdown (not touch friendly)
-* [AddNewModal](docs/en/AddNewModal.md): Opens up the detail form in a modal window 
+* [AddNewModal](docs/en/AddNewModal.md): Opens up the detail form in a modal window
+* [FormatSwitcher](docs/en/FormatSwitcher.md): Allows you to switch between different GridField formats
 * RangeSlider: Filter your GridField using a slider, for a more user-friendly option for viewing lots of records
 * HelpButton: Add a help button to your GridField that you can supply content for (will open a modal dialog)
 * SaveAllButton: Will execute all components on the GridField that implement the GridField_SaveHandler (for use in ModelAdmin where there is no save button)
@@ -25,8 +26,8 @@ Includes the following (note they all live in the namespace Milkyway\SS\GridFiel
 You will need to install the [milkyway-multimedia/ss-mwm-formfields](https://github.com/milkyway-multimedia/ss-mwm-formfields) module to use the RangeSlider component.
 
 ## Requirements
-* [silverstripe/framework](https://github.com/silverstripe/framework) 
-* [milkyway-multimedia/ss-mwm](https://github.com/milkyway-multimedia/ss-mwm) 
+* [silverstripe/framework](https://github.com/silverstripe/framework)
+* [milkyway-multimedia/ss-mwm-env](https://github.com/milkyway-multimedia/ss-mwm-env)
 
 ## Install
 Add the following to your composer.json file
@@ -34,13 +35,13 @@ Add the following to your composer.json file
 ```
 
     "require"          : {
-		"milkyway-multimedia/ss-gridfield-utils": "dev-master"
+		"milkyway-multimedia/ss-gridfield-utils": "0.4"
 	}
 
 ```
 
 ## Suggested Packages
-* [silverstripe-australia/gridfieldextensions](https://github.com/silverstripe-australia/gridfieldextensions) 
+* [silverstripe-australia/gridfieldextensions](https://github.com/silverstripe-australia/gridfieldextensions)
 
 ## Credits
 - [ajshort](https://github.com/ajshort "ajshort on Github"): He did most of the coding of GridFieldExtensions, which I borrowed for the more complex versions in this module
@@ -57,7 +58,7 @@ Add the following to your composer.json file
 * MIT
 
 ## Version
-* Version 0.3 (Alpha)
+* Version 0.4 (Alpha)
 
 ## Contact
 #### Milkyway Multimedia

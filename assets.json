@@ -1,6 +1,9 @@
 {
     "css"   : {
-        "dest": "css/"
+        "dest": "css/",
+        "watch": [
+            "_assets/css/**/*"
+        ]
     },
     "js"   : {
         "dest": "js/"

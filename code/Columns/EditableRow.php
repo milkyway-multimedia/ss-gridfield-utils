@@ -16,6 +16,7 @@ use GridField_ColumnProvider;
 use Validator;
 use FieldList;
 use Session;
+use Requirements;
 
 class EditableRow extends RequestHandler implements GridField_HTMLProvider, GridField_SaveHandler, GridField_URLHandler, GridField_ColumnProvider
 {
@@ -255,7 +256,9 @@ class EditableRow extends RequestHandler implements GridField_HTMLProvider, Grid
 
     public function getHTMLFragments($grid)
     {
-        singleton('require')->css(SS_MWM_DIR . '/thirdparty/font-awesome/font-awesome.min.css');
+        Requirements::css(singleton('env')->get('CDN.font-awesome',
+            'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
+        ));
         $grid->addExtraClass('ss-gridfield-editable-rows');
         Utilities::include_requirements();
 
