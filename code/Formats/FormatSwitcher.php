@@ -191,10 +191,6 @@ class FormatSwitcher implements GridField_HTMLProvider, GridField_DataManipulato
         $lastState = (string)$state->last;
         $currentState = (string)$state->current;
 
-        if($lastState && $lastState == $currentState) {
-            return $dataList;
-        }
-
         if(!$currentState && $lastState) {
             $currentState = $lastState;
         }
