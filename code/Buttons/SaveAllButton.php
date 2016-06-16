@@ -41,6 +41,8 @@ class SaveAllButton implements \GridField_HTMLProvider, \GridField_ActionProvide
             return [];
         }
 
+        Utilities::include_requirements();
+
         if (!$this->buttonName) {
             if ($this->publish && $singleton->hasExtension('Versioned')) {
                 $this->buttonName = _t('GridField.SAVE_ALL_AND_PUBLISH', 'Save all and publish');
@@ -56,7 +58,7 @@ class SaveAllButton implements \GridField_HTMLProvider, \GridField_ActionProvide
             $this->actionName,
             null
         );
-        $button->setAttribute('data-icon', 'disk')->addExtraClass('new new-link ui-button-text-icon-primary');
+        $button->setAttribute('data-icon', 'disk')->addExtraClass('new new-link ui-button-text-icon-primary js-mwm-gridfield-saveall');
 
         return [
             $this->targetFragment => $button->Field(),
