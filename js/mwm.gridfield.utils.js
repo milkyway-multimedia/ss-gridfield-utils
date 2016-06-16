@@ -1,5 +1,12 @@
 ! function(i) {
     i.entwine("ss", function(i) {
+        i(".js-mwm-gridfield-saveall").entwine({
+            onmatch: function(){
+                // Remove 'changed' state from form anytime a SaveAll button is created.
+                i(this[0].form).removeClass('changed');
+                this._super();
+            }
+        }),
         i(".ss-gridfield").entwine({
             showNoItemsMessage: function() {
                 0 === this.find(".ss-gridfield-items:first").children().not(".ss-gridfield-no-items").length && this.find(".ss-gridfield-no-items").show()
