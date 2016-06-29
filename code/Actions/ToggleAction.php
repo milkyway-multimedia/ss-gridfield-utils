@@ -12,9 +12,11 @@ use Milkyway\SS\GridFieldUtils\Common\Action;
 use GridField_FormAction;
 use LogicException;
 use ValidationException;
+use Requirements;
 
 class ToggleAction extends Action
 {
+    public static $include_font_css = true;
     public $field;
 
     public $titles = [
@@ -63,6 +65,14 @@ class ToggleAction extends Action
         if (!$this->checkPermissions($flag, $record, $gridField)) {
             return '';
         }
+
+        if (static::$include_font_css) {
+            Requirements::css(singleton('env')->get('CDN.font-awesome',
+                'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
+            ));
+        }
+
+        Utilities::include_requirements();
 
         $titles = $this->titles;
         $title = '';

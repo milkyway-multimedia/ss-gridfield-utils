@@ -1,7 +1,5 @@
-@import "../../../../bower_components/material-design-iconic-font/less/variables";
-@import (reference) "../../../../bower_components/material-design-iconic-font/less/icons";
-@import (reference) "../../../../bower_components/material-design-iconic-font/less/core";
-@import "../../../../bower_components/material-design-iconic-font/less/path";
+@import "../../../node_modules/font-awesome/less/variables";
+@import "../../../node_modules/font-awesome/less/mixins";
 
 .gridfield-button-toggle-action {
 	position: relative;
@@ -18,18 +16,13 @@
 		line-height: 16px;
 
 		&:after {
-			display: inline-block;
-			font: normal normal normal 14px/1 '@{zmdi-font-name}';
-			font-size: inherit;
-			text-rendering: auto;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			content:@zmdi-var-eye;
+			.fa-icon();
+			content:@fa-var-eye;
 			vertical-align: middle;
 		}
 
 		&.btn-icon-eye-slash:after {
-			content:@zmdi-var-eye-off;
+			content:@fa-var-eye-slash;
 		}
 	}
 

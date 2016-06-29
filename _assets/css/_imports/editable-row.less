@@ -35,10 +35,16 @@
 
 .ss-gridfield-editable-row--fields {
 	> .tabset:first-child:not(.ss-tabset-tabshidden) {
-		margin-top: -50px;
+		margin-top: -5px;
 
-		> .ui-tabs-nav + * {
-			padding-top: 10px;
+		> .ui-tabs-nav {
+            margin-left: -20px;
+            margin-right: -20px;
+            padding-left: 10px;
+            padding-right: 10px;
+            + * {
+                padding-top: 10px;
+            }
 		}
 	}
 

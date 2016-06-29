@@ -7,13 +7,5 @@
     },
     "js"   : {
         "dest": "js/"
-    },
-    "copy" : [
-        {
-            "src"    : [
-                "bower_components/material-design-iconic-font/dist/fonts/**/*"
-            ],
-            "dest"   : "fonts/"
-        }
-    ]
+    }
 }
