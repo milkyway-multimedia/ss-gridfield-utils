@@ -933,5 +933,15 @@
                 });
             }
         });
+
+        // Milkyway\SS\GridFieldUtils\SaveAllButton
+        // @credit SilbinaryWolf
+        $(".js-mwm-gridfield--saveall").entwine({
+            onmatch: function(){
+                // Remove 'changed' state from form anytime a SaveAll button is created.
+                $(this[0].form).removeClass('changed');
+                this._super();
+            }
+         });
     });
 })(jQuery);
