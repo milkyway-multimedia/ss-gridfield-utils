@@ -8,7 +8,13 @@
 }
 
 .ss-gridfield-modal--body {
-    .cms-menu {
+    .cms-menu,
+    .cms_backlink,
+    #page-title-heading .sep {
         display: none;
+    }
+
+    #page-title-heading .cms-panel-link:not(.last)  {
+        visibility: hidden;
     }
 }
